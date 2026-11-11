@@ -19,4 +19,13 @@ export const demoFoods = [
   { id: 'oven', restaurantId: 'littleoven', restaurantName: 'Little Oven', name: 'Prosciutto e Rucola', description: 'Thin crust, prosciutto, rocket & parmesan.', category: 'Pizza', price: 13, image: 'photo-1574071318508-1cdbab80d002', popular: false },
 ]
 
-export const foodCategories = ['All', 'Pizza', 'Burgers', 'Pasta', 'Bowls', 'Sushi', 'Tacos', 'Sides']
+export const foodCategories = [
+  { value: 'All', label: 'Të gjitha' },
+  { value: 'Pizza', label: 'Pica' },
+  { value: 'Burgers', label: 'Hamburgerë' },
+  { value: 'Pasta', label: 'Makarona' },
+  { value: 'Bowls', label: 'Tasa' },
+  { value: 'Sushi', label: 'Sushi' },
+  { value: 'Tacos', label: 'Tako' },
+  { value: 'Sides', label: 'Anët' },
+]

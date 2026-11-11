@@ -59,4 +59,7 @@
 .hero-search:focus-within{border-color:#F97316;outline:3px solid #f2f2ef;outline-offset:1px;box-shadow:none}
 .hero-search input{background:transparent}
 .hero-search button{border-radius:999px;padding-right:18px;padding-left:18px}
+.food-bottom button{border-radius:999px;padding-right:14px;padding-left:14px}
+.view-menu-button{border:1px solid #f2f2ef;border-radius:999px;background:#fff;padding:10px 14px;margin-top:14px}
+.food-category{border-radius:999px}
 

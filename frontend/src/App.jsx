@@ -88,7 +88,7 @@ function App() {
             <div><span className="section-kicker">GOOD TASTE, GREAT VALUE</span><h2>{selectedRestaurant ? `Menu at ${selectedRestaurant.name}` : 'Popular right now'}</h2><p>{selectedRestaurant ? 'Made fresh and ready for pickup.' : 'Customer favorites from restaurants near you.'}</p></div>
             {selectedRestaurant ? <button className="text-link clear-menu" onClick={clearRestaurant}>See all restaurants <span aria-hidden="true">→</span></button> : <a href="#restaurants" className="text-link">Explore restaurants <span aria-hidden="true">→</span></a>}
           </div>
-          <div className="food-categories" aria-label="Filter food by category">{foodCategories.map((item) => <button key={item} className={foodCategory === item ? 'food-category active' : 'food-category'} onClick={() => setFoodCategory(item)}>{item}</button>)}</div>
+          <div className="food-categories" aria-label="Filter food by category">{foodCategories.map((item) => <button key={item.value} className={foodCategory === item.value ? 'food-category active' : 'food-category'} onClick={() => setFoodCategory(item.value)}>{item.label}</button>)}</div>
           {visibleFoods.length ? <div className="food-grid">{visibleFoods.map((food) => <FoodCard key={food.id} food={food} onAdd={addToCart} quantity={cart[food.id] || 0} />)}</div> : <div className="empty-results compact"><h3>No dishes match your search</h3><p>Try a different search, or clear the restaurant selection.</p><button onClick={() => { setSearch(''); setSelectedRestaurant(null); setFoodCategory('All') }}>Show popular food</button></div>}
         </section>
 
