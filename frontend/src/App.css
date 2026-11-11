@@ -54,6 +54,66 @@
 @media(min-width:621px) and (max-width:999px){.hero h1{font-size:55px}.hero-content>p{font-size:15px}.hero-art{height:390px}.hero-art>img{width:370px;height:350px}.section-heading h2,.centered-heading h2{font-size:39px}.restaurant-photo{height:180px}.restaurant-info{padding:15px}.restaurant-title-row h3,.food-info h3{font-size:18px}.restaurant-info>p,.restaurant-meta,.view-menu-button,.food-info>p{font-size:11px}.food-photo{height:190px}.food-info{padding:14px}.step-card h3{font-size:14px}.step-card p{font-size:11px}}
 @media(max-width:620px){.hero{padding-top:48px;padding-bottom:45px}.hero h1{font-size:49px}.hero-content>p{font-size:14px}.hero-search{height:55px}.hero-search input{font-size:12px}.hero-search button{height:43px;font-size:10px}.section{padding-top:52px;padding-bottom:52px}.section-heading h2,.centered-heading h2{font-size:34px}.section-heading>div>p,.centered-heading>p{font-size:12px}.restaurant-photo{height:165px}.restaurant-info{padding:14px}.restaurant-title-row h3,.food-info h3{font-size:16px}.restaurant-info>p,.restaurant-meta,.view-menu-button,.food-info>p{font-size:10px}.food-photo{height:165px}.food-info{padding:13px}.step-card{padding:19px}.step-card h3{font-size:14px}.step-card p{font-size:10px}}
 @media(max-width:380px){.hero h1{font-size:43px}.hero-content>p{font-size:13px}.section-heading h2,.centered-heading h2{font-size:30px}.restaurant-photo{height:180px}.food-photo{height:150px}}
+@media(max-width:760px){
+  .nav-wrap{height:66px;padding:0 18px}
+  .brand-link{min-width:0}
+  .mobile-menu-toggle{display:flex;width:38px;height:38px;margin-left:auto;margin-right:6px;padding:9px;border:0;background:transparent;flex-direction:column;justify-content:center;gap:5px}
+  .mobile-menu-toggle span{width:20px;height:2px;border-radius:2px;background:#171717}
+  .main-nav{display:none;position:absolute;top:65px;left:0;right:0;margin:0;padding:12px 20px;background:#fff;border-bottom:1px solid #f2f2ef;box-shadow:0 8px 18px rgba(23,23,23,.08);flex-direction:column;align-items:stretch;gap:0}
+  .main-nav.open{display:flex}
+  .main-nav a{padding:12px 0;border-bottom:1px solid #f2f2ef}
+  .main-nav a:last-child{border-bottom:0}
+  .nav-actions{display:none;position:absolute;top:207px;left:0;right:0;padding:10px 20px 14px;background:#fff;border-bottom:1px solid #f2f2ef}
+  .nav-actions.open{display:flex}
+  .nav-actions .login-button{margin-right:auto}
+  .hero{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:46px 22px 42px}
+  .hero-content{width:100%}
+  .hero-art{width:min(100%,520px);height:360px;margin:6px auto 0}
+  .hero-art>img{width:min(360px,78vw);height:min(340px,72vw)}
+  .section{padding-right:22px;padding-left:22px}
+  .section-heading{flex-wrap:wrap;align-items:flex-start}
+  .section-heading>.text-link{margin-left:auto}
+  .filter-bar{flex-wrap:wrap;row-gap:10px}
+  .category-filters{max-width:100%;flex:1 1 100%}
+  .result-count{margin-left:auto}
+  .restaurant-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .food-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 22px;padding-right:4px;padding-left:4px}
+  .footer-brand-column{grid-column:1/-1}
+  .footer-newsletter{grid-column:auto}
+}
+@media(max-width:620px){
+  .hero{padding-top:40px;padding-bottom:38px}
+  .hero-art{height:300px}
+  .hero-art>img{width:min(310px,78vw);height:min(285px,72vw)}
+  .pickup-badge{left:0;top:22px}
+  .hero-caption{right:0;bottom:16px}
+  .section-heading{gap:10px}
+  .section-heading>.text-link{padding-top:4px}
+  .food-heading>.text-link{font-size:0}
+  .category-filters,.food-categories{padding-bottom:3px}
+  .filter-chip,.food-category{min-height:38px;padding-right:13px;padding-left:13px}
+  .view-menu-button,.food-bottom button{min-height:38px}
+  .footer-bottom{align-items:flex-start;flex-direction:column;gap:7px}
+}
+@media(max-width:390px){
+  .nav-wrap{padding-right:13px;padding-left:13px}
+  .foodora-logo{gap:5px}
+  .foodora-logo-mark{width:32px;height:32px}
+  .foodora-wordmark strong{font-size:17px}
+  .foodora-wordmark small{font-size:6px}
+  .hero{padding-right:17px;padding-left:17px}
+  .hero-search{gap:7px;padding-left:9px}
+  .hero-search>svg{width:29px;height:29px;padding:7px}
+  .hero-search button{padding-right:11px;padding-left:11px;font-size:9px}
+  .section{padding-right:17px;padding-left:17px}
+  .restaurant-grid,.food-grid{grid-template-columns:minmax(0,1fr)}
+  .restaurant-photo{height:190px}
+  .food-photo{height:180px}
+  .restaurant-title-row h3,.food-info h3{font-size:17px}
+  .food-bottom button{font-size:10px}
+  .hero-art{height:270px}
+}
 .hero-search{border:1px solid #f2f2ef;border-radius:999px;background:#fff;transition:box-shadow .2s,border-color .2s}
 .hero-search>svg{width:32px;height:32px;flex:none;padding:8px;border-radius:50%;background:#F97316;stroke:#fff}
 .hero-search:focus-within{border-color:#F97316;outline:3px solid #f2f2ef;outline-offset:1px;box-shadow:none}
