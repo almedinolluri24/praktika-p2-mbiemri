@@ -1,0 +1,5 @@
+import { FoodoraLogo } from './FoodoraLogo.jsx'
+
+export function Footer() {
+  return <footer className="site-footer"><div className="footer-main"><div className="footer-brand-column"><a href="#home" className="brand-link" aria-label="Foodora home"><FoodoraLogo /></a><p>Your Food. Your Time. Discover local favorites and pick up fresh food on your schedule.</p></div><div className="footer-links"><h3>Explore</h3><a href="#home">Home</a><a href="#restaurants">Restaurants</a><a href="#popular-food">Popular food</a><a href="#how-it-works">How it works</a></div><div className="footer-links"><h3>Get in touch</h3><a href="mailto:hello@foodora.example">hello@foodora.example</a><a href="tel:+38344123456">+383 44 123 456</a><span>Prishtina, Kosovo</span></div><div className="footer-newsletter"><h3>Good things, occasionally.</h3><p>Stay in the loop with local food favorites.</p><a href="mailto:hello@foodora.example">Say hello <span aria-hidden="true">→</span></a></div></div><div className="footer-bottom"><span>© 2026 Foodora. All rights reserved.</span><span>Your Food. Your Time.</span></div></footer>
+}

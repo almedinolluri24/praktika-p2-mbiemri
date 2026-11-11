@@ -1,0 +1,3 @@
+export function FoodCard({ food, onAdd, quantity }) {
+  return <article className="food-card"><div className="food-photo"><img src={`https://images.unsplash.com/${food.image}?auto=format&fit=crop&w=700&q=80`} alt={food.name} loading="lazy"/><span className="food-category-label">{food.category}</span>{quantity > 0 && <span className="added-indicator">{quantity} in cart</span>}</div><div className="food-info"><span className="food-restaurant">{food.restaurantName}</span><h3>{food.name}</h3><p>{food.description}</p><div className="food-bottom"><strong>€{food.price.toFixed(2)}</strong><button onClick={() => onAdd(food)}><span aria-hidden="true">+</span> Add to cart</button></div></div></article>
+}
