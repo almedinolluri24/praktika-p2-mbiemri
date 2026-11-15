@@ -1,5 +1,20 @@
 import { useCallback, useEffect, useState } from 'react'
 import { prepareCsrf, readCsrfCookie } from '../services/auth.js'
+import { FoodoraLogo } from './FoodoraLogo.jsx'
+import { LanguageToggle } from '../i18n/LanguageToggle.jsx'
+import { useLanguage } from '../i18n/useLanguage.js'
+import {
+  AlertTriangleIcon,
+  BackArrowIcon,
+  LogoutIcon,
+  MoonIcon,
+  RefreshCwIcon,
+  ShieldIcon,
+  StoreIcon,
+  SunIcon,
+  TagIcon,
+  UsersIcon,
+} from './Icons.jsx'
 
 async function request(url, { method = 'GET', body } = {}) {
   const headers = { Accept: 'application/json' }
@@ -10,13 +25,23 @@ async function request(url, { method = 'GET', body } = {}) {
   }
   const response = await fetch(url, { method, credentials: 'include', headers, ...(body ? { body: JSON.stringify(body) } : {}) })
   const result = await response.json()
-  if (!response.ok) throw new Error(Object.values(result.errors || {}).flat()[0] || result.message || 'Admin request failed.')
+  if (!response.ok) throw new Error(Object.values(result.errors || {}).flat()[0] || result.message || 'Kërkesa e administratorit dështoi.')
   return result
 }
 
-export function AdminPanel({ onClose }) {
+const restaurantStatusLabels = {
+  approved: '✓ I miratuar',
+  pending: 'Në pritje',
+  rejected: 'Refuzuar',
+  suspended: 'Pezulluar',
+}
+
+export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
+  const { t } = useLanguage()
   const [restaurants, setRestaurants] = useState([])
   const [selectedId, setSelectedId] = useState(null)
+  const [restaurantSearch, setRestaurantSearch] = useState('')
+  const [restaurantStatusFilter, setRestaurantStatusFilter] = useState('all')
   const [categories, setCategories] = useState([])
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(true)
@@ -81,14 +106,17 @@ export function AdminPanel({ onClose }) {
     const timer = window.setTimeout(loadRestaurants, 0)
     return () => window.clearTimeout(timer)
   }, [loadRestaurants])
+
   useEffect(() => {
     const timer = window.setTimeout(loadStaffData, 0)
     return () => window.clearTimeout(timer)
   }, [loadStaffData])
+
   useEffect(() => {
     const timer = window.setTimeout(() => loadCategories(selectedId), 0)
     return () => window.clearTimeout(timer)
   }, [loadCategories, selectedId])
+
   useEffect(() => {
     const timer = window.setTimeout(() => loadBranchStaff(selectedBranchId), 0)
     return () => window.clearTimeout(timer)
@@ -110,11 +138,11 @@ export function AdminPanel({ onClose }) {
     }
   }
 
-  async function removeStaff(user) {
+  async function removeStaff(staffMember) {
     setBusy(true)
     setError('')
     try {
-      await request(`/api/admin/branches/${selectedBranchId}/staff/${user.id}`, { method: 'DELETE' })
+      await request(`/api/admin/branches/${selectedBranchId}/staff/${staffMember.id}`, { method: 'DELETE' })
       await Promise.all([loadBranchStaff(selectedBranchId), loadStaffData()])
     } catch (actionError) {
       setError(actionError.message)
@@ -166,38 +194,303 @@ export function AdminPanel({ onClose }) {
   }
 
   const selectedRestaurant = restaurants.find((restaurant) => restaurant.id === Number(selectedId))
+  const query = restaurantSearch.trim().toLocaleLowerCase()
+  const visibleRestaurants = restaurants.filter((restaurant) => {
+    const matchesSearch = !query
+      || restaurant.name.toLocaleLowerCase().includes(query)
+      || restaurant.business_type.replaceAll('_', ' ').toLocaleLowerCase().includes(query)
+    return matchesSearch && (restaurantStatusFilter === 'all' || restaurant.status === restaurantStatusFilter)
+  })
+  const totalBranches = restaurants.reduce((total, restaurant) => total + Number(restaurant.branches_count || 0), 0)
+  const restaurantStats = [
+    { label: 'Restorante', detail: 'Në platformë', value: restaurants.length, icon: <StoreIcon size={18} />, tone: 'orange' },
+    { label: 'Të miratuara', detail: 'Aktive në katalog', value: restaurants.filter((restaurant) => restaurant.status === 'approved').length, icon: <ShieldIcon size={18} />, tone: 'green' },
+    { label: 'Në pritje', detail: 'Presin vendim', value: restaurants.filter((restaurant) => restaurant.status === 'pending').length, icon: <TagIcon size={18} />, tone: 'amber' },
+    { label: 'Filiale', detail: 'Gjithsej në platformë', value: totalBranches, icon: <UsersIcon size={18} />, tone: 'blue' },
+  ]
 
-  return <div className="admin-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}>
-    <section className="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
-      <header className="admin-heading"><div><span>FOODORA ADMIN DASHBOARD</span><h2 id="admin-title">Business review</h2><p>Restaurant visibility and menu categories</p></div><button onClick={onClose} aria-label="Close admin dashboard">×</button></header>
-      {error && <p className="admin-error" role="alert">{error}</p>}
-      {loading ? <p role="status">Loading restaurants…</p> : <div className="admin-content">
-        <div className="admin-list"><h3>Restaurants</h3>{restaurants.map((restaurant) => <article className="admin-restaurant" key={restaurant.id}>
-          <div><strong>{restaurant.name}</strong><small>{restaurant.business_type.replaceAll('_', ' ')} · {restaurant.branches_count} branches · {restaurant.products_count} products</small><span className={`admin-status ${restaurant.status}`}>{restaurant.status}</span></div>
-          <div className="admin-actions"><button disabled={busy || restaurant.status === 'approved'} onClick={() => changeStatus(restaurant, 'approved')}>Approve</button><button disabled={busy || restaurant.status === 'suspended'} onClick={() => changeStatus(restaurant, 'suspended')}>Suspend</button><button className="admin-select" onClick={() => setSelectedId(restaurant.id)} aria-pressed={selectedId === restaurant.id}>Categories</button></div>
-        </article>)}</div>
-        <div className="admin-categories"><h3>Categories {selectedRestaurant ? `· ${selectedRestaurant.name}` : ''}</h3>
-          {selectedRestaurant && <form onSubmit={addCategory}><label htmlFor="admin-category-name">Add category</label><div><input id="admin-category-name" maxLength="100" value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Salads" required /><button disabled={busy}>Add</button></div></form>}
-          {categories.length ? <ul>{categories.map((category) => <li key={category.id}><span>{category.name}<small>{category.slug}</small></span><button disabled={busy} aria-pressed={category.is_active} onClick={() => toggleCategory(category)}>{category.is_active ? 'Active' : 'Inactive'}</button></li>)}</ul> : <p className="admin-empty">No categories for this restaurant.</p>}
+  return (
+    <div className={`portal-page admin-portal-page ${theme === 'dark' ? 'dark-theme' : ''}`}>
+      {/* Top Fixed Operations Bar */}
+      <header className="portal-topbar">
+        <div className="portal-brand-block">
+          <FoodoraLogo />
+          <span className="portal-role-pill administrator" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <ShieldIcon size={13} />
+            <span>{t('PANELI I ADMINISTRATORIT')}</span>
+          </span>
+          <span className="portal-branch-meta">{t('Menaxhimi Qendror i Platformës')}</span>
         </div>
-        <div className="admin-staff">
-          <h3>Branch staff assignments</h3>
-          <label htmlFor="admin-staff-branch">Branch</label>
-          <select id="admin-staff-branch" value={selectedBranchId} onChange={(event) => setSelectedBranchId(event.target.value)}>
-            {branches.map((branch) => <option key={branch.id} value={branch.id}>{branch.restaurant.name} · {branch.name} ({branch.city})</option>)}
-          </select>
-          <form onSubmit={assignStaff}>
-            <label htmlFor="admin-staff-account">Account</label>
-            <select id="admin-staff-account" value={staffUserId} onChange={(event) => setStaffUserId(event.target.value)} required>
-              <option value="">Choose an account</option>
-              {staffAccounts.map((account) => <option key={account.id} value={account.id}>{account.name} · {account.email} ({account.role.replaceAll('_', ' ')})</option>)}
-            </select>
-            <label htmlFor="admin-staff-role">Role for this branch</label>
-            <div className="admin-staff-form-row"><select id="admin-staff-role" value={staffRole} onChange={(event) => setStaffRole(event.target.value)}><option value="restaurant_manager">Manager</option><option value="kitchen_worker">Kitchen</option><option value="pickup_worker">Pickup</option></select><button disabled={busy || !selectedBranchId}>Assign staff</button></div>
-          </form>
-          {branchStaff.length ? <ul>{branchStaff.map((staff) => <li key={staff.id}><span>{staff.name}<small>{staff.email} · {staff.branch_role.replaceAll('_', ' ')}</small></span><button disabled={busy} onClick={() => removeStaff(staff)}>Remove</button></li>)}</ul> : <p className="admin-empty">No staff assigned to this branch.</p>}
+
+        <div className="portal-actions-block">
+          <LanguageToggle />
+          <button className="portal-refresh-btn" onClick={loadRestaurants} disabled={loading} title={t('Rifresko të dhënat')}>
+            <RefreshCwIcon size={14} />
+            <span>{t(loading ? 'Po ngarkohet…' : 'Rifresko')}</span>
+          </button>
+
+          {onToggleTheme && (
+            <button
+              className="portal-theme-btn"
+              onClick={onToggleTheme}
+              title={t(theme === 'dark' ? 'Kalo në modalitet të ndritshëm' : 'Kalo në modalitet të errët')}
+              aria-label={t('Ndrysho temën')}
+            >
+              {theme === 'dark' ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+            </button>
+          )}
+
+          <button
+            className="portal-logout-button"
+            onClick={onLogout}
+            title={t('Dil nga llogaria')}
+            aria-label={t('Dil nga llogaria')}
+          >
+            <LogoutIcon size={15} />
+            <span>{t('Dil nga llogaria')}</span>
+          </button>
+
+          {/* Dedicated Exit Button - only way to leave the admin panel */}
+          <button className="portal-exit-button" onClick={onClose} title={t('Dil nga paneli i administratorit dhe kthehu te dyqani')}>
+            <BackArrowIcon size={15} />
+            <span>{t('Kthehu te Ballina')}</span>
+          </button>
         </div>
-      </div>}
-    </section>
-  </div>
+      </header>
+
+      {/* Main Admin Portal View */}
+      <main className="portal-main-container">
+        <div className="portal-intro-banner">
+          <div>
+            <h2>{t('Menaxhimi i Restoranteve & Filialeve')}</h2>
+            <p>{t('Kontrollo statusin e restoranteve, menaxho kategoritë dhe cakto stafin nëpër filiale.')}</p>
+          </div>
+          {user && (
+            <div className="portal-user-meta">
+              <span>{t('Administrator:')} <strong>{user.name}</strong></span>
+              <small>{user.email}</small>
+            </div>
+          )}
+        </div>
+
+        {error && (
+          <div className="admin-error" role="alert" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertTriangleIcon size={16} />
+            <span>{t(error)}</span>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="portal-loading-state" role="status">{t('Po ngarkohen restorantet e platformës…')}</div>
+        ) : (
+          <>
+            <section className="admin-dashboard-summary" aria-label={t('Përmbledhja e platformës')}>
+              {restaurantStats.map((stat) => (
+                <article className="admin-summary-card" key={stat.label}>
+                  <span className={`admin-summary-icon ${stat.tone}`}>{stat.icon}</span>
+                  <div>
+                    <small>{t(stat.label)}</small>
+                    <strong>{stat.value}</strong>
+                    <span>{t(stat.detail)}</span>
+                  </div>
+                </article>
+              ))}
+            </section>
+
+            <div className="admin-dashboard-layout">
+              <section className="admin-list">
+                <div className="admin-panel-heading">
+                  <div>
+                    <h3><StoreIcon size={18} /> {t('Restorantet')}</h3>
+                    <p>{t('Menaxho statusin dhe kategoritë e restoranteve të regjistruara.')}</p>
+                  </div>
+                  <span className="admin-panel-count">{visibleRestaurants.length} / {restaurants.length}</span>
+                </div>
+
+                <div className="admin-list-toolbar">
+                  <label className="admin-search">
+                    <span className="visually-hidden">{t('Kërko restorant')}</span>
+                    <input
+                      type="search"
+                      value={restaurantSearch}
+                      onChange={(event) => setRestaurantSearch(event.target.value)}
+                      placeholder={t('Kërko sipas emrit ose llojit…')}
+                    />
+                  </label>
+                  <select
+                    aria-label={t('Filtro restorantet sipas statusit')}
+                    value={restaurantStatusFilter}
+                    onChange={(event) => setRestaurantStatusFilter(event.target.value)}
+                  >
+                    <option value="all">{t('Të gjitha statuset')}</option>
+                    <option value="pending">{t('Në pritje')}</option>
+                    <option value="approved">{t('Të miratuara')}</option>
+                    <option value="rejected">{t('Të refuzuara')}</option>
+                    <option value="suspended">{t('Të pezulluara')}</option>
+                  </select>
+                </div>
+
+                {visibleRestaurants.length ? visibleRestaurants.map((restaurant) => (
+                  <article className="admin-restaurant" key={restaurant.id}>
+                    <div>
+                      <strong>{restaurant.name}</strong>
+                      <small>
+                        {t(restaurant.business_type.replaceAll('_', ' '))} · {restaurant.branches_count} {t('filiale')} · {restaurant.products_count} {t('produkte')}
+                      </small>
+                      <span className={`admin-status ${restaurant.status}`}>
+                        {t(restaurantStatusLabels[restaurant.status] || restaurant.status)}
+                      </span>
+                    </div>
+                    <div className="admin-actions">
+                      <button
+                        disabled={busy || restaurant.status === 'approved'}
+                        onClick={() => changeStatus(restaurant, 'approved')}
+                      >
+                        {t('Mirato')}
+                      </button>
+                      <button
+                        disabled={busy || restaurant.status === 'suspended'}
+                        onClick={() => changeStatus(restaurant, 'suspended')}
+                      >
+                        {t('Pezullo')}
+                      </button>
+                      <button
+                        className="admin-select"
+                        onClick={() => setSelectedId(restaurant.id)}
+                        aria-pressed={selectedId === restaurant.id}
+                      >
+                        {t('Kategoritë')}
+                      </button>
+                    </div>
+                  </article>
+                )) : (
+                  <p className="admin-empty">
+                    {t(restaurants.length ? 'Nuk u gjet asnjë restorant me këto kritere.' : 'Nuk ka restorante të regjistruara.')}
+                  </p>
+                )}
+              </section>
+
+              <aside className="admin-side-stack" aria-label={t('Menaxhimi i kategorive dhe stafit')}>
+                <section className="admin-categories">
+                  <div className="admin-panel-heading">
+                    <div>
+                      <h3><TagIcon size={18} /> {t('Kategoritë')}</h3>
+                      <p>{selectedRestaurant ? t('Restoranti aktiv: {name}', { name: selectedRestaurant.name }) : t('Zgjidh një restorant për të menaxhuar kategoritë.')}</p>
+                    </div>
+                  </div>
+                  {selectedRestaurant && (
+                    <form onSubmit={addCategory}>
+                      <label htmlFor="admin-category-name">{t('Shto kategori të re')}</label>
+                      <div>
+                        <input
+                          id="admin-category-name"
+                          maxLength="100"
+                          value={name}
+                          onChange={(event) => setName(event.target.value)}
+                          placeholder={t('p.sh. Pica speciale')}
+                          required
+                        />
+                        <button disabled={busy}>+ {t('Shto')}</button>
+                      </div>
+                    </form>
+                  )}
+                  {categories.length ? (
+                    <ul>
+                      {categories.map((category) => (
+                        <li key={category.id}>
+                          <span>
+                            {category.name}
+                            <small>{category.slug}</small>
+                          </span>
+                          <button
+                            disabled={busy}
+                            aria-pressed={category.is_active}
+                            onClick={() => toggleCategory(category)}
+                          >
+                            {t(category.is_active ? '✓ Aktive' : 'Jo aktive')}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="admin-empty">{t('Nuk ka kategori për këtë restorant.')}</p>
+                  )}
+                </section>
+
+                <section className="admin-staff">
+                  <div className="admin-panel-heading">
+                    <div>
+                      <h3><UsersIcon size={18} /> {t('Caktimi i stafit')}</h3>
+                      <p>{t('Menaxho qasjen e stafit në filialet e platformës.')}</p>
+                    </div>
+                  </div>
+                  <label htmlFor="admin-staff-branch">{t('Zgjidh filialin')}</label>
+                  <select
+                    id="admin-staff-branch"
+                    value={selectedBranchId}
+                    onChange={(event) => setSelectedBranchId(event.target.value)}
+                  >
+                    {branches.map((branch) => (
+                      <option key={branch.id} value={branch.id}>
+                        {branch.restaurant.name} · {branch.name} ({branch.city})
+                      </option>
+                    ))}
+                  </select>
+
+                  <form onSubmit={assignStaff}>
+                    <label htmlFor="admin-staff-account">{t('Llogaria e përdoruesit')}</label>
+                    <select
+                      id="admin-staff-account"
+                      value={staffUserId}
+                      onChange={(event) => setStaffUserId(event.target.value)}
+                      required
+                    >
+                      <option value="">{t('Zgjidhni një llogari')}</option>
+                      {staffAccounts.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.name} · {account.email} ({t(account.role.replaceAll('_', ' '))})
+                        </option>
+                      ))}
+                    </select>
+
+                    <label htmlFor="admin-staff-role">{t('Roli operativ në këtë filial')}</label>
+                    <div className="admin-staff-form-row">
+                      <select
+                        id="admin-staff-role"
+                        value={staffRole}
+                        onChange={(event) => setStaffRole(event.target.value)}
+                      >
+                        <option value="restaurant_manager">{t('Menaxher Restoranti')}</option>
+                        <option value="kitchen_worker">{t('Punonjës Kuzhine')}</option>
+                        <option value="pickup_worker">{t('Sporteli i Marrjes')}</option>
+                      </select>
+                      <button disabled={busy || !selectedBranchId}>+ {t('Cakto')}</button>
+                    </div>
+                  </form>
+
+                  {branchStaff.length ? (
+                    <ul>
+                      {branchStaff.map((staffMember) => (
+                        <li key={staffMember.id}>
+                          <span>
+                            {staffMember.name}
+                            <small>{staffMember.email} · {t(staffMember.branch_role.replaceAll('_', ' '))}</small>
+                          </span>
+                          <button disabled={busy} onClick={() => removeStaff(staffMember)}>
+                            {t('Hiq')}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="admin-empty">{t('Nuk ka staf të caktuar në këtë filial ende.')}</p>
+                  )}
+                </section>
+              </aside>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  )
 }

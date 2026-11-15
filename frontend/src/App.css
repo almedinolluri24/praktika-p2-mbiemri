@@ -114,6 +114,26 @@
   .food-bottom button{font-size:10px}
   .hero-art{height:270px}
 }
+.user-greeting{max-width:130px;overflow:hidden;color:#171717;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.login-backdrop{position:fixed;z-index:15;inset:0;display:grid;place-items:center;padding:20px;background:rgba(23,23,23,.62)}
+.login-dialog{position:relative;width:min(100%,440px);padding:34px;border:1px solid #f2f2ef;border-radius:12px;background:#fff;box-shadow:0 24px 70px rgba(23,23,23,.2)}
+.login-close{position:absolute;top:15px;right:16px;width:34px;height:34px;border:1px solid #f2f2ef;border-radius:50%;background:#fff;color:#171717;font-size:21px}
+.login-logo{margin-bottom:24px}
+.login-dialog h2{margin:0;color:#171717;font-size:27px;font-weight:700;letter-spacing:-.6px}
+.login-intro{margin:7px 0 24px;color:#171717;font-size:13px;opacity:.68}
+.login-dialog form{display:grid;gap:9px}
+.login-dialog form>label:not(.remember-label){margin-top:4px;color:#171717;font-size:12px;font-weight:600}
+.login-dialog form>input{width:100%;height:46px;padding:0 13px;border:1px solid #f2f2ef;border-radius:7px;background:#fff;color:#171717;font-size:13px;outline:none}
+.login-dialog form>input:focus{border-color:#F97316;box-shadow:0 0 0 3px #f2f2ef}
+.login-dialog form>input::placeholder{color:#171717;opacity:.45}
+.remember-label{display:flex;align-items:center;gap:8px;margin:7px 0 2px;color:#171717;font-size:12px}
+.remember-label input{width:15px;height:15px;margin:0;accent-color:#F97316}
+.login-error{margin:1px 0 4px;padding:10px 12px;border:1px solid #F97316;border-radius:6px;background:#fff;color:#171717;font-size:12px}
+.login-submit{height:47px;margin-top:3px;border:0;border-radius:999px;background:#F97316;color:#fff;font-size:14px;font-weight:700;transition:opacity .2s}
+.login-submit:hover{opacity:.9}
+.login-submit:disabled{cursor:wait;opacity:.65}
+.login-demo-note{margin:16px 0 0;color:#171717;text-align:center;font-size:11px;opacity:.62}
+@media(max-width:500px){.login-dialog{padding:28px 22px}.login-logo{margin-bottom:18px}.login-dialog h2{font-size:24px}}
 .hero-search{border:1px solid #f2f2ef;border-radius:999px;background:#fff;transition:box-shadow .2s,border-color .2s}
 .hero-search>svg{width:32px;height:32px;flex:none;padding:8px;border-radius:50%;background:#F97316;stroke:#fff}
 .hero-search:focus-within{border-color:#F97316;outline:3px solid #f2f2ef;outline-offset:1px;box-shadow:none}
@@ -122,4 +142,1977 @@
 .food-bottom button{border-radius:999px;padding-right:14px;padding-left:14px}
 .view-menu-button{border:1px solid #f2f2ef;border-radius:999px;background:#fff;padding:10px 14px;margin-top:14px}
 .food-category{border-radius:999px}
+.catalog-state{min-height:180px;display:grid;place-items:center;color:#171717;font-size:14px;opacity:.7}
+.pickup-schedule{margin:13px 0;padding:12px;border:1px solid #f2f2ef;border-radius:12px;color:#171717}
+.schedule-title,.slot-picker label{display:block;margin-bottom:8px;font-size:12px;font-weight:700}
+.schedule-switch{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.schedule-switch button{min-height:36px;padding:7px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:10px}
+.schedule-switch button.selected{border-color:#F97316;background:#fff;color:#171717;box-shadow:inset 0 0 0 1px #F97316}
+.slot-picker{display:grid;gap:7px;margin-top:12px}
+.slot-picker input,.slot-picker select{width:100%;min-height:38px;padding:7px 9px;border:1px solid #f2f2ef;border-radius:8px;background:#fff;color:#171717;font-size:12px}
+.slot-picker small{color:#171717;font-size:10px;opacity:.7}
+.checkout-error{padding:9px 10px;border:1px solid #F97316;border-radius:8px;color:#171717!important}
+.price-review{display:grid;gap:6px;margin:11px 0;padding:11px;border:1px solid #F97316;border-radius:11px;color:#171717;font-size:11px}
+.price-review>p{margin:0 0 3px;color:#171717;font-size:10px}
+.price-review>small{color:#171717;font-size:10px}
+.price-review-total{display:flex;justify-content:space-between;margin-top:5px;padding-top:8px;border-top:1px solid #f2f2ef}
+.price-review>button{min-height:36px;border:0;border-radius:999px;background:#F97316;color:#fff;font-size:11px;font-weight:700}
+.cart-confirmation{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#171717}
+.confirmation-check{display:grid;width:48px;height:48px;place-items:center;border-radius:50%;background:#F97316;color:#fff;font-size:26px}
+.cart-confirmation h3{margin:17px 0 5px;font-size:18px}
+.cart-confirmation>p{font-size:12px;opacity:.72}
+.pickup-token{display:grid;gap:9px;width:100%;margin:16px 0;padding:16px;border:1px solid #f2f2ef;border-radius:12px;overflow-wrap:anywhere}
+.pickup-token small{font-size:10px;font-weight:700;letter-spacing:.08em}
+.pickup-token strong{font-family:monospace;font-size:14px}
+.pickup-token span{font-size:10px;opacity:.7}
+.pickup-qr{display:block;width:176px;height:176px;max-width:100%;margin:0 auto 4px;padding:6px;border:1px solid #f2f2ef;border-radius:10px;background:#fff}
+.pickup-qr-loading,.pickup-qr-error{font-size:11px;text-align:center}.pickup-qr-error{color:#9a3412}
+.checkout-placeholder:disabled{cursor:wait;opacity:.6}
+@media(max-width:620px){.schedule-switch button{font-size:9px}.pickup-token{padding:13px}}
+.restaurant-extra-filters{display:flex;align-items:center;gap:8px;margin-left:auto;color:#171717;font-size:10px}
+.restaurant-extra-filters>label:first-child{font-weight:600}
+.restaurant-extra-filters select{min-height:34px;padding:6px 10px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:10px}
+.open-only-filter{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.open-only-filter input{accent-color:#F97316}
+.auth-mode-toggle{display:block;margin:15px auto 0;padding:7px;border:0;background:transparent;color:#171717;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.auth-mode-toggle:focus-visible,.restaurant-extra-filters select:focus-visible,.open-only-filter input:focus-visible{outline:2px solid #F97316;outline-offset:3px}
+@media(max-width:700px){.filter-bar{flex-wrap:wrap;gap:10px}.restaurant-extra-filters{order:3;width:100%;margin:0}.result-count{margin-left:auto}}
+.admin-backdrop{position:fixed;z-index:40;inset:0;display:grid;place-items:center;padding:18px;background:rgba(23,23,23,.62)}
+.admin-panel,.orders-panel{width:min(100%,1000px);max-height:min(88vh,900px);overflow:auto;padding:28px;border:1px solid #f2f2ef;border-radius:18px;background:#fff;box-shadow:0 24px 70px rgba(23,23,23,.22);color:#171717}
+.orders-panel{width:min(100%,780px)}
+.admin-heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #f2f2ef}
+.admin-heading>div>span,.order-history-top>div>span{color:#F97316;font-size:10px;font-weight:800;letter-spacing:.12em}
+.admin-heading h2{margin:5px 0;font-size:26px;letter-spacing:-.5px}
+.admin-heading p{margin:0;font-size:12px;opacity:.7}
+.admin-heading>button{width:38px;height:38px;border:1px solid #f2f2ef;border-radius:50%;background:#fff;color:#171717;font-size:23px}
+.admin-content{display:grid;grid-template-columns:1.15fr .85fr;gap:24px}
+.admin-content h3{margin:0 0 12px;font-size:16px}
+.admin-restaurant{display:grid;gap:12px;padding:14px 0;border-top:1px solid #f2f2ef}
+.admin-restaurant>div:first-child{display:grid;grid-template-columns:1fr auto;gap:5px 10px;align-items:center}
+.admin-restaurant small{grid-column:1/-1;font-size:11px;opacity:.68}
+.admin-status,.order-status-pill{padding:5px 9px;border:1px solid #f2f2ef;border-radius:999px;font-size:10px;font-weight:700;text-transform:capitalize}
+.admin-status.approved,.order-status-pill.ready,.order-status-pill.picked_up{border-color:#F97316;color:#171717}
+.admin-actions{display:flex;flex-wrap:wrap;gap:7px}
+.admin-actions button,.admin-categories button,.admin-categories form button,.orders-toolbar button{min-height:34px;padding:7px 12px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:11px;font-weight:600}
+.admin-actions .admin-select,.admin-categories form button,.orders-toolbar button{border-color:#F97316;background:#F97316;color:#fff}
+.admin-actions button:disabled,.admin-categories button:disabled,.orders-toolbar button:disabled{cursor:not-allowed;opacity:.5}
+.admin-categories{padding:16px;border:1px solid #f2f2ef;border-radius:14px}
+.admin-categories form label{display:block;margin:12px 0 6px;font-size:11px;font-weight:700}
+.admin-categories form>div{display:flex;gap:7px}
+.admin-categories input{min-width:0;flex:1;padding:8px 10px;border:1px solid #f2f2ef;border-radius:999px;color:#171717}
+.admin-categories ul{display:grid;gap:8px;margin:15px 0 0;padding:0;list-style:none}
+.admin-categories li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid #f2f2ef;font-size:12px}
+.admin-categories li span{display:grid;gap:3px}.admin-categories li small{font-size:9px;opacity:.6}
+.admin-staff{grid-column:1/-1;padding:16px;border:1px solid #f2f2ef;border-radius:14px}
+.admin-staff h3{margin:0 0 12px;font-size:16px}
+.admin-staff label{display:block;margin:10px 0 6px;font-size:11px;font-weight:700}
+.admin-staff select{width:100%;min-height:38px;padding:8px 12px;border:1px solid #e5e5e5;border-radius:10px;background:#fff;color:#171717}
+.admin-staff-form-row{display:flex;gap:8px}.admin-staff-form-row select{flex:1}
+.admin-staff-form-row button,.admin-staff li button{min-height:36px;padding:8px 14px;border:1px solid #F97316;border-radius:999px;background:#F97316;color:#fff;font-size:11px;font-weight:700}
+.admin-staff button:disabled{cursor:not-allowed;opacity:.5}
+.admin-staff ul{display:grid;gap:8px;margin:15px 0 0;padding:0;list-style:none}
+.admin-staff li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px solid #f2f2ef;font-size:12px}
+.admin-staff li span{display:grid;gap:4px}.admin-staff li small{font-size:10px;opacity:.65}
+.orders-toolbar>div{display:flex;gap:8px}
+.customer-profile-form{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:10px;margin:0 0 16px;padding:14px;border:1px solid #f2f2ef;border-radius:12px}
+.customer-profile-form label{display:grid;gap:6px;font-size:11px;font-weight:700}
+.customer-profile-form input{min-width:0;padding:9px 12px;border:1px solid #e5e5e5;border-radius:999px;color:#171717}
+.customer-profile-form button,.cancel-customer-order{min-height:36px;padding:8px 14px;border:1px solid #F97316;border-radius:999px;background:#F97316;color:#fff;font-size:11px;font-weight:700}
+.cancel-customer-order{margin-top:10px;border-color:#deded9;background:#fff;color:#4a4a46}
+.admin-error{padding:10px 12px;border:1px solid #F97316;border-radius:10px;font-size:12px}
+.admin-empty,.orders-empty{padding:20px 0;font-size:13px;opacity:.7}
+.orders-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-size:11px;opacity:.75}
+.orders-list{display:grid;gap:15px}
+.order-history-card{padding:18px;border:1px solid #f2f2ef;border-radius:14px}
+.order-history-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.order-history-top h3{margin:5px 0;font-size:16px}
+.order-pickup-location{margin:0 0 13px;font-size:11px;opacity:.68}
+.order-eta{display:grid;gap:4px;margin:12px 0;padding:13px;border-radius:10px;background:#f2f2ef}
+.order-eta small{font-size:9px;font-weight:800;letter-spacing:.08em}.order-eta strong{font-size:12px}.order-eta span{color:#F97316;font-size:12px;font-weight:700}
+.order-lines{display:grid;gap:7px;margin:13px 0;padding:0;list-style:none}
+.order-lines li,.order-total{display:flex;justify-content:space-between;gap:10px;font-size:11px}
+.order-history-steps{display:grid;gap:0;margin:15px 0}
+.order-history-steps>div{display:grid;grid-template-columns:14px 1fr;gap:9px;min-height:34px;font-size:11px}
+.order-history-steps i{position:relative;width:9px;height:9px;margin-top:3px;border:2px solid #F97316;border-radius:50%}
+.order-history-steps>div:not(:last-child) i::after{position:absolute;top:7px;left:2px;width:1px;height:26px;background:#f2f2ef;content:''}
+.order-history-steps small{display:block;margin-top:3px;font-size:9px;opacity:.65}
+.order-total{padding-top:12px;border-top:1px solid #f2f2ef}
+.role-dashboard{width:min(100%,900px);max-height:min(92vh,1000px);overflow:auto;padding:26px;border:1px solid #f2f2ef;border-radius:18px;background:#fff;color:#171717;box-shadow:0 24px 70px rgba(23,23,23,.22)}
+.dashboard-head-actions{display:flex;gap:8px;align-items:center}
+.dashboard-head-actions>button,.role-order-card>button,.role-action-row>button,.role-action-row>label,.role-pickup-actions button,.role-pickup-actions label{min-height:36px;padding:8px 12px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:11px;font-weight:600}
+.dashboard-head-actions>button:first-child,.role-order-card>button,.role-action-row>button,.role-pickup-actions button{border-color:#F97316;background:#F97316;color:#fff}
+.role-order-list{display:grid;gap:14px}
+.role-order-card{padding:17px;border:1px solid #f2f2ef;border-radius:14px}
+.role-order-card>button{margin:4px 6px 8px 0}
+.role-order-customer{margin:0 0 12px;font-size:11px;opacity:.7}
+.role-order-card .order-lines li{align-items:center;flex-wrap:wrap}
+.role-order-card .order-lines li>span{display:grid;flex:1;gap:3px}
+.role-order-card .order-lines li small{font-size:9px;opacity:.65}
+.role-order-card .order-lines li button{min-height:30px;padding:5px 10px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:10px}
+.role-action-row,.role-pickup-actions{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;margin:12px 0}
+.role-action-row>input,.role-action-row>label,.role-pickup-actions>label{display:grid;gap:5px;flex:1;min-width:120px;border:0;padding:0;font-size:10px}
+.role-action-row input,.role-pickup-actions input{width:100%;min-height:36px;padding:7px 10px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:11px}
+.role-pickup-actions p{width:100%;margin:0;font-size:11px}
+.pickup-scanner{display:grid;gap:7px;flex-basis:100%}.pickup-scanner button{align-self:flex-start}.pickup-scanner small{font-size:10px;color:#575750}.pickup-scanner-video{width:min(100%,320px);max-height:220px;object-fit:cover;border-radius:12px;background:#171717}
+.role-dashboard .order-total{margin-top:12px}
+@media(max-width:700px){.admin-backdrop{padding:8px}.admin-panel,.orders-panel{max-height:95vh;padding:18px;border-radius:14px}.admin-content{grid-template-columns:1fr;gap:20px}.admin-heading h2{font-size:21px}.order-history-card{padding:14px}.orders-toolbar{align-items:flex-start}}
+@media(max-width:520px){.customer-profile-form{grid-template-columns:1fr}.orders-toolbar>div{flex-wrap:wrap;justify-content:flex-end}.orders-toolbar{gap:10px}}
+@media(max-width:700px){.role-dashboard{max-height:96vh;padding:17px;border-radius:14px}.role-dashboard .admin-heading{gap:9px}.role-dashboard .admin-heading h2{font-size:20px}.role-action-row{align-items:stretch}.role-action-row>button,.role-action-row>input,.role-action-row>label{flex-basis:100%}}
+.manager-dashboard-tabs{display:flex;gap:7px;overflow-x:auto;margin:-4px 0 18px;padding:3px 0 12px;border-bottom:1px solid #f2f2ef}
+.manager-dashboard-tabs button{min-height:34px;padding:7px 13px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:11px;white-space:nowrap}
+.manager-dashboard-tabs button.active{border-color:#F97316;background:#F97316;color:#fff}
+.manager-staff-tools form{display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,.7fr) auto;align-items:end;gap:10px;padding:14px;border:1px solid #f2f2ef;border-radius:12px}
+.manager-staff-tools label{display:grid;gap:6px;font-size:11px;font-weight:700}
+.manager-staff-tools input,.manager-staff-tools select{min-width:0;min-height:36px;padding:8px 11px;border:1px solid #e5e5e5;border-radius:999px;background:#fff;color:#171717}
+.manager-staff-tools form button,.manager-staff-tools li button{min-height:36px;padding:8px 13px;border:1px solid #F97316;border-radius:999px;background:#F97316;color:#fff;font-size:11px;font-weight:700}
+.manager-staff-tools ul{display:grid;gap:8px;margin:14px 0;padding:0;list-style:none}
+.manager-staff-tools li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px;border-bottom:1px solid #f2f2ef;font-size:12px}
+.manager-staff-tools li span{display:grid;gap:3px}.manager-staff-tools li small{font-size:10px;opacity:.65}
+.manager-tools-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px}
+.manager-tools-heading h3{margin:0 0 4px;font-size:17px}.manager-tools-heading p{margin:0;font-size:11px;opacity:.65}
+.manager-tools-heading>label{display:grid;gap:4px;min-width:210px;font-size:10px;font-weight:700}
+.manager-tools-heading select,.manager-product-form input,.manager-product-form select,.manager-product-form textarea,.manager-hours-form input{min-height:36px;padding:7px 10px;border:1px solid #f2f2ef;border-radius:8px;background:#fff;color:#171717;font-size:11px}
+.manager-menu-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.manager-product-list{display:grid;align-content:start;gap:8px}
+.manager-product-list article{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px;border:1px solid #f2f2ef;border-radius:10px}
+.manager-product-list article>div{display:grid;gap:4px}.manager-product-list article span{font-size:10px;opacity:.7}
+.manager-branch-price{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:9px}
+.manager-branch-price input{width:84px;min-height:30px;padding:5px 7px;border:1px solid #f2f2ef;border-radius:8px;color:#171717;font-size:10px}
+.manager-branch-price button,.manager-category-form button{min-height:30px;padding:5px 9px;border:1px solid #f2f2ef;border-radius:999px;background:#fff;color:#171717;font-size:9px}
+.manager-category-form{display:grid;gap:7px;padding:11px;border:1px solid #f2f2ef;border-radius:10px}
+.manager-category-form label{display:grid;gap:5px;font-size:10px;font-weight:700}
+.manager-category-form input{min-height:34px;padding:7px 9px;border:1px solid #f2f2ef;border-radius:8px;font-size:10px}
+.manager-category-form button{border-color:#F97316;background:#F97316;color:#fff}
+.manager-product-list button,.manager-product-form>button,.manager-hours-form>button{min-height:34px;padding:7px 11px;border:1px solid #F97316;border-radius:999px;background:#F97316;color:#fff;font-size:10px;font-weight:700;white-space:nowrap}
+.manager-product-form{display:grid;gap:9px;padding:15px;border:1px solid #f2f2ef;border-radius:12px}
+.manager-product-form h4,.manager-report h4{margin:0;font-size:14px}
+.manager-product-form>label,.manager-form-row>label{display:grid;gap:5px;font-size:10px;font-weight:700}
+.manager-product-form textarea{min-height:65px;resize:vertical}
+.manager-form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.manager-product-form fieldset{display:flex;flex-wrap:wrap;gap:8px;border:1px solid #f2f2ef;border-radius:9px}
+.manager-product-form legend{font-size:10px;font-weight:700}
+.manager-option{display:flex;align-items:center;gap:6px;font-size:10px}.manager-option input{min-height:auto;accent-color:#F97316}
+.manager-hours-form{display:grid;gap:8px}
+.manager-hour-day{display:grid;grid-template-columns:1fr auto repeat(4,minmax(85px,1fr));align-items:center;gap:9px;padding:10px;border:1px solid #f2f2ef;border-radius:10px;font-size:10px}
+.manager-hour-day>label:not(.manager-option){display:grid;gap:4px}.manager-hour-day input[type=number],.manager-hour-day input[type=time]{width:100%;min-width:0}
+.manager-report{display:grid;gap:12px}.manager-report-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.manager-report-stats article{display:grid;gap:6px;padding:12px;border:1px solid #f2f2ef;border-radius:10px}.manager-report-stats small{font-size:9px;opacity:.65}.manager-report-stats strong{font-size:17px}
+.manager-report ol{display:grid;gap:7px;margin:0;padding-left:20px}.manager-report ol li{display:flex;justify-content:space-between;gap:10px;padding:7px;border-bottom:1px solid #f2f2ef;font-size:11px}
+.manager-status-counts{display:flex;flex-wrap:wrap;gap:7px}.manager-status-counts span{padding:7px 10px;border:1px solid #f2f2ef;border-radius:999px;font-size:10px;text-transform:capitalize}
+.manager-tools button:disabled{cursor:not-allowed;opacity:.55}
+@media(max-width:720px){.manager-tools-heading{align-items:stretch;flex-direction:column}.manager-tools-heading>label{min-width:0}.manager-menu-layout{grid-template-columns:1fr}.manager-hour-day{grid-template-columns:1fr 1fr;gap:8px}.manager-report-stats{grid-template-columns:repeat(2,1fr)}.manager-report-stats article:last-child{grid-column:span 2}}
+@media(max-width:650px){.manager-staff-tools form{grid-template-columns:1fr}.manager-staff-tools form button{justify-self:start}}
+
+
+/* Restaurant Profile & Branch Selection */
+.restaurant-profile-banner{margin-bottom:28px;padding:24px;border:1px solid #f2f2ef;border-radius:14px;background:#ffffff;box-shadow:0 4px 20px rgba(0,0,0,0.03)}
+.profile-header{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.profile-back-button{align-self:flex-start;background:none;border:none;color:#ea580c;font-size:12px;font-weight:700;cursor:pointer;padding:4px 0}
+.profile-back-button:hover{text-decoration:underline}
+.profile-titles h2{margin:6px 0;font-family:'Playfair Display',Georgia,serif;font-size:28px;color:#171717}
+.profile-titles p{margin:0;color:#6b7280;font-size:13px;line-height:1.6}
+.profile-badge-row{display:flex;align-items:center;gap:8px}
+.profile-cuisine-badge{padding:4px 10px;border-radius:999px;background:#fff7ed;color:#ea580c;font-size:11px;font-weight:700}
+.profile-open-badge{padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:700}
+.profile-closed-badge{padding:4px 10px;border-radius:999px;background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700}
+
+.profile-branch-box{padding:18px;background:#fafafa;border:1px solid #f2f2ef;border-radius:12px}
+.profile-branch-selector{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.profile-branch-selector label{font-size:12px;color:#171717}
+.profile-branch-selector select{padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:600;min-width:240px}
+.single-branch-tag{padding:6px 12px;background:#e2e8f0;border-radius:6px;font-size:12px;font-weight:600}
+
+.profile-branch-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.branch-meta-item{display:flex;align-items:flex-start;gap:10px;padding:10px;background:#fff;border:1px solid #f2f2ef;border-radius:8px}
+.branch-meta-item.full-width{grid-column:1/-1}
+.meta-icon{font-size:16px}
+.branch-meta-item small{display:block;font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;margin-bottom:2px}
+.branch-meta-item strong{font-size:12px;color:#1f2937}
+.branch-meta-item p{margin:0;font-size:12px;color:#4b5563;line-height:1.5}
+
+.profile-hours-toggle{border-top:1px solid #f2f2ef;padding-top:12px}
+.hours-button{background:none;border:none;color:#ea580c;font-size:12px;font-weight:600;cursor:pointer;padding:4px 0}
+.hours-button:hover{text-decoration:underline}
+.profile-hours-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px;padding:12px;background:#fff;border-radius:8px;border:1px solid #f2f2ef}
+.hour-row{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid #f9fafb}
+.hour-row.closed strong{color:#dc2626}
+
+/* Food card refinements */
+.food-meta-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.food-prep-time{font-size:10px;font-weight:600;color:#6b7280;background:#f3f4f6;padding:2px 6px;border-radius:4px}
+.food-allergens-tag{margin:4px 0 8px;font-size:10px;color:#c2410c;background:#fff7ed;padding:3px 6px;border-radius:4px;display:inline-block}
+.sold-out-badge{position:absolute;top:9px;right:9px;padding:5px 8px;border-radius:3px;background:#ef4444;color:#fff;font-size:8px;font-weight:700;letter-spacing:0.5px}
+.food-card.sold-out{opacity:0.65}
+.food-card.sold-out img{filter:grayscale(60%)}
+
+/* Cart Drawer customer notes */
+.cart-note-section{margin:10px 0;display:grid;gap:5px}
+.cart-note-section label{font-size:11px;font-weight:700;color:#374151}
+.cart-note-section textarea{width:100%;box-sizing:border-box;padding:8px;border:1px solid #e5e7eb;border-radius:8px;font-size:11px;resize:vertical}
+
+/* Pagination controls */
+.pagination-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px}
+.pagination-controls button{padding:6px 14px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.pagination-controls button:disabled{opacity:0.4;cursor:not-allowed}
+.pagination-controls span{font-size:11px;color:#6b7280}
+
+
+/* ==========================================================================
+   Wolt-Style Authentication Modal (Login & Register)
+   ========================================================================== */
+.wolt-auth-card {
+  width: min(100%, 460px);
+  padding: 32px 28px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #f2f2ef;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.wolt-auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.wolt-auth-header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  color: #171717;
+  margin: 12px 0 6px;
+}
+
+.wolt-auth-header .login-intro {
+  margin: 0 0 16px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.wolt-tab-switch {
+  display: flex;
+  width: 100%;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 999px;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.wolt-tab-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wolt-tab-btn.active {
+  background: #ffffff;
+  color: #171717;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.wolt-demo-selector {
+  background: #fafaf9;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.demo-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.demo-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.demo-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.demo-chip:hover {
+  border-color: #f97316;
+  color: #f97316;
+  background: #fff7ed;
+}
+
+.demo-chip.selected {
+  background: #f97316;
+  border-color: #f97316;
+  color: #ffffff;
+}
+
+.wolt-auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.wolt-form-group {
+  display: grid;
+  gap: 5px;
+}
+
+.wolt-form-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.wolt-form-group input {
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #171717;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.wolt-form-group input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.remember-label input {
+  accent-color: #f97316;
+  width: 15px;
+  height: 15px;
+}
+
+.wolt-btn-primary {
+  height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+}
+
+.wolt-btn-primary:hover {
+  background: #ea580c;
+}
+
+.wolt-btn-primary:active {
+  transform: scale(0.99);
+}
+
+.wolt-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.wolt-auth-footer {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.auth-mode-toggle {
+  background: none;
+  border: none;
+  color: #ea580c;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-mode-toggle:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Wolt-Style Orders Modal & Live Tracking Experience
+   ========================================================================== */
+.wolt-orders-modal {
+  width: min(100%, 820px);
+  max-height: min(90vh, 920px);
+  overflow-y: auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #f2f2ef;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+}
+
+.wolt-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f2f2ef;
+}
+
+.wolt-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #f97316;
+  text-transform: uppercase;
+}
+
+.wolt-modal-header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  margin: 4px 0 6px;
+  color: #171717;
+}
+
+.wolt-live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+.status-dot.pending {
+  background: #f59e0b;
+}
+
+.status-dot.offline {
+  background: #ef4444;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+.wolt-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.wolt-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #4b5563;
+  transition: all 0.15s ease;
+}
+
+.wolt-icon-btn:hover {
+  background: #f3f4f6;
+  color: #171717;
+}
+
+.wolt-icon-btn.close {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.wolt-subtabs {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.wolt-subtabs button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wolt-subtabs button:hover {
+  border-color: #d1d5db;
+  color: #171717;
+}
+
+.wolt-subtabs button.active {
+  background: #171717;
+  color: #ffffff;
+  border-color: #171717;
+}
+
+.wolt-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.wolt-alert.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.wolt-alert.success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.wolt-profile-box {
+  max-width: 440px;
+  margin: 20px auto;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  display: grid;
+  gap: 14px;
+}
+
+.wolt-profile-box h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.wolt-profile-box p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wolt-loading-state {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.wolt-orders-list {
+  display: grid;
+  gap: 24px;
+}
+
+.wolt-order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.wolt-order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.order-meta-info {
+  display: grid;
+  gap: 3px;
+}
+
+.order-id-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 3px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.order-meta-info h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  color: #171717;
+}
+
+.order-branch-sub {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wolt-status-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.wolt-status-badge.pending_confirmation {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.wolt-status-badge.confirmed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.wolt-status-badge.preparing {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.wolt-status-badge.ready {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.wolt-status-badge.picked_up {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.wolt-status-badge.cancelled,
+.wolt-status-badge.rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Wolt Stepper Progress Bar */
+.wolt-stepper-wrap {
+  margin: 20px 0 24px;
+  padding: 6px 8px;
+}
+
+.wolt-stepper-bar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wolt-stepper-bar::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  height: 4px;
+  background: #e5e7eb;
+  z-index: 1;
+  border-radius: 999px;
+}
+
+.wolt-stepper-progress {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  height: 4px;
+  background: #f97316;
+  z-index: 2;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.wolt-step-node {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.node-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 700;
+  transition: all 0.25s ease;
+}
+
+.wolt-step-node.done .node-circle {
+  background: #f97316;
+  border-color: #f97316;
+  color: #ffffff;
+}
+
+.wolt-step-node.current .node-circle {
+  background: #ffffff;
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.25);
+  transform: scale(1.12);
+}
+
+.node-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.wolt-step-node.current .node-label {
+  color: #171717;
+  font-weight: 700;
+}
+
+/* Wolt ETA Banner */
+.wolt-eta-banner {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  margin-bottom: 18px;
+}
+
+.wolt-eta-banner strong {
+  color: #9a3412;
+  font-size: 14px;
+}
+
+.wolt-eta-banner p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #7c2d12;
+  line-height: 1.5;
+}
+
+.wolt-eta-banner.ready {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.wolt-eta-banner.ready strong,
+.wolt-eta-banner.ready p {
+  color: #166534;
+}
+
+.wolt-eta-banner.picked_up {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.wolt-eta-banner.picked_up strong,
+.wolt-eta-banner.picked_up p {
+  color: #374151;
+}
+
+.wolt-eta-banner.cancelled,
+.wolt-eta-banner.rejected {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.wolt-eta-banner.cancelled strong,
+.wolt-eta-banner.rejected strong,
+.wolt-eta-banner.cancelled p,
+.wolt-eta-banner.rejected p {
+  color: #991b1b;
+}
+
+.eta-highlight-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.eta-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  background: #ea580c;
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.eta-times-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #7c2d12;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(249, 115, 22, 0.3);
+}
+
+/* Wolt Pickup Card */
+.wolt-pickup-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border: 1.5px dashed #f97316;
+  border-radius: 14px;
+  background: #fffbf5;
+  margin-bottom: 18px;
+}
+
+.pickup-qr-container {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #fed7aa;
+  display: grid;
+  place-items: center;
+}
+
+.pickup-info-container {
+  flex: 1;
+}
+
+.pickup-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #9a3412;
+}
+
+.pickup-code-box {
+  margin: 6px 0;
+}
+
+.pickup-code-box code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #171717;
+  background: #ffffff;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #fed7aa;
+  display: inline-block;
+}
+
+.pickup-instruction-text {
+  font-size: 11px;
+  color: #78350f;
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+/* Info Grid */
+.wolt-order-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 14px;
+  background: #f9fafb;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #f2f2ef;
+}
+
+.info-cell {
+  font-size: 12px;
+}
+
+.info-cell small {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.info-cell strong {
+  color: #171717;
+}
+
+.info-cell p {
+  margin: 0;
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.45;
+}
+
+.info-cell.full {
+  grid-column: 1 / -1;
+}
+
+.info-cell.note {
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #854d0e;
+}
+
+/* Itemized Receipt */
+.wolt-receipt {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 14px;
+  margin-bottom: 16px;
+}
+
+.receipt-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.receipt-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 13px;
+}
+
+.item-left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.item-qty {
+  font-weight: 700;
+  color: #f97316;
+}
+
+.item-left strong {
+  color: #171717;
+}
+
+.item-options {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #171717;
+}
+
+/* Wolt Order Footer */
+.wolt-order-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.payment-status-pill {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.payment-status-pill strong {
+  color: #171717;
+}
+
+.order-final-total {
+  font-size: 13px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #4b5563;
+}
+
+.order-final-total strong {
+  font-size: 20px;
+  font-weight: 800;
+  color: #171717;
+}
+
+.wolt-card-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.wolt-btn-cancel {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wolt-btn-cancel:hover {
+  background: #fef2f2;
+}
+
+.wolt-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+}
+
+.wolt-empty-state .empty-icon {
+  font-size: 40px;
+}
+
+.wolt-empty-state h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.wolt-empty-state p {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+  max-width: 340px;
+}
+
+/* ==========================================================================
+   Wolt Merchant / Staff Portal Styling (RoleDashboard & ManagerTools)
+   ========================================================================== */
+.role-dashboard .admin-heading {
+  border-bottom: 1px solid #f2f2ef;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.role-dashboard .admin-heading span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #f97316;
+}
+
+.role-dashboard .admin-heading h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  margin: 4px 0 6px;
+}
+
+.role-dashboard .admin-heading p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.kitchen-filter-bar {
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.filter-chip {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-chip.selected {
+  background: #171717;
+  color: #ffffff;
+  border-color: #171717;
+}
+
+.role-order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.role-order-card .order-history-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.role-order-card .order-history-top span {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.5px;
+}
+
+.role-order-card .order-history-top h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+}
+
+.role-order-customer {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.role-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 10px;
+  padding: 10px 12px;
+  background: #fafaf9;
+  border-radius: 10px;
+  border: 1px solid #f2f2ef;
+}
+
+.role-action-row label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.role-action-row input[type=number] {
+  width: 70px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.role-action-row button {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.role-pickup-actions {
+  padding: 12px 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  margin: 12px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.role-pickup-actions input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1.5px solid #fed7aa;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.role-pickup-actions button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #f97316;
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.role-pickup-actions button:hover {
+  background: #ea580c;
+}
+
+@media (max-width: 640px) {
+  .wolt-pickup-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .wolt-stepper-wrap {
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  .wolt-stepper-bar {
+    min-width: 320px;
+  }
+  .wolt-order-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .wolt-order-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+
+/* ==========================================================================
+   Theme Toggle & Comprehensive Dark Mode Styling
+   ========================================================================== */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1.5px solid #e5e7eb;
+  background: #ffffff;
+  color: #171717;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.theme-toggle-btn:hover {
+  border-color: #f97316;
+  color: #f97316;
+  transform: scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   DARK THEME PALETTE & OVERRIDES
+   -------------------------------------------------------------------------- */
+.app-shell.dark-theme {
+  --ink: #f4f4f5;
+  --muted: #27272a;
+  --line: #27272a;
+  --soft: #27272a;
+  background-color: #0f0f12 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .site-header {
+  background-color: #141418 !important;
+  border-bottom-color: #27272a !important;
+}
+
+.app-shell.dark-theme .main-nav,
+.app-shell.dark-theme .nav-actions {
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .main-nav a {
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .main-nav a:hover {
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .user-greeting {
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .login-button {
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .register-button {
+  background-color: #1e1e24 !important;
+  color: #f4f4f5 !important;
+  border-color: #3f3f46 !important;
+}
+
+.app-shell.dark-theme .theme-toggle-btn {
+  background-color: #1e1e24 !important;
+  color: #f4f4f5 !important;
+  border-color: #3f3f46 !important;
+}
+
+.app-shell.dark-theme .theme-toggle-btn:hover {
+  border-color: #f97316 !important;
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .cart-trigger {
+  color: #f4f4f5 !important;
+}
+
+/* Hero Section */
+.app-shell.dark-theme .hero {
+  background: radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 60%);
+}
+
+.app-shell.dark-theme .hero-content h1 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .hero-content > p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .hero-search {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.app-shell.dark-theme .hero-search input {
+  background: transparent !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .hero-search input::placeholder {
+  color: #71717a !important;
+}
+
+.app-shell.dark-theme .hero-proof strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .hero-proof p,
+.app-shell.dark-theme .proof-rating {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .hero-art-backdrop {
+  background: #27272a !important;
+}
+
+.app-shell.dark-theme .pickup-badge,
+.app-shell.dark-theme .hero-caption {
+  background-color: #18181b !important;
+  border: 1px solid #27272a !important;
+  color: #f4f4f5 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+.app-shell.dark-theme .pickup-badge strong,
+.app-shell.dark-theme .hero-caption strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .pickup-badge small,
+.app-shell.dark-theme .hero-caption small {
+  color: #a1a1aa !important;
+}
+
+/* Sections & Headings */
+.app-shell.dark-theme .section-heading h2,
+.app-shell.dark-theme .centered-heading h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .section-heading p,
+.app-shell.dark-theme .centered-heading p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .filter-chip {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .filter-chip:hover {
+  border-color: #f97316 !important;
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .filter-chip.selected {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .restaurant-extra-filters select,
+.app-shell.dark-theme .profile-branch-selector select {
+  background-color: #1e1e24 !important;
+  color: #f4f4f5 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .open-only-filter {
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .result-count {
+  color: #a1a1aa !important;
+}
+
+/* Cards (Restaurant & Food) */
+.app-shell.dark-theme .restaurant-card,
+.app-shell.dark-theme .food-card {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.app-shell.dark-theme .restaurant-title-row h3,
+.app-shell.dark-theme .food-info h3 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .restaurant-info > p,
+.app-shell.dark-theme .food-info > p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .restaurant-meta span {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .view-menu-button {
+  background-color: #222228 !important;
+  color: #f4f4f5 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .view-menu-button:hover {
+  background-color: #f97316 !important;
+  color: #ffffff !important;
+  border-color: #f97316 !important;
+}
+
+.app-shell.dark-theme .food-meta-top .food-restaurant {
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .food-prep-time {
+  background-color: #27272a !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .food-allergens-tag {
+  background-color: #2e1a0d !important;
+  color: #fdba74 !important;
+}
+
+.app-shell.dark-theme .food-bottom strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .food-bottom button {
+  background-color: #222228 !important;
+  color: #f4f4f5 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .food-bottom button:hover:not(:disabled) {
+  background-color: #f97316 !important;
+  color: #ffffff !important;
+  border-color: #f97316 !important;
+}
+
+.app-shell.dark-theme .food-category {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .food-category.active {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+/* Restaurant Profile Banner */
+.app-shell.dark-theme .restaurant-profile-banner {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.app-shell.dark-theme .profile-titles h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .profile-titles p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .profile-branch-box {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .branch-meta-item {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.app-shell.dark-theme .branch-meta-item strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .branch-meta-item p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .profile-hours-grid {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.app-shell.dark-theme .hour-row {
+  border-bottom-color: #27272a !important;
+  color: #d4d4d8 !important;
+}
+
+/* How it works */
+.app-shell.dark-theme .step-card {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .step-card h3 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .step-card p {
+  color: #a1a1aa !important;
+}
+
+/* Site Footer */
+.app-shell.dark-theme .site-footer {
+  background-color: #121215 !important;
+  border-top-color: #27272a !important;
+}
+
+.app-shell.dark-theme .footer-brand-column p,
+.app-shell.dark-theme .footer-newsletter p,
+.app-shell.dark-theme .footer-bottom {
+  color: #71717a !important;
+}
+
+.app-shell.dark-theme .footer-links a {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .footer-links a:hover {
+  color: #f97316 !important;
+}
+
+/* Wolt Auth Modal (Dark) */
+.app-shell.dark-theme .wolt-auth-card {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+}
+
+.app-shell.dark-theme .wolt-auth-header h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-auth-header .login-intro {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .wolt-tab-switch {
+  background-color: #27272a !important;
+}
+
+.app-shell.dark-theme .wolt-tab-btn {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .wolt-tab-btn.active {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-demo-selector {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .demo-chip {
+  background-color: #18181b !important;
+  border-color: #3f3f46 !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .demo-chip:hover {
+  border-color: #f97316 !important;
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .demo-chip.selected {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-form-group label {
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .wolt-form-group input {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .login-close {
+  background-color: #27272a !important;
+  border-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+/* Wolt Orders & Live Stepper (Dark) */
+.app-shell.dark-theme .wolt-orders-modal,
+.app-shell.dark-theme .role-dashboard,
+.app-shell.dark-theme .admin-panel {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .wolt-modal-header {
+  border-bottom-color: #27272a !important;
+}
+
+.app-shell.dark-theme .wolt-modal-header h2,
+.app-shell.dark-theme .admin-heading h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-icon-btn {
+  background-color: #27272a !important;
+  border-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .wolt-subtabs button {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .wolt-subtabs button.active {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-order-card {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .order-meta-info h3 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .order-id-tag {
+  background-color: #27272a !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .wolt-stepper-bar::before {
+  background-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .node-circle {
+  background-color: #27272a !important;
+  border-color: #3f3f46 !important;
+  color: #71717a !important;
+}
+
+.app-shell.dark-theme .wolt-step-node.done .node-circle {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-step-node.current .node-circle {
+  background-color: #18181b !important;
+  border-color: #f97316 !important;
+  color: #f97316 !important;
+}
+
+.app-shell.dark-theme .wolt-step-node.current .node-label {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .wolt-eta-banner {
+  background-color: #2e1a0d !important;
+  border-color: #7c2d12 !important;
+}
+
+.app-shell.dark-theme .wolt-eta-banner strong {
+  color: #fdba74 !important;
+}
+
+.app-shell.dark-theme .wolt-eta-banner p,
+.app-shell.dark-theme .eta-times-row {
+  color: #fed7aa !important;
+}
+
+.app-shell.dark-theme .wolt-pickup-card {
+  background-color: #241c14 !important;
+  border-color: #ea580c !important;
+}
+
+.app-shell.dark-theme .pickup-qr-container {
+  background-color: #18181b !important;
+  border-color: #3f3f46 !important;
+}
+
+.app-shell.dark-theme .pickup-code-box code {
+  background-color: #18181b !important;
+  color: #fdba74 !important;
+  border-color: #ea580c !important;
+}
+
+.app-shell.dark-theme .pickup-instruction-text {
+  color: #fed7aa !important;
+}
+
+.app-shell.dark-theme .wolt-order-info-grid {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.app-shell.dark-theme .info-cell strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .info-cell p {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .receipt-row strong,
+.app-shell.dark-theme .item-price {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .order-final-total strong {
+  color: #ffffff !important;
+}
+
+/* Cart Drawer (Dark) */
+.app-shell.dark-theme .cart-drawer {
+  background-color: #18181b !important;
+  border-left-color: #27272a !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .drawer-header {
+  border-bottom-color: #27272a !important;
+}
+
+.app-shell.dark-theme .drawer-header h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .cart-item {
+  border-bottom-color: #27272a !important;
+}
+
+.app-shell.dark-theme .cart-item-details strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .cart-item-details small {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .quantity-control button {
+  background-color: #27272a !important;
+  border-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .drawer-summary {
+  background-color: #141418 !important;
+  border-top-color: #27272a !important;
+}
+
+.app-shell.dark-theme .schedule-switch button {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+  color: #d4d4d8 !important;
+}
+
+.app-shell.dark-theme .schedule-switch button.selected {
+  background-color: #f97316 !important;
+  color: #ffffff !important;
+  border-color: #f97316 !important;
+}
+
+.app-shell.dark-theme .slot-picker select,
+.app-shell.dark-theme .slot-picker input {
+  background-color: #202025 !important;
+  color: #f4f4f5 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .cart-note-section textarea {
+  background-color: #202025 !important;
+  color: #f4f4f5 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .drawer-total strong {
+  color: #ffffff !important;
+}
+
+/* Product Options Modal (Dark) */
+.app-shell.dark-theme .options-dialog {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6) !important;
+}
+
+.app-shell.dark-theme .options-dialog h2 {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .options-intro {
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .option-group legend {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .option-choice {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .options-close {
+  background-color: #27272a !important;
+  border-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+/* Role Dashboard & Manager Tools (Dark) */
+.app-shell.dark-theme .role-order-card {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .role-action-row {
+  background-color: #222228 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .role-action-row input {
+  background-color: #18181b !important;
+  border-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+.app-shell.dark-theme .manager-dashboard-tabs button {
+  background-color: #1e1e24 !important;
+  border-color: #2e2e34 !important;
+  color: #a1a1aa !important;
+}
+
+.app-shell.dark-theme .manager-dashboard-tabs button.active {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .manager-report-stats article {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .manager-report-stats strong {
+  color: #ffffff !important;
+}
+
+.app-shell.dark-theme .manager-product-list article {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .manager-product-form,
+.app-shell.dark-theme .manager-hours-form,
+.app-shell.dark-theme .manager-staff-tools form {
+  background-color: #202025 !important;
+  border-color: #2e2e34 !important;
+}
+
+.app-shell.dark-theme .manager-product-form input,
+.app-shell.dark-theme .manager-product-form select,
+.app-shell.dark-theme .manager-product-form textarea,
+.app-shell.dark-theme .manager-hours-form input,
+.app-shell.dark-theme .manager-staff-tools input,
+.app-shell.dark-theme .manager-staff-tools select {
+  background-color: #18181b !important;
+  color: #f4f4f5 !important;
+  border-color: #3f3f46 !important;
+}
 
