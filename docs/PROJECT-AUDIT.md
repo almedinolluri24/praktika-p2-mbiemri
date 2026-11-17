@@ -1,27 +1,49 @@
-# Auditimi P2 sipas specifikimit të profesorit
+# Auditimi i Foodora P2 sipas PDF-së v1.2
 
-Burimi kryesor: `Projekti-02-Platforma-e-porosive-ne-restorante.pdf`, versioni 1.2, i datës 10 nëntor 2026. Përditësuar më 15 nëntor 2026.
+Burimi: `Projekti-02-Platforma-e-porosive-ne-restorante.pdf`, 15 faqe, versioni 1.2 (10 nëntor 2026). PDF-ja u lexua nga skedari i bashkëngjitur në Downloads. Marrja në restorant është rrjedha e vetme e kërkuar; dërgesa, GPS-i dhe korrierët janë jashtë fushës.
 
-| Kërkesa e dokumentit | Gjendja | Detajet e zbatimit |
+Auditimi u krahasua me kodin aktual, migrimet, rrugët, seeders dhe testet. Statusi “përfunduar” për një sjellje në kod nuk nënkupton testim të shërbimit të jashtëm ose prove live.
+
+## Përmbledhja
+
+Projekti është React/Vite + Laravel, me API, migrime, seeders dhe mbulim të konsiderueshëm të rrjedhës së porosisë. Nuk është rindërtuar. Gjatë kësaj faze u mbyllën tri dobësi të drejtpërdrejta: reset pa email token, pamundësia për të porositur të njëjtin produkt me dy konfigurime, dhe mungesa e kontrollit për llogari joaktive. U shtuan aktivizimi/çaktivizimi i llogarive nga admini, ngarkimi i sigurt i fotografisë dhe timezone i Prishtinës.
+
+Kufizimet kryesore që mbeten: databaza lokale është SQLite, MySQL nuk u provua; WebSocket nuk u demonstrua në tri pajisje dhe nuk u mat afati ≤5 sekonda; testet e kapacitetit/statusit janë prova kërkesash sekuenciale, jo simulim i klientëve konkurrues; nuk u bë test vizual manual në browser.
+
+## Kërkesat dhe gjendja reale
+
+| Kërkesa PDF v1.2 | Statusi | Evidenca / çfarë mungon |
 | --- | --- | --- |
-| **Stack React, Laravel API, MySQL / SQLite** | **Përfunduar** | Arkitekturë e plotë full stack. Laravel API me autorizim sipas roleve, transaksione DB dhe migrime; React SPA responsive me ndërfaqe moderne; mbështetje për MySQL përmes `.env.example` dhe SQLite për zhvillim lokal dhe teste. |
-| **Vizitori shfleton/kërkon pa llogari** | **Përfunduar** | Kërkim i plotë i restoranteve dhe artikujve të ushqimit, filtrimi sipas llojit të biznesit, qytetit dhe statusit "Hapur tani". Profil i dedikuar restoranti me përzgjedhje degësh, orare javore, kontakt dhe udhëzime marrjeje. |
-| **Klienti menaxhon profilin dhe ndjek porositë** | **Përfunduar** | Klienti krijon llogari, bën porosi, ndjek statusin live (ETA, countdown, historik, koha reale e fillimit të përgatitjes, kodi dhe QR i marrjes, udhëzimet për marrje), dhe mund të anulojë në fazën "Në pritje". |
-| **Menaxheri menaxhon vetëm degët e autorizuara** | **Përfunduar** | CRUD i menusë, çmimet dhe disponueshmëria sipas degës, orari javor dhe kapaciteti i intervaleve, caktimi/heqja e stafit dhe raporte të plota me filtra sipas periudhës. |
-| **Kuzhina sheh porositë, personalizimet, shënimet dhe afatet** | **Përfunduar** | Paneli i kuzhinës me filtra sipas stacioneve (`pizza`, `grill`, `oven`, `drinks`, `packaging`) dhe statusit, shënimet e klientit, shënimi i artikujve të përfunduar, konfirmimi i paketimit dhe përditësimi i audituar i afatit (ETA). |
-| **Pika e marrjes regjistron pagesën dhe verifikon kodin** | **Përfunduar** | Paneli i marrjes shfaq porositë gati, regjistron pagesën me para në dorë ("E papaguar" → "E paguar"), verifikon kodin me skaner QR ose futje manuale, dhe përfundon porosinë në mënyrë atomike. |
-| **Administratori mbikëqyr platformën** | **Përfunduar** | Paneli i administratorit lejon miratimin dhe pezullimin e restoranteve, menaxhimin e kategorive dhe caktimin e stafit në degë me audit log. |
-| **Regjistrimi publik krijon vetëm klient** | **Përfunduar** | Endpoint-i i regjistrimit cakton vetëm rolin `customer`; roli i dërguar nga klienti injorohet plotësisht në backend. |
-| **Izolimi i stafit ndërmjet restoranteve** | **Përfunduar** | Stafi i restorantit A nuk mund të lexojë apo ndryshojë porositë e restorantit B; çdo veprim kontrollohet me anëtarësinë në degë (`staff_memberships`). |
-| **7 lloje biznesesh të PDF-së** | **Përfunduar** | Pizzeria, Fast Food, Restorant Tradicional, Kafe, Furrë Buke, Ëmbëltore dhe Ushqim i Shëndetshëm me kategori dhe produkte specifike. |
-| **Restorant me 2 degë** | **Përfunduar** | `Casa Forno` përmban degët `Casa Forno Center` dhe `Casa Forno East`, të cilat menaxhohen veçmas me çmime dhe disponueshmëri të pavarura. |
-| **30 produkte, 6 grupe opsionesh, stacione** | **Përfunduar** | 36 produkte demo dhe 6 grupe opsionesh me kufij min/max, çmime shtesë dhe stacione të ndara përgatitjeje. |
-| **Alergjenë dhe shënime të klientit** | **Përfunduar** | Fusha `allergens` e deklaruar për produktet dhe fushë e dedikuar `customer_note` me gjatësi të kufizuar në shportë dhe në porosi. |
-| **Shporta e një dege dhe konfirmim para ndërrimit** | **Përfunduar** | Shporta kufizohet në një degë të vetme; ndërrimi i degës shfaq dialogun e konfirmimit për zbrazjen e shportës. |
-| **Çmimi i kontrolluar dhe rikonfirmimi 409** | **Përfunduar** | Serveri rivlerëson çmimet në blerje; çmimi i manipuluar refuzohet dhe ndryshimi i çmimit në meny kërkon rikonfirmim nga klienti. |
-| **Porosi ASAP dhe me orar të planifikuar** | **Përfunduar** | Zgjedhje e marrjes së menjëhershme ose me interval kohor; vendi rezervohet në mënyrë atomike dhe lirohet në rast anulimi. |
-| **Idempotency Key** | **Përfunduar** | Çelësi unik i idempotencës parandalon krijimin e porosive të dyfishta; riprovimi kthen të njëjtën porosi ekzistuese. |
-| **Rregullat strikte të statusit** | **Përfunduar** | Rrjedha `Në pritje → E pranuar → Në përgatitje → Gati për marrje → E përfunduar`. Nuk lejohen kapërcime arbitrare; anulimi dhe refuzimi ruajnë arsyet përkatëse. |
-| **Afati absolut (ETA) dhe numërimi mbrapsht** | **Përfunduar** | Ruhet `estimated_ready_at` dhe minutat llogariten nga klienti; në zero shfaqet mesazhi ekzakt *“Afati i parashikuar ka kaluar; presim përditësim”* pa e kaluar statusin në mënyrë artificiale. |
-| **Kodi dhe QR i marrjes** | **Përfunduar** | Gjenerohet token i rastësishëm njëpërdorimësh pa të dhëna personale, i shfaqur si kod dhe si QR kod i skanueshëm. |
-| **Raportet e menaxherit** | **Përfunduar** | Filtra sipas degës dhe periudhës, numri i porosive, të ardhurat e arkëtuara, produktet bestseller, koha mesatare nga fillimi deri në "Gati", porositë e vonuara dhe paraqitja e veçuar e porosive të anuluara/refuzuara. |
+| React + Laravel API + MySQL | **Pjesërisht** | React dhe API Laravel funksionojnë. `.env.example` dhe PDO MySQL janë gati, por `database.default` lokal është `sqlite`; nuk u lidh server MySQL. |
+| Vizitori kërkon restorante/ushqime, filtron kategori/qytet/degë të hapura; backend rendit dhe faqezon | **Pjesërisht** | `PublicCatalogController` zbaton kërkim, filtra, renditje dhe pagination. Testet provojnë kërkim/lloj biznesi dhe faqezim të menysë; filtrat e qytetit/hapur dhe pagination/renditja e restoranteve nuk kanë prova të dedikuara. Frontendi ngarkon deri në 50 rezultate. |
+| Profil restoranti, degë, orar, kontakt, menu dhe udhëzime marrjeje | **Përfunduar në kod** | Publik API dhe komponenti i profilit përdorin degët/oraret reale; menuja merret nga API. |
+| Produkte, disponueshmëri, alergjenë, opsione min/max dhe çmime shtesë | **Përfunduar në kod dhe backend-testuar** | Validimi i opsioneve bëhet në Laravel; menaxheri mund të krijojë/ndryshojë produkte, disponueshmëri, çmime, stacion dhe alergjenë. |
+| Shporta vetëm për një degë; rreshta të veçantë për konfigurime të ndryshme; çmime server-side dhe rikonfirmim | **Përfunduar dhe backend-testuar** | U shtua provë për të njëjtin produkt me dy konfigurime. Çmimi rivlerësohet në API dhe ndryshimi kthen 409. |
+| Regjistrim vetëm klient; 6 role dhe autorizim real/izolim dege | **Përfunduar në API** | Rolet e stafit verifikohen për çdo degë; publikimi nuk cakton role. Llogaritë joaktive bllokohen në login dhe në kërkesat e mbrojtura. Vizitori është gjendje anonime, jo rresht në `users`. |
+| Admin miraton/pezullon biznese, menaxhon kategori dhe llogari | **Pjesërisht** | Miratim/pezullim restoranti, kategori, caktim stafi dhe aktivizim/çaktivizim llogarie janë implementuar. Krijimi/menaxhimi i plotë i përdoruesve, degëve dhe katalogut nga admini mungon. |
+| Menaxheri, kuzhina dhe pika e marrjes | **Përfunduar në kod/API** | Menaxheri: menu, staf, orar/kapacitet, raporte. Kuzhina: radhë sipas stacionit, artikuj, paketim, ETA. Pickup: pagesë cash dhe kod/QR. |
+| Porosi ASAP/të planifikuara, slotet dhe idempotency | **Përfunduar në kod; konkurrenca pjesërisht e provuar** | Transaksionet dhe lock-u i rreshtit të orarit ekzistojnë. Testi i kapacitetit provon refuzimin e slotit të plotë sekuencialisht, jo dy rezervime njëkohësisht në MySQL. Idempotency riprovohet në test. |
+| Statuset, arsyet, historiku, ETA UTC | **Përfunduar në kod/API** | Kalimet valide kontrollohen brenda transaksionit. ETA ruhet në UTC; dega ekspozon `Europe/Pristina` (me alias llogaritjeje për runtime Windows që nuk e ka atë identifikues). Countdown zero nuk e ndryshon statusin. |
+| Kuzhina vendos “Gati” vetëm pasi artikujt dhe paketimi përfundojnë | **Përfunduar dhe backend-testuar** | Endpoint-i refuzon kalimin në `ready` derisa të gjitha rreshtat dhe paketimi të jenë konfirmuar. |
+| Private WebSocket, rilidhje, njoftime pas commit-it, performancë ≤5 sekonda | **Pjesërisht** | Reverb/Echo, private channels, evente pas transaksionit dhe rifreskim API pas rilidhjes janë në kod. Testohet autorizimi i kanaleve; Reverb real dhe latenca nuk u demonstrua. |
+| Pagesë cash, QR/token njëpërdorimësh | **Përfunduar dhe backend-testuar** | Pagesa dhe përdorimi i tokenit janë transaksionale; prova refuzon pagesën e munguar dhe përdorimin e dytë. Skanimi automatik varet nga `BarcodeDetector`; kodi manual është alternativë. |
+| Imazhe të produkteve me kontroll formati/madhësie | **Përfunduar dhe backend-testuar** | Upload JPG/PNG/WebP, limit 5 MB; SVG dhe skedarët mbi limit refuzohen. Kërkohet `php artisan storage:link`. URL-të e lejuara ekzistuese vazhdojnë të mbështeten. |
+| Seed demo: 5+ lloje, 2 degë, 30 produkte, 6 opsione, 15 porosi | **Përfunduar dhe verifikuar në SQLite tests** | 7 lloje, 7 restorante, 8 degë, 36 produkte, 6 grupe, 9 llogari, 15 porosi. |
+| `.env.example`, ER, API, README, raport testimi | **Pjesërisht** | Ekzistojnë dhe po përditësohen. ER diagrami përdor emrat aktualë të skemës; disa koncepte të propozuara në PDF modelohen si fusha/relacione (`idempotency` te `orders`, orari në `business_hours`, tokeni te `orders`, stacioni te produkti), jo si tabela të ndara. |
+| Responsive, keyboard/accessibility, gjendje loading/error/empty | **Pjesërisht** | Komponentët dhe CSS për responsive/focus/states janë në kod; nuk u krye kontroll manual në desktop/tablet/telefon për këtë fazë. |
+| 3–5 vendime dizajni të dokumentuara | **Përfunduar** | [Vendimet e dizajnit](DESIGN-DECISIONS.md) përshkruajnë katër vendime të Foodora-s. |
+
+## Skedarët kryesorë
+
+- API dhe siguri: `backend/routes/`, `backend/app/Http/Controllers/`, `backend/app/Http/Middleware/EnsureActiveAccount.php`.
+- Skema/të dhëna: `backend/database/migrations/`, `backend/database/seeders/DatabaseSeeder.php`.
+- Ndërfaqja: `frontend/src/App.jsx`, `frontend/src/components/`, `frontend/src/styles/`.
+- Dokumentimi/provat: `README.md`, `docs/ER-DIAGRAM.md`, `docs/TEST-REPORT.md`, `docs/DESIGN-DECISIONS.md`.
+
+## Faza e radhës
+
+1. Lidhje dhe migrim në MySQL të pastër, pastaj seed dhe gjithë testet në MySQL.
+2. Provë live në dy klientë + kuzhinë + pickup me Reverb; matje e ngjarjeve dhe rilidhjes.
+3. Prova konkurruese për slot/idempotency/status me MySQL.
+4. Kontroll browser në desktop/tablet/telefon dhe rregullim sipas screenshot-eve të Foodora-s.
+5. Plotësim i panelit admin për krijim/menaxhim të llogarive, degëve dhe katalogut nëse kërkohet si CRUD i plotë.
