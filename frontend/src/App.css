@@ -358,9 +358,9 @@
 
 
 /* ==========================================================================
-   Wolt-Style Authentication Modal (Login & Register)
+   foodora-Style Authentication Modal (Login & Register)
    ========================================================================== */
-.wolt-auth-card {
+.foodora-auth-card {
   width: min(100%, 460px);
   padding: 32px 28px;
   border-radius: 18px;
@@ -370,7 +370,7 @@
   position: relative;
 }
 
-.wolt-auth-header {
+.foodora-auth-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -378,21 +378,21 @@
   margin-bottom: 20px;
 }
 
-.wolt-auth-header h2 {
+.foodora-auth-header h2 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 26px;
   color: #171717;
   margin: 12px 0 6px;
 }
 
-.wolt-auth-header .login-intro {
+.foodora-auth-header .login-intro {
   margin: 0 0 16px;
   color: #6b7280;
   font-size: 13px;
   line-height: 1.5;
 }
 
-.wolt-tab-switch {
+.foodora-tab-switch {
   display: flex;
   width: 100%;
   background: #f3f4f6;
@@ -402,7 +402,7 @@
   margin-top: 6px;
 }
 
-.wolt-tab-btn {
+.foodora-tab-btn {
   flex: 1;
   padding: 9px 16px;
   border: none;
@@ -415,13 +415,13 @@
   transition: all 0.2s ease;
 }
 
-.wolt-tab-btn.active {
+.foodora-tab-btn.active {
   background: #ffffff;
   color: #171717;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.wolt-demo-selector {
+.foodora-demo-selector {
   background: #fafaf9;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -467,23 +467,23 @@
   color: #ffffff;
 }
 
-.wolt-auth-form {
+.foodora-auth-form {
   display: grid;
   gap: 14px;
 }
 
-.wolt-form-group {
+.foodora-form-group {
   display: grid;
   gap: 5px;
 }
 
-.wolt-form-group label {
+.foodora-form-group label {
   font-size: 12px;
   font-weight: 700;
   color: #374151;
 }
 
-.wolt-form-group input {
+.foodora-form-group input {
   height: 44px;
   padding: 0 14px;
   border: 1.5px solid #e5e7eb;
@@ -495,7 +495,7 @@
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.wolt-form-group input:focus {
+.foodora-form-group input:focus {
   border-color: #f97316;
   box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
 }
@@ -515,7 +515,7 @@
   height: 15px;
 }
 
-.wolt-btn-primary {
+.foodora-btn-primary {
   height: 48px;
   border: none;
   border-radius: 999px;
@@ -528,20 +528,20 @@
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
 }
 
-.wolt-btn-primary:hover {
+.foodora-btn-primary:hover {
   background: #ea580c;
 }
 
-.wolt-btn-primary:active {
+.foodora-btn-primary:active {
   transform: scale(0.99);
 }
 
-.wolt-btn-primary:disabled {
+.foodora-btn-primary:disabled {
   opacity: 0.6;
   cursor: wait;
 }
 
-.wolt-auth-footer {
+.foodora-auth-footer {
   margin-top: 18px;
   display: grid;
   gap: 8px;
@@ -562,9 +562,9 @@
 }
 
 /* ==========================================================================
-   Wolt-Style Orders Modal & Live Tracking Experience
+   foodora-Style Orders Modal & Live Tracking Experience
    ========================================================================== */
-.wolt-orders-modal {
+.foodora-orders-modal {
   width: min(100%, 820px);
   max-height: min(90vh, 920px);
   overflow-y: auto;
@@ -575,7 +575,7 @@
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
 }
 
-.wolt-modal-header {
+.foodora-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -584,7 +584,7 @@
   border-bottom: 1px solid #f2f2ef;
 }
 
-.wolt-kicker {
+.foodora-kicker {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -592,14 +592,14 @@
   text-transform: uppercase;
 }
 
-.wolt-modal-header h2 {
+.foodora-modal-header h2 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 26px;
   margin: 4px 0 6px;
   color: #171717;
 }
 
-.wolt-live-indicator {
+.foodora-live-indicator {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -633,13 +633,13 @@
   50% { opacity: 0.6; transform: scale(1.15); }
 }
 
-.wolt-header-actions {
+.foodora-header-actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.wolt-icon-btn {
+.foodora-icon-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -653,17 +653,17 @@
   transition: all 0.15s ease;
 }
 
-.wolt-icon-btn:hover {
+.foodora-icon-btn:hover {
   background: #f3f4f6;
   color: #171717;
 }
 
-.wolt-icon-btn.close {
+.foodora-icon-btn.close {
   font-size: 20px;
   line-height: 1;
 }
 
-.wolt-subtabs {
+.foodora-subtabs {
   display: flex;
   gap: 8px;
   margin: 18px 0 20px;
@@ -671,7 +671,7 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
-.wolt-subtabs button {
+.foodora-subtabs button {
   padding: 8px 18px;
   border-radius: 999px;
   border: 1px solid #e5e7eb;
@@ -683,18 +683,18 @@
   transition: all 0.15s ease;
 }
 
-.wolt-subtabs button:hover {
+.foodora-subtabs button:hover {
   border-color: #d1d5db;
   color: #171717;
 }
 
-.wolt-subtabs button.active {
+.foodora-subtabs button.active {
   background: #171717;
   color: #ffffff;
   border-color: #171717;
 }
 
-.wolt-alert {
+.foodora-alert {
   padding: 12px 16px;
   border-radius: 10px;
   font-size: 12px;
@@ -702,19 +702,19 @@
   font-weight: 500;
 }
 
-.wolt-alert.error {
+.foodora-alert.error {
   background: #fef2f2;
   color: #991b1b;
   border: 1px solid #fecaca;
 }
 
-.wolt-alert.success {
+.foodora-alert.success {
   background: #f0fdf4;
   color: #166534;
   border: 1px solid #bbf7d0;
 }
 
-.wolt-profile-box {
+.foodora-profile-box {
   max-width: 440px;
   margin: 20px auto;
   padding: 24px;
@@ -725,30 +725,30 @@
   gap: 14px;
 }
 
-.wolt-profile-box h3 {
+.foodora-profile-box h3 {
   margin: 0;
   font-size: 18px;
 }
 
-.wolt-profile-box p {
+.foodora-profile-box p {
   margin: 0 0 6px;
   font-size: 12px;
   color: #6b7280;
 }
 
-.wolt-loading-state {
+.foodora-loading-state {
   padding: 40px;
   text-align: center;
   color: #6b7280;
   font-size: 13px;
 }
 
-.wolt-orders-list {
+.foodora-orders-list {
   display: grid;
   gap: 24px;
 }
 
-.wolt-order-card {
+.foodora-order-card {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 22px;
@@ -756,7 +756,7 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
-.wolt-order-card-header {
+.foodora-order-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -792,7 +792,7 @@
   color: #6b7280;
 }
 
-.wolt-status-badge {
+.foodora-status-badge {
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 11px;
@@ -800,51 +800,51 @@
   white-space: nowrap;
 }
 
-.wolt-status-badge.pending_confirmation {
+.foodora-status-badge.pending_confirmation {
   background: #fef3c7;
   color: #92400e;
 }
 
-.wolt-status-badge.confirmed {
+.foodora-status-badge.confirmed {
   background: #e0f2fe;
   color: #0369a1;
 }
 
-.wolt-status-badge.preparing {
+.foodora-status-badge.preparing {
   background: #ffedd5;
   color: #c2410c;
 }
 
-.wolt-status-badge.ready {
+.foodora-status-badge.ready {
   background: #dcfce7;
   color: #15803d;
 }
 
-.wolt-status-badge.picked_up {
+.foodora-status-badge.picked_up {
   background: #f3f4f6;
   color: #4b5563;
 }
 
-.wolt-status-badge.cancelled,
-.wolt-status-badge.rejected {
+.foodora-status-badge.cancelled,
+.foodora-status-badge.rejected {
   background: #fee2e2;
   color: #b91c1c;
 }
 
-/* Wolt Stepper Progress Bar */
-.wolt-stepper-wrap {
+/* foodora Stepper Progress Bar */
+.foodora-stepper-wrap {
   margin: 20px 0 24px;
   padding: 6px 8px;
 }
 
-.wolt-stepper-bar {
+.foodora-stepper-bar {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.wolt-stepper-bar::before {
+.foodora-stepper-bar::before {
   content: '';
   position: absolute;
   top: 16px;
@@ -856,7 +856,7 @@
   border-radius: 999px;
 }
 
-.wolt-stepper-progress {
+.foodora-stepper-progress {
   position: absolute;
   top: 16px;
   left: 20px;
@@ -867,7 +867,7 @@
   transition: width 0.4s ease;
 }
 
-.wolt-step-node {
+.foodora-step-node {
   position: relative;
   z-index: 3;
   display: flex;
@@ -890,13 +890,13 @@
   transition: all 0.25s ease;
 }
 
-.wolt-step-node.done .node-circle {
+.foodora-step-node.done .node-circle {
   background: #f97316;
   border-color: #f97316;
   color: #ffffff;
 }
 
-.wolt-step-node.current .node-circle {
+.foodora-step-node.current .node-circle {
   background: #ffffff;
   border-color: #f97316;
   color: #f97316;
@@ -912,13 +912,13 @@
   white-space: nowrap;
 }
 
-.wolt-step-node.current .node-label {
+.foodora-step-node.current .node-label {
   color: #171717;
   font-weight: 700;
 }
 
-/* Wolt ETA Banner */
-.wolt-eta-banner {
+/* foodora ETA Banner */
+.foodora-eta-banner {
   padding: 16px 20px;
   border-radius: 12px;
   background: #fff7ed;
@@ -926,48 +926,48 @@
   margin-bottom: 18px;
 }
 
-.wolt-eta-banner strong {
+.foodora-eta-banner strong {
   color: #9a3412;
   font-size: 14px;
 }
 
-.wolt-eta-banner p {
+.foodora-eta-banner p {
   margin: 4px 0 0;
   font-size: 12px;
   color: #7c2d12;
   line-height: 1.5;
 }
 
-.wolt-eta-banner.ready {
+.foodora-eta-banner.ready {
   background: #f0fdf4;
   border-color: #bbf7d0;
 }
 
-.wolt-eta-banner.ready strong,
-.wolt-eta-banner.ready p {
+.foodora-eta-banner.ready strong,
+.foodora-eta-banner.ready p {
   color: #166534;
 }
 
-.wolt-eta-banner.picked_up {
+.foodora-eta-banner.picked_up {
   background: #f9fafb;
   border-color: #e5e7eb;
 }
 
-.wolt-eta-banner.picked_up strong,
-.wolt-eta-banner.picked_up p {
+.foodora-eta-banner.picked_up strong,
+.foodora-eta-banner.picked_up p {
   color: #374151;
 }
 
-.wolt-eta-banner.cancelled,
-.wolt-eta-banner.rejected {
+.foodora-eta-banner.cancelled,
+.foodora-eta-banner.rejected {
   background: #fef2f2;
   border-color: #fecaca;
 }
 
-.wolt-eta-banner.cancelled strong,
-.wolt-eta-banner.rejected strong,
-.wolt-eta-banner.cancelled p,
-.wolt-eta-banner.rejected p {
+.foodora-eta-banner.cancelled strong,
+.foodora-eta-banner.rejected strong,
+.foodora-eta-banner.cancelled p,
+.foodora-eta-banner.rejected p {
   color: #991b1b;
 }
 
@@ -999,8 +999,8 @@
   border-top: 1px dashed rgba(249, 115, 22, 0.3);
 }
 
-/* Wolt Pickup Card */
-.wolt-pickup-card {
+/* foodora Pickup Card */
+.foodora-pickup-card {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -1056,7 +1056,7 @@
 }
 
 /* Info Grid */
-.wolt-order-info-grid {
+.foodora-order-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
@@ -1104,7 +1104,7 @@
 }
 
 /* Itemized Receipt */
-.wolt-receipt {
+.foodora-receipt {
   border-top: 1px solid #f3f4f6;
   padding-top: 14px;
   margin-bottom: 16px;
@@ -1162,8 +1162,8 @@
   color: #171717;
 }
 
-/* Wolt Order Footer */
-.wolt-order-card-footer {
+/* foodora Order Footer */
+.foodora-order-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1194,13 +1194,13 @@
   color: #171717;
 }
 
-.wolt-card-actions {
+.foodora-card-actions {
   margin-top: 14px;
   display: flex;
   justify-content: flex-end;
 }
 
-.wolt-btn-cancel {
+.foodora-btn-cancel {
   padding: 8px 16px;
   border-radius: 999px;
   border: 1px solid #fecaca;
@@ -1212,11 +1212,11 @@
   transition: all 0.15s ease;
 }
 
-.wolt-btn-cancel:hover {
+.foodora-btn-cancel:hover {
   background: #fef2f2;
 }
 
-.wolt-empty-state {
+.foodora-empty-state {
   text-align: center;
   padding: 48px 20px;
   display: grid;
@@ -1224,16 +1224,16 @@
   gap: 10px;
 }
 
-.wolt-empty-state .empty-icon {
+.foodora-empty-state .empty-icon {
   font-size: 40px;
 }
 
-.wolt-empty-state h3 {
+.foodora-empty-state h3 {
   margin: 0;
   font-size: 18px;
 }
 
-.wolt-empty-state p {
+.foodora-empty-state p {
   margin: 0;
   font-size: 12px;
   color: #6b7280;
@@ -1241,7 +1241,7 @@
 }
 
 /* ==========================================================================
-   Wolt Merchant / Staff Portal Styling (RoleDashboard & ManagerTools)
+   foodora Merchant / Staff Portal Styling (RoleDashboard & ManagerTools)
    ========================================================================== */
 .role-dashboard .admin-heading {
   border-bottom: 1px solid #f2f2ef;
@@ -1395,22 +1395,22 @@
 }
 
 @media (max-width: 640px) {
-  .wolt-pickup-card {
+  .foodora-pickup-card {
     flex-direction: column;
     text-align: center;
   }
-  .wolt-stepper-wrap {
+  .foodora-stepper-wrap {
     overflow-x: auto;
     padding-bottom: 12px;
   }
-  .wolt-stepper-bar {
+  .foodora-stepper-bar {
     min-width: 320px;
   }
-  .wolt-order-card-header {
+  .foodora-order-card-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  .wolt-order-card-footer {
+  .foodora-order-card-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -1758,35 +1758,35 @@
   color: #f97316 !important;
 }
 
-/* Wolt Auth Modal (Dark) */
-.app-shell.dark-theme .wolt-auth-card {
+/* foodora Auth Modal (Dark) */
+.app-shell.dark-theme .foodora-auth-card {
   background-color: #18181b !important;
   border-color: #27272a !important;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
 }
 
-.app-shell.dark-theme .wolt-auth-header h2 {
+.app-shell.dark-theme .foodora-auth-header h2 {
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-auth-header .login-intro {
+.app-shell.dark-theme .foodora-auth-header .login-intro {
   color: #a1a1aa !important;
 }
 
-.app-shell.dark-theme .wolt-tab-switch {
+.app-shell.dark-theme .foodora-tab-switch {
   background-color: #27272a !important;
 }
 
-.app-shell.dark-theme .wolt-tab-btn {
+.app-shell.dark-theme .foodora-tab-btn {
   color: #a1a1aa !important;
 }
 
-.app-shell.dark-theme .wolt-tab-btn.active {
+.app-shell.dark-theme .foodora-tab-btn.active {
   background-color: #18181b !important;
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-demo-selector {
+.app-shell.dark-theme .foodora-demo-selector {
   background-color: #202025 !important;
   border-color: #2e2e34 !important;
 }
@@ -1808,11 +1808,11 @@
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-form-group label {
+.app-shell.dark-theme .foodora-form-group label {
   color: #d4d4d8 !important;
 }
 
-.app-shell.dark-theme .wolt-form-group input {
+.app-shell.dark-theme .foodora-form-group input {
   background-color: #202025 !important;
   border-color: #2e2e34 !important;
   color: #f4f4f5 !important;
@@ -1824,8 +1824,8 @@
   color: #f4f4f5 !important;
 }
 
-/* Wolt Orders & Live Stepper (Dark) */
-.app-shell.dark-theme .wolt-orders-modal,
+/* foodora Orders & Live Stepper (Dark) */
+.app-shell.dark-theme .foodora-orders-modal,
 .app-shell.dark-theme .role-dashboard,
 .app-shell.dark-theme .admin-panel {
   background-color: #18181b !important;
@@ -1834,34 +1834,34 @@
   color: #f4f4f5 !important;
 }
 
-.app-shell.dark-theme .wolt-modal-header {
+.app-shell.dark-theme .foodora-modal-header {
   border-bottom-color: #27272a !important;
 }
 
-.app-shell.dark-theme .wolt-modal-header h2,
+.app-shell.dark-theme .foodora-modal-header h2,
 .app-shell.dark-theme .admin-heading h2 {
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-icon-btn {
+.app-shell.dark-theme .foodora-icon-btn {
   background-color: #27272a !important;
   border-color: #3f3f46 !important;
   color: #f4f4f5 !important;
 }
 
-.app-shell.dark-theme .wolt-subtabs button {
+.app-shell.dark-theme .foodora-subtabs button {
   background-color: #1e1e24 !important;
   border-color: #2e2e34 !important;
   color: #a1a1aa !important;
 }
 
-.app-shell.dark-theme .wolt-subtabs button.active {
+.app-shell.dark-theme .foodora-subtabs button.active {
   background-color: #f97316 !important;
   border-color: #f97316 !important;
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-order-card {
+.app-shell.dark-theme .foodora-order-card {
   background-color: #1e1e24 !important;
   border-color: #2e2e34 !important;
 }
@@ -1875,7 +1875,7 @@
   color: #d4d4d8 !important;
 }
 
-.app-shell.dark-theme .wolt-stepper-bar::before {
+.app-shell.dark-theme .foodora-stepper-bar::before {
   background-color: #2e2e34 !important;
 }
 
@@ -1885,37 +1885,37 @@
   color: #71717a !important;
 }
 
-.app-shell.dark-theme .wolt-step-node.done .node-circle {
+.app-shell.dark-theme .foodora-step-node.done .node-circle {
   background-color: #f97316 !important;
   border-color: #f97316 !important;
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-step-node.current .node-circle {
+.app-shell.dark-theme .foodora-step-node.current .node-circle {
   background-color: #18181b !important;
   border-color: #f97316 !important;
   color: #f97316 !important;
 }
 
-.app-shell.dark-theme .wolt-step-node.current .node-label {
+.app-shell.dark-theme .foodora-step-node.current .node-label {
   color: #ffffff !important;
 }
 
-.app-shell.dark-theme .wolt-eta-banner {
+.app-shell.dark-theme .foodora-eta-banner {
   background-color: #2e1a0d !important;
   border-color: #7c2d12 !important;
 }
 
-.app-shell.dark-theme .wolt-eta-banner strong {
+.app-shell.dark-theme .foodora-eta-banner strong {
   color: #fdba74 !important;
 }
 
-.app-shell.dark-theme .wolt-eta-banner p,
+.app-shell.dark-theme .foodora-eta-banner p,
 .app-shell.dark-theme .eta-times-row {
   color: #fed7aa !important;
 }
 
-.app-shell.dark-theme .wolt-pickup-card {
+.app-shell.dark-theme .foodora-pickup-card {
   background-color: #241c14 !important;
   border-color: #ea580c !important;
 }
@@ -1935,7 +1935,7 @@
   color: #fed7aa !important;
 }
 
-.app-shell.dark-theme .wolt-order-info-grid {
+.app-shell.dark-theme .foodora-order-info-grid {
   background-color: #18181b !important;
   border-color: #27272a !important;
 }
