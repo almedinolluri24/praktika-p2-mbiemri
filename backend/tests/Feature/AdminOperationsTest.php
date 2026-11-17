@@ -14,6 +14,18 @@ class AdminOperationsTest extends TestCase
 
     protected $seed = true;
 
+    public function test_admin_can_disable_accounts_but_cannot_disable_themselves(): void
+    {
+        $admin = User::where('email', 'admin@foodora.demo')->firstOrFail();
+        $customer = User::where('email', 'test@example.com')->firstOrFail();
+
+        $this->actingAs($customer)->getJson('/api/admin/users')->assertForbidden();
+        $this->actingAs($admin)->patchJson("/api/admin/users/{$customer->id}/status", ['is_active' => false])
+            ->assertOk()->assertJsonPath('data.is_active', false);
+        $this->assertDatabaseHas('audit_logs', ['event' => 'user.status_changed', 'subject_id' => $customer->id]);
+        $this->patchJson("/api/admin/users/{$admin->id}/status", ['is_active' => false])->assertUnprocessable();
+    }
+
     public function test_only_administrator_can_approve_restaurants_and_manage_categories(): void
     {
         $restaurant = Restaurant::where('slug', 'casa-forno')->firstOrFail();
