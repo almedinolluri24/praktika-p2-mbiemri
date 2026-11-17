@@ -1,22 +1,23 @@
 import { useLanguage } from '../i18n/useLanguage.js'
+import './Hero.css'
 
 export function Hero({ search, onSearch }) {
   const { t } = useLanguage()
   return (
-    <section className="hero" id="home">
-      <div className="hero-content">
-        <span className="hero-eyebrow">
-          <span className="eyebrow-dot"></span> {t('USHQIMI YT · KOHA JOTE')}
+    <section className="foodora-hero" id="home">
+      <div className="foodora-hero-copy">
+        <span className="foodora-hero-eyebrow">
+          <span aria-hidden="true"></span> {t('USHQIMI YT · KOHA JOTE')}
         </span>
         <h1>
-          {t('Ushqimi juaj i preferuar,')}<br />
+          {t('Ushqimi juaj i preferuar,')}
           <span>{t('gati për marrje')}</span>
         </h1>
-        <p>
+        <p className="foodora-hero-description">
           {t('Zbuloni restorantet më të mira të qytetit, porositni ushqim të freskët dhe tërhiqeni sapo të jetë gati pa pritur në radhë.')}
         </p>
         <form
-          className="hero-search"
+          className="foodora-hero-search"
           onSubmit={(event) => {
             event.preventDefault()
             document.querySelector('#restaurants')?.scrollIntoView({ behavior: 'smooth' })
@@ -36,27 +37,26 @@ export function Hero({ search, onSearch }) {
             {t('Eksploro restorantet')} <span aria-hidden="true">→</span>
           </button>
         </form>
-        <div className="hero-proof">
-          <p><strong>{t('Porositni online')}</strong> {t('dhe merreni në restorant')}</p>
-          <span className="proof-rating"><span>✓</span> {t('Pagesa bëhet në marrje')}</span>
+        <div className="foodora-hero-benefits">
+          <span><i aria-hidden="true">✓</i>{t('Marrje në restorant')}</span>
+          <span><i aria-hidden="true">✓</i>{t('Pagesa në marrje')}</span>
         </div>
       </div>
-      <div className="hero-art">
-        <div className="hero-art-backdrop"></div>
+      <div className="foodora-hero-visual">
         <img
           src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1050&q=85"
           alt={t('Ushqim i freskët dhe i shijshëm gati për marrje')}
         />
-        <div className="pickup-badge">
-          <span className="badge-icon">✓</span>
-          <span>
+        <div className="foodora-hero-ready">
+          <span className="foodora-hero-ready-icon" aria-hidden="true">✓</span>
+          <span className="foodora-hero-badge-copy">
             <strong>{t('I freskët & gati')}</strong>
             <small>{t('Përgatitur enkas për ju')}</small>
           </span>
         </div>
-        <div className="hero-caption">
-          <span className="caption-star">★</span>
-          <span>
+        <div className="foodora-hero-caption">
+          <span className="foodora-hero-caption-icon" aria-hidden="true">✦</span>
+          <span className="foodora-hero-badge-copy">
             <strong>{t('Shije të shkëlqyera, më afër')}</strong>
             <small>{t('Zgjidhni dhe tërhiqni kur dëshironi')}</small>
           </span>
