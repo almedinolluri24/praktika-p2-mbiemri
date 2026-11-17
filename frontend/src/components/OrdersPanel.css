@@ -1,0 +1,89 @@
+.foodora-orders-modal .foodora-order-card {
+  padding: clamp(17px, 3vw, 25px);
+  border: 1px solid #eee7e0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(38, 30, 22, .055);
+}
+.foodora-orders-modal .foodora-order-card-header { align-items: flex-start; gap: 14px; }
+.foodora-orders-modal .order-meta-info h3 { margin: 8px 0 4px; color: #241f1a; font-size: 19px; letter-spacing: -.025em; }
+.foodora-orders-modal .order-branch-sub { color: #716a64; font-size: 12px; }
+.foodora-orders-modal .foodora-stepper-wrap { overflow-x: auto; padding: 12px 2px 8px; scrollbar-width: thin; }
+.foodora-orders-modal .foodora-stepper-bar { min-width: 610px; }
+.foodora-orders-modal .foodora-step-node .node-label { max-width: 100px; font-size: 10px; line-height: 1.35; }
+.foodora-orders-modal .foodora-eta-banner {
+  display: grid;
+  gap: 17px;
+  padding: 18px;
+  border: 1px solid #f0e3d6;
+  border-radius: 16px;
+  background: #fdf9f5;
+}
+.foodora-orders-modal .foodora-eta-banner.pending_confirmation { border-color: #f0e3d6; background: #fdf9f5; }
+.foodora-orders-modal .foodora-eta-banner.ready { border-color: #d6eadc; background: #f4fbf6; }
+.foodora-orders-modal .foodora-eta-banner.picked_up { border-color: #e5e4df; background: #f8f8f6; }
+.foodora-orders-modal .foodora-eta-banner.cancelled,
+.foodora-orders-modal .foodora-eta-banner.rejected { border-color: #f0d6d0; background: #fff8f6; }
+.foodora-orders-modal .foodora-eta-banner.is-late { border-color: #f1cfaa; background: #fff9f1; }
+.foodora-orders-modal .eta-status-message { display: flex; align-items: flex-start; gap: 11px; color: #9b4a15; }
+.foodora-orders-modal .eta-status-message > svg { flex: 0 0 auto; margin-top: 2px; }
+.foodora-orders-modal .eta-status-message strong { display: block; color: #30251c; font-size: 14px; line-height: 1.4; }
+.foodora-orders-modal .eta-status-message p { margin: 4px 0 0; color: #71675e; font-size: 12px; line-height: 1.55; }
+.foodora-orders-modal .eta-tracking-details { display: grid; gap: 12px; }
+.foodora-orders-modal .eta-countdown { display: flex; align-items: center; gap: 10px; color: #383029; }
+.foodora-orders-modal .eta-countdown > strong { font-size: 13px; line-height: 1.5; }
+.foodora-orders-modal .eta-badge { display: inline-flex; flex: 0 0 auto; align-items: center; min-height: 25px; padding: 0 9px; border-radius: 999px; background: #fff0e2; color: #a84a0c; font-size: 9px; font-weight: 800; letter-spacing: .055em; }
+.foodora-orders-modal .foodora-eta-banner.is-late .eta-countdown > strong { color: #a34b14; }
+.foodora-orders-modal .eta-times-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 0; }
+.foodora-orders-modal .eta-time-card {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid #eee5dc;
+  border-radius: 12px;
+  background: rgba(255,255,255,.78);
+}
+.foodora-orders-modal .eta-time-card small { color: #81776e; font-size: 10px; font-weight: 650; }
+.foodora-orders-modal .eta-time-card strong { color: #302923; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.foodora-orders-modal .eta-time-card.requested { border-left: 3px solid #b6a99c; }
+.foodora-orders-modal .eta-time-card.estimated { border-left: 3px solid #f97316; }
+.foodora-orders-modal .eta-time-card.started { border-left: 3px solid #5c9b6b; }
+.foodora-orders-modal .foodora-order-info-grid { gap: 10px; }
+.foodora-orders-modal .info-cell { padding: 13px 15px; border: 1px solid #eee8e2; border-radius: 12px; background: #fdfbf9; }
+.foodora-orders-modal .foodora-order-items-list { margin-top: 15px; border-top: 1px solid #eee8e2; }
+.foodora-orders-modal .foodora-order-items-list li { padding: 13px 0; border-color: #eee8e2; }
+.foodora-orders-modal .foodora-order-card-footer { align-items: center; gap: 14px; padding-top: 14px; border-top: 1px solid #eee8e2; }
+.foodora-orders-modal .foodora-pickup-card { border: 1px solid #eee4da; border-radius: 16px; background: #fff; }
+
+.app-shell.dark-theme .foodora-orders-modal .foodora-order-card { border-color: #36322e; background: #201e1c; box-shadow: 0 8px 24px rgba(0,0,0,.22); }
+.app-shell.dark-theme .foodora-orders-modal .order-meta-info h3 { color: #f4f1ed; }
+.app-shell.dark-theme .foodora-orders-modal .order-branch-sub { color: #b9b0a8; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner { border-color: #40372f; background: #27221e; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner.ready { border-color: #31533a; background: #1d2a20; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner.picked_up { border-color: #3c3934; background: #252321; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner.cancelled,
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner.rejected { border-color: #5b3630; background: #30201d; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-eta-banner.is-late { border-color: #6a4728; background: #30261c; }
+.app-shell.dark-theme .foodora-orders-modal .eta-status-message { color: #ffb27b; }
+.app-shell.dark-theme .foodora-orders-modal .eta-status-message strong,
+.app-shell.dark-theme .foodora-orders-modal .eta-countdown > strong { color: #f5f1ed; }
+.app-shell.dark-theme .foodora-orders-modal .eta-status-message p { color: #c2b9b1; }
+.app-shell.dark-theme .foodora-orders-modal .eta-badge { background: #493122; color: #ffb27b; }
+.app-shell.dark-theme .foodora-orders-modal .eta-time-card,
+.app-shell.dark-theme .foodora-orders-modal .info-cell,
+.app-shell.dark-theme .foodora-orders-modal .foodora-pickup-card { border-color: #403a34; background: #292623; }
+.app-shell.dark-theme .foodora-orders-modal .eta-time-card small { color: #b9b0a8; }
+.app-shell.dark-theme .foodora-orders-modal .eta-time-card strong { color: #f4f1ed; }
+.app-shell.dark-theme .foodora-orders-modal .foodora-order-items-list,
+.app-shell.dark-theme .foodora-orders-modal .foodora-order-items-list li,
+.app-shell.dark-theme .foodora-orders-modal .foodora-order-card-footer { border-color: #39332e; }
+
+@media (max-width: 600px) {
+  .foodora-orders-modal .foodora-order-card { padding: 15px; border-radius: 16px; }
+  .foodora-orders-modal .foodora-eta-banner { gap: 13px; padding: 13px; }
+  .foodora-orders-modal .eta-times-row { grid-template-columns: minmax(0, 1fr); }
+  .foodora-orders-modal .eta-countdown { align-items: flex-start; flex-direction: column; gap: 7px; }
+  .foodora-orders-modal .foodora-order-card-footer { align-items: stretch; flex-direction: column; }
+}
