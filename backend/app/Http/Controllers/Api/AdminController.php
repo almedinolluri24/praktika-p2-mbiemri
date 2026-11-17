@@ -27,7 +27,34 @@ class AdminController extends Controller
     {
         abort_unless($request->user()->isAdministrator(), 403);
 
-        return response()->json(['data' => User::query()->whereIn('role', [User::ROLE_CUSTOMER, ...User::STAFF_ROLES])->orderBy('name')->get(['id', 'name', 'email', 'role'])]);
+        return response()->json(['data' => User::query()->where('is_active', true)->whereIn('role', [User::ROLE_CUSTOMER, ...User::STAFF_ROLES])->orderBy('name')->get(['id', 'name', 'email', 'role'])]);
+    }
+
+    public function users(Request $request): JsonResponse
+    {
+        abort_unless($request->user()->isAdministrator(), 403);
+
+        $users = User::query()
+            ->when($request->query('search'), fn ($query, $search) => $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')))
+            ->orderBy('name')->paginate(30, ['id', 'name', 'email', 'role', 'is_active']);
+
+        return response()->json($users);
+    }
+
+    public function setUserStatus(Request $request, User $user): JsonResponse
+    {
+        abort_unless($request->user()->isAdministrator(), 403);
+        $data = $request->validate(['is_active' => ['required', 'boolean']]);
+        abort_if($request->user()->id === $user->id && ! $data['is_active'], 422, 'You cannot deactivate your own account.');
+        if ($user->isAdministrator() && ! $data['is_active']) {
+            abort_if(User::query()->where('role', User::ROLE_ADMIN)->where('is_active', true)->count() <= 1, 422, 'The last active administrator cannot be deactivated.');
+        }
+
+        $previous = $user->is_active;
+        $user->update(['is_active' => $data['is_active']]);
+        $this->audit($request, 'user.status_changed', $user, ['from' => $previous, 'to' => $user->is_active]);
+
+        return response()->json(['data' => $user->fresh(['staffBranches'])->only(['id', 'name', 'email', 'role', 'is_active'])]);
     }
 
     public function branchStaff(Request $request, Branch $branch): JsonResponse
