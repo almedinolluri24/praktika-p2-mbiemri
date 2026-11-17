@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
@@ -29,8 +32,16 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        $request->session()->regenerate();
         $user = $request->user();
+        if (! $user->is_active) {
+            Auth::logout();
+            return response()->json([
+                'message' => 'Email or password is incorrect.',
+                'errors' => ['email' => ['Email or password is incorrect.']],
+            ], 422);
+        }
+
+        $request->session()->regenerate();
 
         return response()->json([
             'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, 'role' => $user->role,
@@ -86,15 +97,40 @@ class AuthenticatedSessionController extends Controller
         ]]);
     }
 
+    public function sendResetLink(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ]);
+
+        Password::sendResetLink($request->only('email'));
+
+        return response()->json([
+            'message' => 'Nëse ekziston llogaria, do të dërgohet një lidhje për rivendosjen e fjalëkalimit.',
+        ], 202);
+    }
+
     public function resetPassword(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email' => ['required', 'email', 'exists:users,email'],
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user = User::where('email', $data['email'])->firstOrFail();
-        $user->update(['password' => $data['password']]);
+        $status = Password::reset($data, function (User $user, string $password): void {
+            $user->forceFill([
+                'password' => $password,
+                'remember_token' => Str::random(60),
+            ])->save();
+            event(new PasswordReset($user));
+        });
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return response()->json([
+                'message' => 'Lidhja e rivendosjes është e pavlefshme ose ka skaduar.',
+            ], 422);
+        }
 
         return response()->json([
             'message' => 'Fjalëkalimi u rivendos me sukses. Tani mund të kyçeni.',
