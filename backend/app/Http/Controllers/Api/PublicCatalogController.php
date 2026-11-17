@@ -55,7 +55,7 @@ class PublicCatalogController extends Controller
         if ($request->boolean('open_only')) {
             $openBranchIds = Branch::query()->where('is_active', true)->with('businessHours')->get()
                 ->filter(function (Branch $branch): bool {
-                    $now = CarbonImmutable::now($branch->timezone);
+                    $now = CarbonImmutable::now($branch->timezoneForCalculations());
                     $hours = $branch->businessHours->firstWhere('weekday', $now->dayOfWeek);
                     return $hours && ! $hours->is_closed && $hours->opens_at && $hours->closes_at
                         && $now->format('H:i:s') >= $hours->opens_at
@@ -73,7 +73,7 @@ class PublicCatalogController extends Controller
         $page = $restaurants->paginate($filters['per_page'] ?? 12);
         $page->getCollection()->each(function (Restaurant $restaurant): void {
             $restaurant->branches->each(function (Branch $branch): void {
-                $now = CarbonImmutable::now($branch->timezone);
+                $now = CarbonImmutable::now($branch->timezoneForCalculations());
                 $hours = $branch->businessHours->firstWhere('weekday', $now->dayOfWeek);
                 $isOpen = $hours && ! $hours->is_closed && $hours->opens_at && $hours->closes_at
                     && $now->format('H:i:s') >= $hours->opens_at
@@ -96,18 +96,19 @@ class PublicCatalogController extends Controller
     {
         abort_unless($branch->is_active && $branch->restaurant()->where('status', 'approved')->exists(), 404);
         $data = $request->validate(['date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today', 'before_or_equal:'.now()->addDays(14)->toDateString()]]);
-        $localDate = CarbonImmutable::parse($data['date'], $branch->timezone);
+        $timezone = $branch->timezoneForCalculations();
+        $localDate = CarbonImmutable::parse($data['date'], $timezone);
         $hours = $branch->businessHours()->where('weekday', $localDate->dayOfWeek)->first();
         if (! $hours || $hours->is_closed || ! $hours->opens_at || ! $hours->closes_at) {
             return response()->json(['date' => $data['date'], 'timezone' => $branch->timezone, 'slots' => []]);
         }
 
-        $start = CarbonImmutable::parse($data['date'].' '.$hours->opens_at, $branch->timezone);
-        $close = CarbonImmutable::parse($data['date'].' '.$hours->closes_at, $branch->timezone);
+        $start = CarbonImmutable::parse($data['date'].' '.$hours->opens_at, $timezone);
+        $close = CarbonImmutable::parse($data['date'].' '.$hours->closes_at, $timezone);
         $interval = max(5, (int) $hours->slot_interval_minutes);
         $slots = [];
         for ($slot = $start; $slot->lt($close); $slot = $slot->addMinutes($interval)) {
-            if ($slot->lte(CarbonImmutable::now($branch->timezone)->addMinutes(10))) continue;
+            if ($slot->lte(CarbonImmutable::now($timezone)->addMinutes(10))) continue;
             $end = $slot->addMinutes($interval);
             $reserved = Order::query()->where('branch_id', $branch->id)
                 ->whereIn('status', ['pending_confirmation', 'confirmed', 'preparing', 'ready'])
