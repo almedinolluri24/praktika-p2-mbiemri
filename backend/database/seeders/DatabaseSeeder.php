@@ -219,7 +219,7 @@ class DatabaseSeeder extends Seeder
             foreach ($business['branches'] as $branchData) {
                 $branch = Branch::updateOrCreate(
                     ['restaurant_id' => $restaurant->id, 'name' => $branchData['name']],
-                    [...$branchData, 'timezone' => 'Europe/Belgrade', 'is_active' => true],
+                    [...$branchData, 'timezone' => 'Europe/Pristina', 'is_active' => true],
                 );
                 $branches[] = $branch;
 
