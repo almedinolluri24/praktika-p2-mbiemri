@@ -4,6 +4,7 @@ import { prepareCsrf, readCsrfCookie } from '../services/auth.js'
 import { PickupQr } from './PickupQr.jsx'
 import { LanguageToggle } from '../i18n/LanguageToggle.jsx'
 import { useLanguage } from '../i18n/useLanguage.js'
+import './OrdersPanel.css'
 import {
   AlertTriangleIcon,
   CheckCircleIcon,
@@ -19,7 +20,7 @@ const statusSteps = [
   { key: 'pending_confirmation', label: 'Në pritje', icon: ClockIcon },
   { key: 'confirmed', label: 'E pranuar', icon: CheckCircleIcon },
   { key: 'preparing', label: 'Në përgatitje', icon: CookingFlameIcon },
-  { key: 'ready', label: 'Gati', icon: ShoppingBagIcon },
+  { key: 'ready', label: 'Gati për marrje', icon: ShoppingBagIcon },
   { key: 'picked_up', label: 'E përfunduar', icon: StarBadgeIcon },
 ]
 
@@ -47,13 +48,31 @@ const statusBadgeLabels = {
 function remainingTimeText(date, now, t) {
   if (!date) return t('Ende pa vlerësim afati nga restoranti')
   const seconds = Math.floor((new Date(date).getTime() - now) / 1000)
-  if (seconds <= 0) return t('Afati i parashikuar ka kaluar; stafi po e përfundon')
+  if (seconds <= 0) return t('Afati i parashikuar ka kaluar; presim përditësim')
   const minutes = Math.floor(seconds / 60)
   const remainingSec = seconds % 60
   return t('Edhe rreth {minutes} min {seconds} sek të mbetura', {
     minutes,
     seconds: String(remainingSec).padStart(2, '0'),
   })
+}
+
+function formatPristinaDateTime(value, language, includeDate = true) {
+  if (!value) return ''
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const options = {
+    timeZone: 'Europe/Pristina',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }
+  if (includeDate) {
+    options.day = '2-digit'
+    options.month = 'short'
+  }
+  const locale = language === 'en' ? 'en-GB' : language === 'de' ? 'de-DE' : 'sq-XK'
+  return new Intl.DateTimeFormat(locale, options).format(date)
 }
 
 export function OrdersPanel({ user, onClose, onProfileUpdated }) {
@@ -177,7 +196,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   ? t('Po lidhet me serverin live…')
                   : t('Lidhja live jashtë linje — rifresko')}
               </span>
-              {updatedAt && <small>· {t('Rifreskuar')}: {updatedAt.toLocaleTimeString(language === 'en' ? 'en-US' : 'sq-XK')}</small>}
+              {updatedAt && <small>· {t('Rifreskuar')}: {updatedAt.toLocaleTimeString(language === 'en' ? 'en-US' : language === 'de' ? 'de-DE' : 'sq-XK')}</small>}
             </div>
           </div>
           <div className="foodora-header-actions">
@@ -262,6 +281,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
               const isTerminal = ['cancelled', 'rejected'].includes(order.status)
               const prepStart = order.status_history?.find((s) => s.to_status === 'preparing')
               const terminalReason = order.status_history?.find((s) => ['cancelled', 'rejected'].includes(s.to_status) && s.note)?.note
+              const etaPassed = Boolean(!isTerminal && now > 0 && order.estimated_ready_at && new Date(order.estimated_ready_at).getTime() <= now)
 
               return (
                 <article className="foodora-order-card" key={order.id}>
@@ -293,6 +313,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                             <div
                               key={step.key}
                               className={`foodora-step-node ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}`}
+                              aria-current={isCurrent ? 'step' : undefined}
                             >
                               <div className="node-circle">
                                 {isDone ? <CheckCircleIcon size={14} /> : <StepIcon size={14} />}
@@ -306,9 +327,9 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   )}
 
                   {/* ETA & Live Status Banner */}
-                  <div className={`foodora-eta-banner ${order.status}`}>
+                  <div className={`foodora-eta-banner ${order.status} ${etaPassed ? 'is-late' : ''}`}>
                     {order.status === 'pending_confirmation' ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <div className="eta-status-message">
                         <ClockIcon size={18} />
                         <div>
                           <strong>{t('Në pritje të konfirmimit nga restoranti')}</strong>
@@ -316,7 +337,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                         </div>
                       </div>
                     ) : order.status === 'ready' ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <div className="eta-status-message">
                         <ShoppingBagIcon size={18} />
                         <div>
                           <strong>{t("Porosia është gati për t'u marrë!")}</strong>
@@ -324,7 +345,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                         </div>
                       </div>
                     ) : order.status === 'picked_up' ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <div className="eta-status-message">
                         <CheckCircleIcon size={18} />
                         <div>
                           <strong>{t('Porosia u përfundua me sukses')}</strong>
@@ -332,7 +353,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                         </div>
                       </div>
                     ) : isTerminal ? (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <div className="eta-status-message">
                         <AlertTriangleIcon size={18} />
                         <div>
                           <strong>{t('Porosia është {status}', { status: t(statusBadgeLabels[order.status]) })}</strong>
@@ -340,15 +361,38 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                         </div>
                       </div>
                     ) : (
-                      <div>
-                        <div className="eta-highlight-row">
-                          <span className="eta-badge">{t('AFATI I MARRJES')}</span>
-                          <strong>{remainingTimeText(order.estimated_ready_at, now, t)}</strong>
+                      <div className="eta-status-message">
+                        <ClockIcon size={18} />
+                        <div>
+                          <strong>{t('Porosia është në përgatitje')}</strong>
+                          <p>{t('Stafi po përgatit porosinë tuaj.')}</p>
                         </div>
+                      </div>
+                    )}
+
+                    {!isTerminal && (
+                      <div className="eta-tracking-details">
+                        {['confirmed', 'preparing'].includes(order.status) && (
+                          <div className="eta-countdown">
+                            <span className="eta-badge">{t('AFATI I MARRJES')}</span>
+                            <strong>{remainingTimeText(order.estimated_ready_at, now, t)}</strong>
+                          </div>
+                        )}
                         <div className="eta-times-row">
-                          <span>{t('Koha e parashikuar:')} <strong>{order.estimated_ready_at ? new Date(order.estimated_ready_at).toLocaleTimeString(language === 'en' ? 'en-US' : 'sq-XK') : t('Në pritje')}</strong></span>
-                          <span>{t('Koha e kërkuar:')} <strong>{order.pickup_at ? new Date(order.pickup_at).toLocaleTimeString(language === 'en' ? 'en-US' : 'sq-XK') : t('Sa më shpejt')}</strong></span>
-                          {prepStart && <span>{t('Filloi përgatitja:')} <strong>{new Date(prepStart.created_at).toLocaleTimeString(language === 'en' ? 'en-US' : 'sq-XK')}</strong></span>}
+                          <div className="eta-time-card requested">
+                            <small>{t('Koha e kërkuar')}</small>
+                            <strong>{order.pickup_at ? formatPristinaDateTime(order.pickup_at, language) : t('Sa më shpejt')}</strong>
+                          </div>
+                          <div className="eta-time-card estimated">
+                            <small>{t('Afati i konfirmuar')}</small>
+                            <strong>{order.estimated_ready_at ? formatPristinaDateTime(order.estimated_ready_at, language) : t('Në pritje të konfirmimit')}</strong>
+                          </div>
+                          {prepStart && (
+                            <div className="eta-time-card started">
+                              <small>{t('Filloi përgatitja')}</small>
+                              <strong>{formatPristinaDateTime(prepStart.created_at, language, false)}</strong>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
