@@ -49,6 +49,31 @@ class OrderLifecycleTest extends TestCase
         $this->assertDatabaseCount('orders', 16);
     }
 
+    public function test_customer_can_order_same_product_with_different_configurations(): void
+    {
+        $customer = User::where('email', 'test@example.com')->firstOrFail();
+        $branch = Branch::where('name', 'Casa Forno Center')->firstOrFail();
+        $product = Product::where('slug', 'margherita-pizza')->firstOrFail();
+        $regular = ProductOption::where('name', 'Regular')->firstOrFail();
+        $large = ProductOption::where('name', 'Large')->firstOrFail();
+
+        $response = $this->actingAs($customer)->withHeader('Idempotency-Key', 'two-pizza-configs-0001')->postJson('/api/orders', [
+            'branch_id' => $branch->id,
+            'schedule_type' => 'asap',
+            'items' => [
+                ['product_id' => $product->id, 'quantity' => 1, 'options' => [$regular->id]],
+                ['product_id' => $product->id, 'quantity' => 1, 'options' => [$large->id]],
+            ],
+        ]);
+
+        $response->assertCreated()->assertJsonPath('order.total', '21.50');
+        $orderId = $response->json('order.id');
+        $itemIds = \App\Models\OrderItem::where('order_id', $orderId)->pluck('id');
+        $this->assertCount(2, $itemIds);
+        $optionNames = \App\Models\OrderItemOption::whereIn('order_item_id', $itemIds)->orderBy('option_name')->pluck('option_name')->all();
+        $this->assertSame(['Large', 'Regular'], $optionNames);
+    }
+
     public function test_order_statuses_follow_the_workflow_and_pickup_code_is_single_use(): void
     {
         $customer = User::where('email', 'test@example.com')->firstOrFail();
@@ -177,7 +202,7 @@ class OrderLifecycleTest extends TestCase
     {
         $customer = User::where('email', 'test@example.com')->firstOrFail();
         $branch = Branch::where('name', 'Casa Forno Center')->firstOrFail();
-        $pickupAt = CarbonImmutable::now($branch->timezone)->addDay()->setTime(16, 0);
+        $pickupAt = CarbonImmutable::now($branch->timezoneForCalculations())->addDay()->setTime(16, 0);
         BusinessHour::where('branch_id', $branch->id)->where('weekday', $pickupAt->dayOfWeek)->update(['orders_per_slot' => 1]);
         $payload = [
             'branch_id' => $branch->id,
@@ -195,7 +220,7 @@ class OrderLifecycleTest extends TestCase
     {
         $customer = User::where('email', 'test@example.com')->firstOrFail();
         $branch = Branch::where('name', 'Casa Forno Center')->firstOrFail();
-        $pickupAt = CarbonImmutable::now($branch->timezone)->addDay()->setTime(16, 0);
+        $pickupAt = CarbonImmutable::now($branch->timezoneForCalculations())->addDay()->setTime(16, 0);
         BusinessHour::where('branch_id', $branch->id)->where('weekday', $pickupAt->dayOfWeek)->update(['orders_per_slot' => 1]);
         $created = $this->actingAs($customer)->withHeader('Idempotency-Key', 'cancel-release-slot-001')->postJson('/api/orders', [
             'branch_id' => $branch->id,
