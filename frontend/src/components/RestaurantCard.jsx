@@ -1,4 +1,5 @@
 import { useLanguage } from '../i18n/useLanguage.js'
+import foodPlaceholder from '../assets/food-placeholder.svg'
 
 export function RestaurantCard({ restaurant, onViewMenu }) {
   const { t } = useLanguage()
@@ -9,7 +10,15 @@ export function RestaurantCard({ restaurant, onViewMenu }) {
   return (
     <article className="restaurant-card">
       <div className="restaurant-photo">
-        <img src={imageUrl} alt={restaurant.name} loading="lazy" />
+        <img
+          src={imageUrl}
+          alt={restaurant.name}
+          loading="lazy"
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = foodPlaceholder
+          }}
+        />
         {restaurant.featured && <span className="featured-label">{t('E PREFERUAR LOKALE')}</span>}
         <span className={restaurant.open ? 'open-label' : 'closed-label'}>
           <i></i>{t(restaurant.open ? 'Hapur tani' : 'Mbyllur')}
