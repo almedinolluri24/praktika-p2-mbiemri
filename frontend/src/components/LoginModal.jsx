@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FoodoraLogo } from './FoodoraLogo.jsx'
 import { BackArrowIcon, MoonIcon, SunIcon } from './Icons.jsx'
-import { login, register, resetPassword } from '../services/auth.js'
+import { login, register, requestPasswordReset, resetPassword } from '../services/auth.js'
 import { LanguageToggle } from '../i18n/LanguageToggle.jsx'
 import { useLanguage } from '../i18n/useLanguage.js'
 
@@ -15,9 +15,10 @@ const demoAccounts = [
 
 export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage = false, theme = 'light', onToggleTheme }) {
   const { t } = useLanguage()
-  const [mode, setMode] = useState(initialMode) // 'login' | 'register' | 'reset'
+  const [mode, setMode] = useState(initialMode) // 'login' | 'register' | 'forgot' | 'reset'
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(() => new URLSearchParams(window.location.search).get('email') || '')
+  const [resetToken] = useState(() => new URLSearchParams(window.location.search).get('reset_token') || '')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [remember, setRemember] = useState(true)
@@ -39,12 +40,16 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
     setSuccessMsg('')
     setSubmitting(true)
     try {
-      if (mode === 'reset') {
-        const res = await resetPassword({ email, password, passwordConfirmation })
+      if (mode === 'forgot') {
+        const res = await requestPasswordReset({ email })
+        setSuccessMsg(res.message || 'Nëse ekziston llogaria, do të dërgohet një lidhje për rivendosjen e fjalëkalimit.')
+      } else if (mode === 'reset') {
+        const res = await resetPassword({ email, token: resetToken, password, passwordConfirmation })
         setSuccessMsg(res.message || 'Fjalëkalimi u ndryshua me sukses!')
         setMode('login')
         setPassword('')
         setPasswordConfirmation('')
+        window.history.replaceState({}, '', '/')
       } else if (mode === 'register') {
         const user = await register({ name, email, password, passwordConfirmation })
         onSuccess(user, mode)
@@ -63,6 +68,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
 
   const registering = mode === 'register'
   const resetting = mode === 'reset'
+  const forgetting = mode === 'forgot'
 
   return (
     <div
@@ -102,33 +108,35 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
       )}
 
       <section
-        className={`login-dialog wolt-auth-card ${isPage ? 'auth-page-card' : ''}`}
+        className={`login-dialog foodora-auth-card ${isPage ? 'auth-page-card' : ''}`}
         role={isPage ? undefined : 'dialog'}
         aria-modal={isPage ? undefined : true}
         aria-labelledby="login-title"
       >
         {!isPage && <button className="login-close" type="button" onClick={onClose} aria-label={t('Mbyll dritaren')}>×</button>}
 
-        <div className="wolt-auth-header">
+        <div className="foodora-auth-header">
           {!isPage && <FoodoraLogo className="login-logo" />}
           <h2 id="login-title">
-            {t(resetting ? 'Rivendos fjalëkalimin' : registering ? 'Krijo llogari të re' : 'Mirë se vini në Foodora')}
+            {t(resetting ? 'Vendos fjalëkalim të ri' : forgetting ? 'Rivendos fjalëkalimin' : registering ? 'Krijo llogari të re' : 'Mirë se vini në Foodora')}
           </h2>
           <p className="login-intro">
             {resetting
-              ? t('Shkruani email-in dhe fjalëkalimin tuaj të ri për llogarinë.')
+              ? t('Zgjidhni fjalëkalim të ri për llogarinë tuaj.')
+              : forgetting
+              ? t('Do t’ju dërgojmë një lidhje të sigurt në email për ta rivendosur fjalëkalimin.')
               : registering
               ? t('Regjistrohuni për të bërë porosi me marrje në restorant.')
               : t('Hyni në llogarinë tuaj për të porositur dhe ndjekur përgatitjen.')}
           </p>
 
-          {!resetting && (
-            <div className="wolt-tab-switch" role="tablist">
+          {!(resetting || forgetting) && (
+            <div className="foodora-tab-switch" role="tablist">
               <button
                 type="button"
                 role="tab"
                 aria-selected={!registering}
-                className={`wolt-tab-btn ${!registering ? 'active' : ''}`}
+                className={`foodora-tab-btn ${!registering ? 'active' : ''}`}
                 onClick={() => { setError(''); setSuccessMsg(''); setMode('login') }}
               >
                 {t('Kyçu')}
@@ -137,7 +145,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
                 type="button"
                 role="tab"
                 aria-selected={registering}
-                className={`wolt-tab-btn ${registering ? 'active' : ''}`}
+                className={`foodora-tab-btn ${registering ? 'active' : ''}`}
                 onClick={() => { setError(''); setSuccessMsg(''); setMode('register') }}
               >
                 {t('Regjistrohu')}
@@ -147,7 +155,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
         </div>
 
         {mode === 'login' && (
-          <div className="wolt-demo-selector">
+          <div className="foodora-demo-selector">
             <span className="demo-label">⚡ {t('Llogari demonstrimi (1-klikim):')}</span>
             <div className="demo-chips">
               {demoAccounts.map((acc) => (
@@ -166,14 +174,14 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
         )}
 
         {successMsg && (
-          <div className="wolt-alert success" role="status" style={{ marginBottom: '14px' }}>
+          <div className="foodora-alert success" role="status" style={{ marginBottom: '14px' }}>
             ✓ {t(successMsg)}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="wolt-auth-form">
+        <form onSubmit={handleSubmit} className="foodora-auth-form">
           {registering && (
-            <div className="wolt-form-group">
+            <div className="foodora-form-group">
               <label htmlFor="register-name">{t('Emri dhe mbiemri')}</label>
               <input
                 id="register-name"
@@ -189,7 +197,8 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
             </div>
           )}
 
-          <div className="wolt-form-group">
+          {!resetting && (
+          <div className="foodora-form-group">
             <label htmlFor="login-email">{t('Adresa e email-it')}</label>
             <input
               id="login-email"
@@ -202,14 +211,16 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
               autoFocus={!registering}
             />
           </div>
+          )}
 
-          <div className="wolt-form-group">
+          {!forgetting && (
+          <div className="foodora-form-group">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <label htmlFor="login-password">{t(resetting ? 'Fjalëkalimi i ri' : 'Fjalëkalimi')}</label>
               {mode === 'login' && (
                 <button
                   type="button"
-                  onClick={() => { setError(''); setSuccessMsg(''); setMode('reset') }}
+                  onClick={() => { setError(''); setSuccessMsg(''); setMode('forgot') }}
                   style={{ background: 'none', border: 'none', color: '#ea580c', fontSize: '11px', cursor: 'pointer', padding: 0 }}
                 >
                   {t('Harruat fjalëkalimin?')}
@@ -227,9 +238,10 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
               required
             />
           </div>
+          )}
 
           {(registering || resetting) ? (
-            <div className="wolt-form-group">
+            <div className="foodora-form-group">
               <label htmlFor="register-confirm-password">{t('Konfirmo fjalëkalimin')}</label>
               <input
                 id="register-confirm-password"
@@ -242,22 +254,22 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
                 required
               />
             </div>
-          ) : (
+          ) : mode === 'login' ? (
             <label className="remember-label">
               <input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} />
               {t('Më mbaj të kyçur në këtë pajisje')}
             </label>
-          )}
+          ) : null}
 
           {error && <div className="login-error" role="alert">⚠️ {t(error)}</div>}
 
-          <button className="login-submit wolt-btn-primary" type="submit" disabled={submitting}>
-            {t(submitting ? 'Ju lutem prisni…' : resetting ? 'Rivendos fjalëkalimin' : registering ? 'Krijo llogarinë' : 'Vazhdo')}
+          <button className="login-submit foodora-btn-primary" type="submit" disabled={submitting}>
+            {t(submitting ? 'Ju lutem prisni…' : resetting ? 'Ruaj fjalëkalimin e ri' : forgetting ? 'Dërgo lidhjen e rivendosjes' : registering ? 'Krijo llogarinë' : 'Vazhdo')}
           </button>
         </form>
 
-        <div className="wolt-auth-footer">
-          {resetting ? (
+        <div className="foodora-auth-footer">
+          {(resetting || forgetting) ? (
             <button
               className="auth-mode-toggle"
               type="button"
