@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -80,7 +82,7 @@ class AuthenticationTest extends TestCase
         $this->getJson("/api/orders/{$order->id}")->assertNotFound();
     }
 
-    public function test_user_can_reset_password_with_valid_confirmation(): void
+    public function test_user_must_use_a_reset_link_to_change_password(): void
     {
         $customer = User::where('email', 'test@example.com')->firstOrFail();
 
@@ -88,9 +90,49 @@ class AuthenticationTest extends TestCase
             'email' => $customer->email,
             'password' => 'new-secret-password-123',
             'password_confirmation' => 'new-secret-password-123',
+        ])->assertUnprocessable();
+
+        Notification::fake();
+        $this->postJson('/api/forgot-password', ['email' => $customer->email])
+            ->assertAccepted()
+            ->assertJsonPath('message', 'Nëse ekziston llogaria, do të dërgohet një lidhje për rivendosjen e fjalëkalimit.');
+        Notification::assertSentTo($customer, ResetPassword::class);
+        $resetNotification = Notification::sent($customer, ResetPassword::class)->first();
+        $this->assertStringStartsWith('http://localhost:5173/reset-password?reset_token=', $resetNotification->toMail($customer)->actionUrl);
+
+        $this->postJson('/api/reset-password', [
+            'email' => $customer->email,
+            'token' => $resetNotification->token,
+            'password' => 'new-secret-password-123',
+            'password_confirmation' => 'new-secret-password-123',
         ])->assertOk()->assertJsonPath('message', 'Fjalëkalimi u rivendos me sukses. Tani mund të kyçeni.');
 
         $customer->refresh();
         $this->assertTrue(Hash::check('new-secret-password-123', $customer->password));
+        $this->postJson('/api/reset-password', [
+            'email' => $customer->email,
+            'token' => $resetNotification->token,
+            'password' => 'another-password-123',
+            'password_confirmation' => 'another-password-123',
+        ])->assertUnprocessable();
+    }
+
+    public function test_forgot_password_response_does_not_reveal_unknown_emails(): void
+    {
+        Notification::fake();
+        $response = $this->postJson('/api/forgot-password', ['email' => 'missing@example.com']);
+        $response->assertAccepted()->assertJsonPath('message', 'Nëse ekziston llogaria, do të dërgohet një lidhje për rivendosjen e fjalëkalimit.');
+        Notification::assertNothingSent();
+    }
+
+    public function test_inactive_user_cannot_login_or_keep_using_an_existing_session(): void
+    {
+        $customer = User::where('email', 'test@example.com')->firstOrFail();
+        $this->postJson('/api/login', ['email' => $customer->email, 'password' => 'password'])->assertOk();
+
+        $customer->update(['is_active' => false]);
+        $this->getJson('/api/user')->assertForbidden();
+        auth()->logout();
+        $this->postJson('/api/login', ['email' => $customer->email, 'password' => 'password'])->assertUnprocessable();
     }
 }
