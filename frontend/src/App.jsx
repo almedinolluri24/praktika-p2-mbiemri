@@ -21,6 +21,8 @@ import { createPickupOrder } from './services/orders.js'
 import './App.css'
 import './styles/site-refresh.css'
 import './styles/portal.css'
+import './styles/catalog-refresh.css'
+import './styles/food-refresh.css'
 
 const categoryLabels = {
   All: 'Të gjitha',
@@ -78,8 +80,8 @@ function App() {
   const [cart, setCart] = useState({})
   const [cartOpen, setCartOpen] = useState(false)
   const [notice, setNotice] = useState('')
-  const [authPageOpen, setAuthPageOpen] = useState(false)
-  const [authMode, setAuthMode] = useState('login')
+  const [authPageOpen, setAuthPageOpen] = useState(() => new URLSearchParams(window.location.search).has('reset_token'))
+  const [authMode, setAuthMode] = useState(() => new URLSearchParams(window.location.search).has('reset_token') ? 'reset' : 'login')
   const [user, setUser] = useState(null)
   const [optionsFood, setOptionsFood] = useState(null)
   const [checkoutBusy, setCheckoutBusy] = useState(false)
@@ -321,6 +323,10 @@ function App() {
   )
 
   if (authPageOpen) {
+    const closeAuthPage = () => {
+      setAuthPageOpen(false)
+      if (new URLSearchParams(window.location.search).has('reset_token')) window.history.replaceState({}, '', '/')
+    }
     return (
       <div className={`app-shell ${theme === 'dark' ? 'dark-theme' : ''}`} data-theme={theme}>
         <LoginModal
@@ -328,7 +334,7 @@ function App() {
           isPage
           theme={theme}
           onToggleTheme={handleToggleTheme}
-          onClose={() => setAuthPageOpen(false)}
+          onClose={closeAuthPage}
           onSuccess={handleLoginSuccess}
         />
       </div>
