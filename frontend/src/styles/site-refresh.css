@@ -46,14 +46,29 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 700;
   letter-spacing: .04em;
 }
-.language-toggle-btn .current { color: var(--foodora-orange-hover); }
+.language-toggle-btn button {
+  min-width: 26px;
+  height: 26px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .02em;
+  transition: background-color .16s ease, color .16s ease;
+}
+.language-toggle-btn button.current { background: #fff1e7; color: var(--foodora-orange-hover); }
+.language-toggle-btn button:not(.current):hover { background: #f5f5f4; color: #292524; }
 .language-toggle-btn:hover { border-color: var(--foodora-orange) !important; }
 .app-shell.dark-theme .language-toggle-btn {
   border-color: #3f3f46 !important;
   background: #1e1e24;
   color: #a1a1aa;
 }
-.app-shell.dark-theme .language-toggle-btn .current { color: #fb923c; }
+.app-shell.dark-theme .language-toggle-btn button.current { background: #3b2619; color: #fb923c; }
+.app-shell.dark-theme .language-toggle-btn button:not(.current):hover { background: #303036; color: #f4f4f5; }
 .app-shell.dark-theme .language-toggle-btn:hover { border-color: var(--foodora-orange) !important; }
 .visually-hidden {
   position: absolute;
@@ -287,6 +302,60 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .app-shell.dark-theme .auth-theme-toggle { border-color: #3f3f46; background: #1e1e24; color: #f4f4f5; }
 .app-shell.dark-theme .auth-page-back:hover,
 .app-shell.dark-theme .auth-theme-toggle:hover { border-color: var(--foodora-orange); color: var(--foodora-orange); }
+
+/* Header sign-in actions use Foodora orange as the primary accent. */
+.app-shell .nav-actions .auth-nav-btn {
+  min-height: 42px;
+  padding: 0 16px !important;
+  border: 1px solid #f2e6dc !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: #3b3028 !important;
+  font-weight: 700 !important;
+  gap: 7px;
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease;
+}
+.app-shell .nav-actions .auth-nav-btn svg { color: #f97316; }
+.app-shell .nav-actions .auth-nav-btn:hover {
+  border-color: #f97316 !important;
+  background: #fff7f0 !important;
+  color: #c64b08 !important;
+  transform: translateY(-1px);
+}
+.app-shell .nav-actions .register-button {
+  min-height: 42px;
+  padding: 0 18px !important;
+  border: 1px solid #f97316 !important;
+  border-radius: 999px !important;
+  background: #f97316 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 5px 12px rgba(249, 115, 22, .16);
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.app-shell .nav-actions .register-button:hover {
+  border-color: #e8620c !important;
+  background: #e8620c !important;
+  box-shadow: 0 7px 16px rgba(249, 115, 22, .22);
+  transform: translateY(-1px);
+}
+.app-shell .nav-actions .auth-nav-btn:focus-visible,
+.app-shell .nav-actions .register-button:focus-visible { outline: 3px solid rgba(249, 115, 22, .35); outline-offset: 3px; }
+.app-shell.dark-theme .nav-actions .auth-nav-btn {
+  border-color: #4a4038 !important;
+  background: #211f1c !important;
+  color: #f4f1ed !important;
+}
+.app-shell.dark-theme .nav-actions .auth-nav-btn:hover { border-color: #f97316 !important; background: #2b251f !important; color: #ff9a54 !important; }
+.app-shell.dark-theme .nav-actions .register-button { border-color: #f97316 !important; background: #f97316 !important; color: #fff !important; }
+.app-shell.dark-theme .nav-actions .register-button:hover { border-color: #e8620c !important; background: #e8620c !important; }
+.app-shell .nav-actions .auth-nav-btn {
+  border-color: #171717 !important;
+  background: #171717 !important;
+  color: #fff !important;
+}
+.app-shell .nav-actions .auth-nav-btn:hover { border-color: #343434 !important; background: #343434 !important; color: #fff !important; }
+.app-shell.dark-theme .nav-actions .auth-nav-btn { border-color: #171717 !important; background: #171717 !important; color: #fff !important; }
 .login-dialog form>input, .customer-profile-form input, .admin-staff select { border-color: #dededb; border-radius: 10px; }
 .login-dialog form>input:focus { border-color: var(--foodora-orange); box-shadow: 0 0 0 3px rgba(249,115,22,.15); }
 .login-submit { border-radius: 999px; background: #171717 !important; color: #fff !important; }
