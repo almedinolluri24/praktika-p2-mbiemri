@@ -1,44 +1,54 @@
-# Raporti i auditimit dhe testeve
+# Raporti i testimit Foodora P2
 
-Kontrolluar më 17 nëntor 2026 kundrejt specifikimit të profesorit në PDF (v1.2, 10 nëntor 2026).
-Stack-u: **React · Laravel · MySQL / SQLite**.
+Përditësuar më 17 nëntor 2026. Këto rezultate janë nga komandat e ekzekutuara në këtë workspace; backend testet përdorin SQLite in-memory. MySQL, shfletues real dhe WebSocket i nisur nuk janë pjesë e këtyre provave.
 
-## Komandat dhe rezultatet e ekzekutimit
+## Rezultatet e fundit
 
-- `php artisan test` — **37 teste kaluan, 225 assertions** me sukses.
-- `npm run test:auth` — **7 teste kaluan**: admini hap vetëm panelin admin, rolet e stafit hapin panelin e punës, klienti hap porositë pas login-it dhe sign up nuk hap panel të privilegjuar.
-- `php artisan migrate:status` — të gjitha migrimet (përfshirë `2026_11_15_000009_add_pickup_instructions_to_branches`) janë ekzekutuar (`Ran`).
-- `php artisan db:seed --no-interaction` — ekzekutohet pa asnjë gabim; popullohen 7 lloje biznesesh, 8 degë, 36 produkte me alergjenë të deklaruar, 6 grupe opsionesh me çmime shtesë, llogari me role dhe 15 porosi demo me të gjitha statuset.
-- `npm run build` — **kaloi me sukses** (Vite: 77 module të transformuara).
-- `npm run lint` — **kaloi me sukses** (ESLint: 0 paralajmërime, 0 gabime).
+| Kontrolli | Rezultati |
+| --- | --- |
+| `php artisan test` nga `backend` | **42 kaluan, 251 assertions**, 0 dështime. |
+| `npm run test:auth` nga `frontend` | **7 kaluan**, 0 dështime. Script-i përdor Node test API drejtpërdrejt për të mos kërkuar proces fëmijë. |
+| `npm run build` nga `frontend` | **Kaloi**, 77 module Vite. |
+| `npm run lint` nga `frontend` | **Kaloi**, pa gabime ESLint. |
+| `php artisan migrate --force` në DB lokale | Migrimet 000010 dhe 000011 u aplikuan pa gabim; pa fshirje tabelash/të dhënash. |
+| `php artisan migrate:status` | Migrimet e projektit u raportuan `Ran` në DB lokale SQLite. |
+| MySQL | **Nuk u testua**; `database.default` lokal është `sqlite`. |
+| Reverb/WebSocket live dhe responsive në browser | **Nuk u testuan manualisht**. |
 
-## Mbulimi i plotë i skenarëve kritikë T01–T18
+## Mbulimi i skenarëve të PDF-së T01–T18
 
-| ID | Skenari | Rezultati | Evidenca dhe zbatimi |
-| --- | --- | --- | --- |
-| **T01** | Kërkim dhe filtrim | **Përfunduar** | Kërkimi sipas emrit të restorantit ose produktit, filtrimi sipas llojit të biznesit (7 kategori), qytetit dhe statusit "Hapur tani" kryhen në backend në `PublicCatalogController`. |
-| **T02** | Opsion i detyrueshëm mungon | **Përfunduar** | Serveri e refuzon porosinë me gabim validimi 422 kur mungon një grup opsioni i detyrueshëm ose tejkalohen kufijtë min/max. Testuar në `OrderLifecycleTest`. |
-| **T03** | Manipulim i çmimit | **Përfunduar** | Totali dhe çmimet llogariten nga të dhënat e serverit dhe çmimet specifike të degës. Çmimi i manipuluar nga shfletuesi refuzohet ose mbishkruhet. Testuar në `OrderLifecycleTest`. |
-| **T04** | Produkt shitet / çmimi ndryshon | **Përfunduar** | Nëse produkti është i padisponueshëm porosia refuzohet; nëse çmimi në meny ndryshon gjatë procesit, serveri kthen 409 Quote dhe kërkon rikonfirmimin e klientit. Testuar në `OrderLifecycleTest`. |
-| **T05** | Klikim i dyfishtë ose retry | **Përfunduar** | Çelësi `Idempotency-Key` ruan fingerprint-in e kërkesës. Riprovimi i të njëjtit veprim kthen porosinë ekzistuese; kërkesë tjetër me të njëjtin çelës refuzohet me 409. |
-| **T06** | Dy klientë kërkojnë vendin e fundit | **Përfunduar** | Testuar në `DemonstrationScenariosTest::test_t06_slot_capacity_permits_only_available_slots_and_rejects_overflow`. Kur kapaciteti i slotit mbushet, rezervimi i dytë refuzohet me 422. |
-| **T07** | Kuzhina nis përgatitjen | **Përfunduar** | Statusi kalon në `preparing` dhe koha reale e fillimit ruhet. Ngjarja transmetohet në kanale private Reverb dhe klienti e sheh përditësimin pa rifreskim faqeje. |
-| **T08** | Afati shtyhet me 10 minuta | **Përfunduar** | Testuar në `DemonstrationScenariosTest::test_t08_eta_can_be_postponed_and_creates_audited_history_and_notification`. Përditësohet `estimated_ready_at`, ruhet arsyeja dhe historiku në `order_eta_history` dhe `audit_logs`, dhe dërgohet njoftimi. |
-| **T09** | Numërimi arrin zero | **Përfunduar** | Kur numërimi mbrapsht arrin zero, shfaqet teksti ekzakt i PDF-së: *“Afati i parashikuar ka kaluar; presim përditësim”*. Porosia nuk shpallet automatikisht "Gati" pa konfirmimin manual të stafit. |
-| **T10** | Interneti shkëputet dhe rikthehet | **Përfunduar** | Ndërfaqja tregon gjendjen e lidhjes (`connected` / `connecting` / `offline`). Në rilidhje rimerret gjendja e plotë nga API dhe gjendjet nuk kthehen prapa. |
-| **T11** | Akses te porosi e një tjetri | **Përfunduar** | Testuar në `DemonstrationScenariosTest::test_t11_cross_business_isolation_for_staff_and_customers`. Stafi i një restoranti nuk ka qasje në porositë e një dege tjetër (403/404); klienti sheh vetëm porositë e veta. |
-| **T12** | Dy punonjës ndryshojnë statusin | **Përfunduar** | Testuar në `DemonstrationScenariosTest::test_t12_status_conflict_and_invalid_transition_handling`. Kalimet e statusit kontrollohen në DB me transaksione; nuk lejohen kapërcime ose kthime prapa të paligjshme. |
-| **T13** | Skanim QR dy herë | **Përfunduar** | Tokeni i marrjes shënohet `pickup_code_used_at` dhe statusi bëhet `picked_up`. Çdo tentative e dytë për dorëzim refuzohet me 409/422. Testuar në `OrderLifecycleTest`. |
-| **T14** | Artikull ende i papërfunduar | **Përfunduar** | Kalimi në statusin “Gati” bllokohet derisa çdo artikull në stacionet përkatëse të shënohet si i përfunduar dhe të konfirmohet paketimi. Testuar në `OrderLifecycleTest`. |
-| **T15** | Anulim / refuzim | **Përfunduar** | Klienti anulon vetëm në pritje; menaxheri anulon/refuzon me arsye të detyrueshme. Anulimi liron menjëherë kapacitetin e slotit të rezervuar. Testuar në `OrderLifecycleTest`. |
-| **T16** | Ndryshim produkti pas porosisë | **Përfunduar** | `order_items` dhe `order_item_options` ruajnë snapshot të emrit dhe çmimit në çastin e blerjes. Ndryshimi i emrit apo çmimit të produktit më vonë nuk prek porosinë historike. Testuar në `OrderLifecycleTest`. |
-| **T17** | Rinisje serveri dhe rifreskim | **Përfunduar** | Testuar në `DemonstrationScenariosTest::test_t17_order_state_and_history_persist_in_database`. Të dhënat, afati, artikujt dhe historiku ruhen në mënyrë persistente në databazë. |
-| **T18** | Pagesa ende e papaguar | **Përfunduar** | Statusi i pagesës ruhet veçmas (`unpaid` → `paid`). Dorëzimi dhe përdorimi i kodit refuzohen nëse stafi nuk ka regjistruar paraprakisht pagesën me para në dorë. Testuar në `OrderLifecycleTest`. |
+| ID | Skenari | Gjendja e provës |
+| --- | --- | --- |
+| T01 | Kërkim/filtrim, pagination | API teston kërkimin dhe llojin e biznesit; menuja teston pagination. Qyteti/hapur/sortimi i restoranteve nuk kanë test të dedikuar; MySQL nuk u përdor. **Pjesërisht** |
+| T02 | Opsion i detyrueshëm mungon | Test backend refuzon opsionin/grupin e pavlefshëm. **Kaloi** |
+| T03 | Manipulim çmimi | API rivlerëson çmimin dhe teston totalin nga serveri. **Kaloi** |
+| T04 | Produkt shitet/çmimi ndryshon | Testet refuzojnë produktin joaktiv dhe verifikojnë përgjigjen 409 për ndryshim total. **Kaloi** |
+| T05 | Double-click/retry | Idempotency kthen porosinë e parë dhe refuzon payload tjetër me të njëjtin key. Retry i njëkohshëm nuk u stres-testua. **Pjesërisht** |
+| T06 | Dy klientë, sloti i fundit | Testet provojnë kapacitetin e mbushur me kërkesa sekuenciale; gara simultane në MySQL nuk u provua. **Pjesërisht** |
+| T07 | Kuzhina nis përgatitjen | Kalimi/statusi dhe privatësia e kanalit testohen në backend; event live në Reverb nuk u pa nga klient real. **Pjesërisht** |
+| T08 | ETA shtyhet 10 minuta | Testi provon ETA, historikun, arsyen, auditin dhe njoftimin e ruajtur. **Kaloi** |
+| T09 | Countdown arrin zero | Testi provon se koha e kaluar nuk e ndryshon statusin automatikisht; UI mesazhi nuk u kontrollua në browser. **Pjesërisht** |
+| T10 | Shkëputje dhe rilidhje | Kodi Echo rilidhet dhe rifreskon nga API; nuk u krye provë live me rrjet të shkëputur. **Pjesërisht** |
+| T11 | Qasje ndërmjet restoranteve | Testet provojnë izolimin e stafit/klientit dhe autorizimin e kanaleve private. **Kaloi** |
+| T12 | Dy punonjës ndryshojnë statusin | Testohen kalimet e palejuara dhe konfliktet pas gjendjes së fundit; kërkesa simultane nuk u stres-testua. **Pjesërisht** |
+| T13 | QR skanohet dy herë | Testi provon se kodi i përdorur refuzohet; QR i dytë nuk mund ta përfundojë porosinë. **Kaloi** |
+| T14 | Artikull i papërfunduar | Backend bllokon “Gati” deri te përfundimi i artikujve dhe paketimit. **Kaloi** |
+| T15 | Anulim/refuzim | Testohen lejet, arsyet dhe lirimi i slotit në anulim. **Kaloi** |
+| T16 | Menuja ndryshon pas porosisë | Testi verifikon snapshot-in e emrit dhe çmimit. **Kaloi** |
+| T17 | Restart serveri/rifreskim | Testi provon leximin e gjendjes së ruajtur nga DB; procesi nuk u ndal/rinis në test. **Pjesërisht** |
+| T18 | Pagesë e papaguar | API bllokon dorëzimin pa pagesë të saktë; teston pagesën dhe përfundimin. **Kaloi** |
 
-## Verifikimi i të dhënave demo sipas PDF-së
+## Prova të shtuara në këtë fazë
 
-- **7 lloje biznesesh**: Pizzeria (`Casa Forno`), Fast Food (`Urban Grill`), Kafe (`Moka House`), Furrë buke (`Daily Crumb`), Ushqim i shëndetshëm (`Green Table`), Restorant tradicional (`Bujtina Te Ura`), Ëmbëltore (`Sweet Atelier`).
-- **Restorant me 2 degë**: `Casa Forno` ka `Casa Forno Center` dhe `Casa Forno East`.
-- **Produkte & Alergjenë**: 36 produkte gjithsej me stacione kuzhine (`pizza`, `grill`, `oven`, `drinks`, `packaging`) dhe alergjenë të deklaruar realistë (`gluten`, `dairy`, `eggs`, `nuts`, `sesame`, `mustard`).
-- **Grupe opsionesh**: 6 grupe me përzgjedhje min/max, zgjedhje të detyrueshme dhe çmime shtesë.
-- **Raste kufitare**: Degë e mbyllur (p.sh. e hënë te Sweet Atelier), produkt i padisponueshëm (four-cheese-pizza te Casa Forno East), slot i plotë, dhe kod marrjeje tashmë i përdorur.
+- Reset password kërkon tokenin e dërguar në email; tokeni skadon/përdoret një herë dhe email-i i panjohur merr përgjigje neutrale.
+- Llogaria joaktive nuk mund të kyçet dhe një sesion ekzistues ndërpritet në kërkesën e radhës; admini nuk mund ta çaktivizojë veten.
+- Imazhi produkti refuzon SVG dhe madhësi mbi 5 MB; JPG/PNG/WebP brenda limitit ruhen në diskun `public`.
+- I njëjti produkt mund të jetë dy rreshta porosie me konfigurime të ndryshme dhe totalet llogariten veçmas.
+- Seed/test konfirmon 7 lloje biznesesh, 8 degë, 36 produkte, 6 grupe opsionesh, 9 përdorues dhe 15 porosi.
+
+## Çfarë duhet testuar para dorëzimit
+
+1. Migro/seed nga databazë MySQL bosh dhe ekzekuto testet me MySQL.
+2. Nise Laravel + Reverb + Vite; provo eventet dhe rilidhjen në pajisje/shfletues të ndarë, mat T07 brenda 5 sekondash.
+3. Simulo kërkesa të njëkohshme për slotin e fundit, idempotency key të njëjtë dhe kalim statusi.
+4. Kontrollo vizualisht desktop, tablet dhe telefon, tastierë, gabime rrjeti, menu bosh dhe llogari demo.
