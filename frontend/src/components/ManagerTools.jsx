@@ -7,12 +7,13 @@ const weekdays = ['E diel', 'E hënë', 'E martë', 'E mërkurë', 'E enjte', 'E
 
 async function managerRequest(url, { method = 'GET', body } = {}) {
   const headers = { Accept: 'application/json' }
-  if (body) headers['Content-Type'] = 'application/json'
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
+  if (body && !isFormData) headers['Content-Type'] = 'application/json'
   if (method !== 'GET') {
     await prepareCsrf()
     headers['X-XSRF-TOKEN'] = readCsrfCookie()
   }
-  const response = await fetch(url, { method, credentials: 'include', headers, ...(body ? { body: JSON.stringify(body) } : {}) })
+  const response = await fetch(url, { method, credentials: 'include', headers, ...(body ? { body: isFormData ? body : JSON.stringify(body) } : {}) })
   const result = await response.json()
   if (!response.ok) throw new Error(Object.values(result.errors || {}).flat()[0] || result.message || 'Manager request failed.')
   return result
@@ -34,6 +35,7 @@ export function ManagerTools({ section }) {
   const [categories, setCategories] = useState([])
   const [newCategory, setNewCategory] = useState('')
   const [branchPrices, setBranchPrices] = useState({})
+  const [imageFile, setImageFile] = useState(null)
   const [form, setForm] = useState({ name: '', description: '', allergens: '', price: '', category_id: '', prep_station: 'packaging', prep_minutes: 15, option_group_ids: [] })
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -96,9 +98,19 @@ export function ManagerTools({ section }) {
     setError('')
     try {
       const declaredAllergens = form.allergens.split(',').map((allergen) => allergen.trim()).filter(Boolean)
-      const body = { ...form, category_id: Number(form.category_id), price: Number(form.price), prep_minutes: Number(form.prep_minutes), allergens: declaredAllergens.length ? declaredAllergens : null }
+      const body = new FormData()
+      body.append('category_id', String(Number(form.category_id)))
+      body.append('name', form.name)
+      body.append('description', form.description)
+      body.append('price', String(Number(form.price)))
+      body.append('prep_minutes', String(Number(form.prep_minutes)))
+      body.append('prep_station', form.prep_station)
+      declaredAllergens.forEach((allergen) => body.append('allergens[]', allergen))
+      form.option_group_ids.forEach((groupId) => body.append('option_group_ids[]', String(groupId)))
+      if (imageFile) body.append('image', imageFile)
       await managerRequest(`/api/manager/branches/${branchId}/products`, { method: 'POST', body })
       setForm((current) => ({ ...current, name: '', description: '', allergens: '', price: '' }))
+      setImageFile(null)
       await loadSection()
     } catch (actionError) {
       setError(actionError.message)
@@ -302,6 +314,7 @@ export function ManagerTools({ section }) {
           </label>
           <label>{t('Emri i produktit')}<input required maxLength="160" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder={t('p.sh. Pizza Quattro Formaggi')} /></label>
           <label>{t('Përshkrimi i produktit')}<textarea maxLength="2000" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder={t('Përbërësit kryesorë...')} /></label>
+          <label>{t('Fotografia (JPG, PNG ose WebP · maksimumi 5 MB)')}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setImageFile(event.target.files?.[0] || null)} /></label>
           <label>{t('Alergjenët e deklaruar (të ndarë me presje)')}<input maxLength="1000" placeholder={t('p.sh. gluten, qumësht, vezë')} value={form.allergens} onChange={(event) => setForm({ ...form, allergens: event.target.value })} /></label>
           <div className="manager-form-row">
             <label>{t('Çmimi (€)')}<input type="number" required min="0" step="0.01" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} /></label>
@@ -402,7 +415,7 @@ export function ManagerTools({ section }) {
           </form>
           <button
             type="button"
-            className="wolt-btn-primary"
+            className="foodora-btn-primary"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '36px', padding: '0 16px', fontSize: '11px' }}
             onClick={exportReportCsv}
           >
