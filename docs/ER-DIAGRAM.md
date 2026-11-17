@@ -33,6 +33,7 @@ erDiagram
         string role
         string name
         string email UK
+        boolean is_active
     }
     RESTAURANTS {
         bigint id PK
@@ -167,5 +168,9 @@ erDiagram
 ```
 
 Produktet dhe opsionet kopjohen te `order_items` / `order_item_options` si snapshot emri e çmimi; fshirja e produktit origjinal nuk ndryshon historikun e blerjes. `pickup_code_hash` është hash i kodit njëpërdorimësh; një kopje e enkriptuar ruhet për t'ia kthyer të njëjtin sekret klientit në riprovim idempotent.
+
+Deget ruhen me zonën `Europe/Pristina`; llogaritjet përdorin identifikuesin ekuivalent `Europe/Belgrade` vetëm në instalimet Windows ku PHP nuk e njeh IANA-n `Europe/Pristina`. Kohët e afatit ruhen UTC. Llogaritë kanë `is_active`; administratori mund t'i çaktivizojë dhe kërkesat e autentikuara e kontrollojnë gjendjen aktuale.
+
+Disa entitete të sugjeruara në PDF modelohen pa tabela të ndara: `staff_memberships` është `branch_staff`, `menu_categories` është `product_categories`, `option_choices` është `product_options`, `product_option_groups` është `option_group_product`, `stations` mbahet te `products.prep_station`, `pickup_slots` llogaritet nga `business_hours` + porositë aktive, `item_preparation_statuses` mbahet te `order_items`, `ready_time_history` është `order_eta_history`, `idempotency_keys` ruhet te `orders`, dhe kodi në `pickup_tokens` ruhet hash/encrypted te `orders`.
 
 Migrimet bazë të Laravel-it për sesione, cache dhe jobs nuk paraqiten në diagram.
