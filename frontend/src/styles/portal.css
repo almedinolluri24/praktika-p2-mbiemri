@@ -1,6 +1,6 @@
 /* ==========================================================================
    FOODORA PORTAL — Staff & Admin Full-Page Dashboard
-   Professional, Wolt-style layout. Exit only via "Kthehu te Ballina".
+   Professional, foodora-style layout. Exit only via "Kthehu te Ballina".
    ========================================================================== */
 
 :root {
@@ -1356,6 +1356,200 @@
   .portal-refresh-btn span { display: none; }
   .portal-refresh-btn { padding: 0 12px; }
 }
+
+/* Administrator dark theme: consistent surfaces and readable controls throughout the workspace. */
+.portal-page.dark-theme.admin-portal-page {
+  background: #141312;
+  color: #f5f1ed;
+}
+.portal-page.dark-theme.admin-portal-page .portal-topbar {
+  border-color: #302c28;
+  background: #1b1917;
+}
+.portal-page.dark-theme.admin-portal-page .foodora-wordmark strong { color: #f5f1ed !important; }
+.portal-page.dark-theme.admin-portal-page .foodora-wordmark small { color: #bdb3aa !important; opacity: 1; }
+.portal-page.dark-theme.admin-portal-page .portal-role-pill { border-color: #6d3b1b; background: #38261b; color: #ffb27b; }
+.portal-page.dark-theme.admin-portal-page .portal-intro-banner,
+.portal-page.dark-theme.admin-portal-page .admin-summary-card,
+.portal-page.dark-theme.admin-portal-page .admin-list,
+.portal-page.dark-theme.admin-portal-page .admin-categories,
+.portal-page.dark-theme.admin-portal-page .admin-staff,
+.portal-page.dark-theme.admin-portal-page .admin-users {
+  border-color: #302c28;
+  background: #1d1b19;
+  color: #f5f1ed;
+}
+.portal-page.dark-theme.admin-portal-page .portal-intro-banner h2,
+.portal-page.dark-theme.admin-portal-page .admin-panel-heading h3,
+.portal-page.dark-theme.admin-portal-page .admin-restaurant strong,
+.portal-page.dark-theme.admin-portal-page .admin-categories h3,
+.portal-page.dark-theme.admin-portal-page .admin-staff h3,
+.portal-page.dark-theme.admin-portal-page .admin-users h3 { color: #f5f1ed; }
+.portal-page.dark-theme.admin-portal-page .portal-intro-banner p,
+.portal-page.dark-theme.admin-portal-page .portal-user-meta,
+.portal-page.dark-theme.admin-portal-page .portal-user-meta small,
+.portal-page.dark-theme.admin-portal-page .admin-panel-heading p,
+.portal-page.dark-theme.admin-portal-page .admin-summary-card small,
+.portal-page.dark-theme.admin-portal-page .admin-summary-card > div > span,
+.portal-page.dark-theme.admin-portal-page .admin-restaurant small,
+.portal-page.dark-theme.admin-portal-page .admin-staff label { color: #bdb3aa; }
+.portal-page.dark-theme.admin-portal-page .admin-summary-card strong { color: #fff; }
+.portal-page.dark-theme.admin-portal-page .admin-panel-count { border-color: #6d3b1b; background: #38261b; color: #ffb27b; }
+.portal-page.dark-theme.admin-portal-page .admin-list-toolbar input,
+.portal-page.dark-theme.admin-portal-page .admin-list-toolbar select,
+.portal-page.dark-theme.admin-portal-page .admin-categories form input,
+.portal-page.dark-theme.admin-portal-page .admin-staff input,
+.portal-page.dark-theme.admin-portal-page .admin-staff select {
+  border-color: #403a34;
+  background: #262320;
+  color: #f5f1ed;
+}
+.portal-page.dark-theme.admin-portal-page .admin-list-toolbar input::placeholder,
+.portal-page.dark-theme.admin-portal-page .admin-categories form input::placeholder,
+.portal-page.dark-theme.admin-portal-page .admin-staff input::placeholder { color: #958a80; }
+.portal-page.dark-theme.admin-portal-page .admin-restaurant,
+.portal-page.dark-theme.admin-portal-page .admin-categories ul li,
+.portal-page.dark-theme.admin-portal-page .admin-staff ul li,
+.portal-page.dark-theme.admin-portal-page .admin-user-row { border-color: #332f2b; }
+.portal-page.dark-theme.admin-portal-page .admin-categories ul li,
+.portal-page.dark-theme.admin-portal-page .admin-staff ul li { background: #24211e; color: #f5f1ed; }
+.portal-page.dark-theme.admin-portal-page .admin-actions button,
+.portal-page.dark-theme.admin-portal-page .admin-user-row button,
+.portal-page.dark-theme.admin-portal-page .admin-categories ul li button {
+  border-color: #48413a;
+  background: #2a2622;
+  color: #e9e2db;
+}
+.portal-page.dark-theme.admin-portal-page .admin-actions button:hover:not(:disabled),
+.portal-page.dark-theme.admin-portal-page .admin-user-row button:hover:not(:disabled),
+.portal-page.dark-theme.admin-portal-page .admin-categories ul li button:hover {
+  border-color: #f97316;
+  background: #38261b;
+  color: #ffb27b;
+}
+.portal-page.dark-theme.admin-portal-page .admin-actions button.admin-select[aria-pressed="true"],
+.portal-page.dark-theme.admin-portal-page .admin-categories form button {
+  border-color: #f97316;
+  background: #f97316;
+  color: #fff;
+}
+.portal-page.dark-theme.admin-portal-page .admin-actions button.admin-select[aria-pressed="true"]:hover,
+.portal-page.dark-theme.admin-portal-page .admin-categories form button:hover { background: #df5d0b; color: #fff; }
+.portal-page.dark-theme.admin-portal-page .admin-user-state.active { background: #173522; color: #86efac; }
+.portal-page.dark-theme.admin-portal-page .admin-user-state.inactive { background: #3b211d; color: #fca5a5; }
+.portal-page.dark-theme.admin-portal-page .admin-empty,
+.portal-page.dark-theme.admin-portal-page .portal-loading-state { border-color: #37322d; background: #201e1b; color: #bdb3aa; }
+.portal-page.dark-theme.admin-portal-page :focus-visible { outline-color: rgba(251, 146, 60, .65); }
+
+/* Foodora workspace refresh: shared visual language for manager, kitchen and admin. */
+.portal-page {
+  --portal-orange: #f97316;
+  --portal-orange-dark: #ea580c;
+  --portal-radius: 18px;
+  background: #f7f6f4;
+}
+.portal-topbar {
+  min-height: 76px;
+  padding-inline: clamp(18px, 4vw, 56px);
+  border-bottom: 1px solid #eee9e3;
+  background: rgba(255, 255, 255, .96);
+}
+.portal-main-container { width: min(100% - 48px, 1380px); padding-block: 30px 64px; gap: 24px; }
+.portal-intro-banner {
+  position: relative;
+  min-height: 150px;
+  padding: clamp(24px, 4vw, 38px);
+  overflow: hidden;
+  border: 1px solid #f2e4d8;
+  border-left: 5px solid var(--portal-orange);
+  border-radius: 22px;
+  background: #fff;
+}
+.portal-intro-banner h2 { font-size: clamp(24px, 3vw, 34px); letter-spacing: -.04em; }
+.portal-intro-banner p { max-width: 650px; line-height: 1.65; }
+.portal-workspace { gap: 22px; }
+.portal-section-heading { margin-bottom: 18px; }
+.portal-section-heading h3 { font-size: 21px; letter-spacing: -.025em; }
+.portal-section-heading p { line-height: 1.55; }
+.admin-dashboard-summary { gap: 16px; }
+.admin-summary-card {
+  min-height: 116px;
+  padding: 20px;
+  border: 1px solid #eee9e3;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(32, 27, 23, .045);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.admin-summary-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(32, 27, 23, .085); }
+.admin-summary-card strong { font-size: 28px; letter-spacing: -.04em; }
+.admin-summary-card small { font-size: 12px; }
+.admin-dashboard-layout { gap: 20px; align-items: start; }
+.admin-portal-page .admin-list, .admin-portal-page .admin-categories,
+.admin-portal-page .admin-staff, .admin-users, .manager-tools {
+  border: 1px solid #eee9e3;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(32, 27, 23, .045);
+}
+.admin-panel-heading { margin-bottom: 18px; }
+.admin-panel-heading h3 { font-size: 17px; letter-spacing: -.02em; }
+.admin-list-toolbar { gap: 10px; }
+.portal-page input, .portal-page select, .admin-list-toolbar input,
+.admin-list-toolbar select, .manager-tools input, .manager-tools select {
+  min-height: 42px;
+  border: 1px solid #e8e1da;
+  border-radius: 11px;
+  background-color: #fff;
+}
+.portal-page button { min-height: 40px; border-radius: 11px; font-weight: 700; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+.portal-page button:hover:not(:disabled) { transform: translateY(-1px); }
+.role-order-list { gap: 14px; }
+.role-order-card {
+  padding: 22px;
+  border: 1px solid #eee9e3;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 7px 22px rgba(32, 27, 23, .045);
+}
+.role-order-card .order-history-top { padding-bottom: 14px; border-bottom: 1px solid #f0ece8; }
+.role-order-card .order-lines { padding-block: 12px; }
+.role-action-row { gap: 10px; }
+.manager-dashboard-tabs { padding: 6px; border: 1px solid #eee9e3; border-radius: 14px; background: #fff; }
+.manager-dashboard-tabs button { border-radius: 10px; }
+.kitchen-filter-bar { padding: 12px; border: 1px solid #eee9e3; border-radius: 14px; background: #fff; }
+.portal-live-indicator { padding: 7px 11px; border-radius: 999px; background: #f7f6f4; }
+.portal-page.dark-theme { background: #141414; }
+.portal-page.dark-theme .portal-topbar { border-color: #2a2928; background: #1d1c1b; }
+.portal-page.dark-theme .portal-intro-banner,
+.portal-page.dark-theme .admin-summary-card,
+.portal-page.dark-theme .admin-portal-page .admin-list,
+.portal-page.dark-theme .admin-portal-page .admin-categories,
+.portal-page.dark-theme .admin-portal-page .admin-staff,
+.portal-page.dark-theme .admin-users,
+.portal-page.dark-theme .manager-tools,
+.portal-page.dark-theme .role-order-card,
+.portal-page.dark-theme .manager-dashboard-tabs,
+.portal-page.dark-theme .kitchen-filter-bar { border-color: #302e2c; background: #1d1c1b; }
+.portal-page.dark-theme input, .portal-page.dark-theme select { border-color: #393633; background: #252321; }
+
+@media (max-width: 900px) {
+  .portal-main-container { width: calc(100% - 32px); padding-top: 22px; }
+  .admin-dashboard-summary { gap: 12px; }
+  .role-order-card { padding: 18px; }
+}
+@media (max-width: 600px) {
+  .portal-topbar { min-height: 64px; padding-inline: 14px; }
+  .portal-main-container { width: calc(100% - 24px); padding-block: 16px 38px; }
+  .portal-intro-banner { min-height: 0; padding: 20px; border-radius: 17px; }
+  .admin-summary-card { min-height: 94px; padding: 14px; border-radius: 15px; }
+  .role-order-card { padding: 15px; border-radius: 15px; }
+  .admin-portal-page .admin-list, .admin-portal-page .admin-categories,
+  .admin-portal-page .admin-staff, .admin-users, .manager-tools { border-radius: 15px; }
+  .manager-dashboard-tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .manager-dashboard-tabs button { flex: 0 0 auto; }
+  .kitchen-filter-bar { align-items: flex-start; flex-direction: column; }
+}
 @media (max-width: 480px) {
   .admin-dashboard-summary { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .admin-summary-card { gap: 9px; padding: 12px; }
@@ -1370,4 +1564,48 @@
   .order-history-top { flex-direction: column; gap: 8px; }
   .portal-intro-banner h2 { font-size: 17px; }
   .portal-section-heading p { max-width: 270px; line-height: 1.45; }
+}
+
+/* Shared finishing details for the existing admin and staff workspaces. */
+.portal-page { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.portal-topbar { box-shadow: 0 2px 10px rgba(23, 23, 23, .045); }
+.portal-main-container { scrollbar-gutter: stable; }
+.portal-intro-banner, .admin-summary-card, .admin-portal-page .admin-list,
+.admin-portal-page .admin-categories, .admin-portal-page .admin-staff,
+.role-order-card, .manager-tools { box-shadow: 0 5px 22px rgba(23, 23, 23, .05); }
+.portal-page button, .portal-page input, .portal-page select { font: inherit; }
+.portal-page button:focus-visible, .portal-page input:focus-visible,
+.portal-page select:focus-visible { outline: 3px solid rgba(249, 115, 22, .35); outline-offset: 2px; }
+.portal-page button:disabled { cursor: not-allowed; }
+.portal-section-heading { scroll-margin-top: 84px; }
+.admin-users { padding: 20px; border: 1px solid var(--portal-border); border-radius: var(--portal-radius); background: var(--portal-surface); box-shadow: var(--portal-shadow-sm); }
+.admin-users .admin-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 8px; }
+.admin-users .admin-panel-heading h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 5px; font-size: 16px; }
+.admin-users .admin-panel-heading p { margin: 0; color: var(--portal-muted); font-size: 12px; }
+.admin-user-list { display: grid; }
+.admin-user-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--portal-border); }
+.admin-user-row:last-child { border-bottom: 0; }
+.admin-user-row strong, .admin-user-row small { display: block; }
+.admin-user-row strong { font-size: 13px; }
+.admin-user-row small { margin-top: 3px; color: var(--portal-muted); font-size: 11px; }
+.admin-user-state { padding: 5px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+.admin-user-state.active { background: #ecfdf3; color: #15803d; }
+.admin-user-state.inactive { background: #fef2f2; color: #b91c1c; }
+.admin-user-row button { min-height: 34px; padding: 0 12px; border: 1px solid var(--portal-border); border-radius: 999px; background: var(--portal-surface); color: var(--portal-text); font-size: 11px; font-weight: 700; }
+.admin-user-row button:hover:not(:disabled) { border-color: var(--portal-orange); color: var(--portal-orange-dark); }
+.admin-user-row button:disabled { opacity: .45; cursor: not-allowed; }
+.portal-page.dark-theme .admin-users { background: #18181b; border-color: #27272a; }
+.portal-page.dark-theme .admin-user-row { border-color: #27272a; }
+.portal-page.dark-theme .admin-user-row button { background: #202025; border-color: #3f3f46; color: #f4f4f5; }
+
+@media (max-width: 720px) {
+  .portal-topbar { min-height: 60px; }
+  .portal-brand-block { gap: 9px; }
+  .portal-main-container { scrollbar-gutter: auto; }
+  .portal-intro-banner { border-left-width: 3px; }
+  .admin-users { padding: 14px; }
+  .admin-users .admin-panel-heading { align-items: stretch; flex-direction: column; }
+  .admin-user-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .admin-user-state { justify-self: start; grid-column: 1; grid-row: 2; }
+  .admin-user-row button { grid-column: 2; grid-row: 1 / span 2; }
 }
