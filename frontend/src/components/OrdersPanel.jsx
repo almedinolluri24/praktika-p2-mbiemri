@@ -163,12 +163,12 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
 
   return (
     <div className="admin-backdrop" role="presentation">
-      <section className="orders-panel wolt-orders-modal" role="dialog" aria-modal="true" aria-labelledby="orders-title">
-        <header className="wolt-modal-header">
+      <section className="orders-panel foodora-orders-modal" role="dialog" aria-modal="true" aria-labelledby="orders-title">
+        <header className="foodora-modal-header">
           <div>
-            <span className="wolt-kicker">{t('LLOGARIA JUAJ')}</span>
+            <span className="foodora-kicker">{t('LLOGARIA JUAJ')}</span>
             <h2 id="orders-title">{t('Porositë & Gjurmimi Live')}</h2>
-            <div className="wolt-live-indicator">
+            <div className="foodora-live-indicator">
               <span className={`status-dot ${liveState === 'connected' ? 'online' : liveState === 'connecting' ? 'pending' : 'offline'}`} />
               <span>
                 {liveState === 'connected'
@@ -180,18 +180,18 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
               {updatedAt && <small>· {t('Rifreskuar')}: {updatedAt.toLocaleTimeString(language === 'en' ? 'en-US' : 'sq-XK')}</small>}
             </div>
           </div>
-          <div className="wolt-header-actions">
+          <div className="foodora-header-actions">
             <LanguageToggle />
-            <button className="wolt-icon-btn" onClick={loadOrders} disabled={loading} title={t('Rifresko të dhënat')} aria-label={t('Rifresko')}>
+            <button className="foodora-icon-btn" onClick={loadOrders} disabled={loading} title={t('Rifresko të dhënat')} aria-label={t('Rifresko')}>
               <RefreshCwIcon size={14} />
             </button>
-            <button className="wolt-icon-btn close" onClick={onClose} aria-label={t('Mbyll')}>
+            <button className="foodora-icon-btn close" onClick={onClose} aria-label={t('Mbyll')}>
               ×
             </button>
           </div>
         </header>
 
-        <nav className="wolt-subtabs" aria-label={t('Ndarjet e panelit të klientit')}>
+        <nav className="foodora-subtabs" aria-label={t('Ndarjet e panelit të klientit')}>
           <button
             type="button"
             className={activeTab === 'orders' ? 'active' : ''}
@@ -213,23 +213,23 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
         </nav>
 
         {error && (
-          <div className="wolt-alert error" role="alert" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="foodora-alert error" role="alert" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <AlertTriangleIcon size={16} />
             <span>{t(error)}</span>
           </div>
         )}
         {profileSuccess && (
-          <div className="wolt-alert success" role="status" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="foodora-alert success" role="status" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <CheckCircleIcon size={16} />
             <span>{t(profileSuccess)}</span>
           </div>
         )}
 
         {activeTab === 'profile' ? (
-          <form className="wolt-profile-box" onSubmit={saveProfile}>
+          <form className="foodora-profile-box" onSubmit={saveProfile}>
             <h3>{t('Të dhënat e profilit')}</h3>
             <p>{t('Përditësoni emrin dhe email-in tuaj personal.')}</p>
-            <div className="wolt-form-group">
+            <div className="foodora-form-group">
               <label htmlFor="profile-name">{t('Emri dhe mbiemri')}</label>
               <input
                 id="profile-name"
@@ -239,7 +239,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                 required
               />
             </div>
-            <div className="wolt-form-group">
+            <div className="foodora-form-group">
               <label htmlFor="profile-email">{t('Adresa e email-it')}</label>
               <input
                 id="profile-email"
@@ -249,14 +249,14 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                 required
               />
             </div>
-            <button className="wolt-btn-primary" disabled={profileSaving} style={{ marginTop: '12px' }}>
+            <button className="foodora-btn-primary" disabled={profileSaving} style={{ marginTop: '12px' }}>
               {t(profileSaving ? 'Po ruhet…' : 'Ruaj ndryshimet')}
             </button>
           </form>
         ) : loading && !orders.length ? (
-          <div className="wolt-loading-state" role="status">{t('Po ngarkohen porositë tuaja…')}</div>
+          <div className="foodora-loading-state" role="status">{t('Po ngarkohen porositë tuaja…')}</div>
         ) : orders.length ? (
-          <div className="wolt-orders-list">
+          <div className="foodora-orders-list">
             {orders.map((order) => {
               const currentStepIndex = getStepIndex(order.status)
               const isTerminal = ['cancelled', 'rejected'].includes(order.status)
@@ -264,25 +264,25 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
               const terminalReason = order.status_history?.find((s) => ['cancelled', 'rejected'].includes(s.to_status) && s.note)?.note
 
               return (
-                <article className="wolt-order-card" key={order.id}>
+                <article className="foodora-order-card" key={order.id}>
                   {/* Top Bar */}
-                  <div className="wolt-order-card-header">
+                  <div className="foodora-order-card-header">
                     <div className="order-meta-info">
                       <span className="order-id-tag">{t('POROSIA #{id}', { id: order.id })}</span>
                       <h3>{order.branch?.restaurant?.name || t('Restoranti')}</h3>
                       <p className="order-branch-sub">{order.branch?.name} · {order.branch?.city}</p>
                     </div>
-                    <span className={`wolt-status-badge ${order.status}`}>
+                    <span className={`foodora-status-badge ${order.status}`}>
                       {t(statusBadgeLabels[order.status] || order.status)}
                     </span>
                   </div>
 
-                  {/* Wolt-Style Step Tracker */}
+                  {/* foodora-Style Step Tracker */}
                   {!isTerminal && (
-                    <div className="wolt-stepper-wrap" aria-label={t('Hapat e përgatitjes')}>
-                      <div className="wolt-stepper-bar">
+                    <div className="foodora-stepper-wrap" aria-label={t('Hapat e përgatitjes')}>
+                      <div className="foodora-stepper-bar">
                         <div
-                          className="wolt-stepper-progress"
+                          className="foodora-stepper-progress"
                           style={{ width: `${(Math.max(0, currentStepIndex) / (statusSteps.length - 1)) * 100}%` }}
                         />
                         {statusSteps.map((step, idx) => {
@@ -292,7 +292,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                           return (
                             <div
                               key={step.key}
-                              className={`wolt-step-node ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}`}
+                              className={`foodora-step-node ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}`}
                             >
                               <div className="node-circle">
                                 {isDone ? <CheckCircleIcon size={14} /> : <StepIcon size={14} />}
@@ -306,7 +306,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   )}
 
                   {/* ETA & Live Status Banner */}
-                  <div className={`wolt-eta-banner ${order.status}`}>
+                  <div className={`foodora-eta-banner ${order.status}`}>
                     {order.status === 'pending_confirmation' ? (
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                         <ClockIcon size={18} />
@@ -356,7 +356,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
 
                   {/* Pickup Code & QR Card */}
                   {order.pickup_token && order.status !== 'picked_up' && (
-                    <div className="wolt-pickup-card">
+                    <div className="foodora-pickup-card">
                       <div className="pickup-qr-container">
                         <PickupQr value={order.pickup_token} />
                       </div>
@@ -373,7 +373,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   )}
 
                   {/* Branch & Pickup Details */}
-                  <div className="wolt-order-info-grid">
+                  <div className="foodora-order-info-grid">
                     <div className="info-cell">
                       <small>{t('Pika e marrjes')}</small>
                       <strong>{order.branch?.address}, {order.branch?.city}</strong>
@@ -393,7 +393,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   </div>
 
                   {/* Items list */}
-                  <ul className="wolt-order-items-list">
+                  <ul className="foodora-order-items-list">
                     {(order.items || []).map((item) => (
                       <li key={item.id}>
                         <div className="item-title-col">
@@ -408,7 +408,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                   </ul>
 
                   {/* Order Footer & Actions */}
-                  <div className="wolt-order-card-footer">
+                  <div className="foodora-order-card-footer">
                     <div className="footer-total-box">
                       <span>{t(order.schedule_type === 'asap' ? 'Marrje e menjëhershme (ASAP)' : 'Marrje e planifikuar')}</span>
                       <strong>{t('Totali:')} €{Number(order.total).toFixed(2)}</strong>
@@ -418,7 +418,7 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                       {order.status === 'pending_confirmation' && (
                         <button
                           type="button"
-                          className="wolt-btn-cancel"
+                          className="foodora-btn-cancel"
                           onClick={() => cancelOrder(order)}
                         >
                           {t('Anulo porosinë')}
@@ -431,11 +431,11 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
             })}
           </div>
         ) : (
-          <div className="wolt-empty-orders">
+          <div className="foodora-empty-orders">
             <ShoppingBagIcon size={44} />
             <h3>{t('Nuk keni ende asnjë porosi')}</h3>
             <p>{t('Eksploroni restorantet më të mira dhe porositni ushqim të freskët për marrje!')}</p>
-            <button className="wolt-btn-primary" onClick={onClose}>
+            <button className="foodora-btn-primary" onClick={onClose}>
               {t('Shiko menynë')}
             </button>
           </div>
