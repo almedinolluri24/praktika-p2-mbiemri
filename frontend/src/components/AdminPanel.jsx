@@ -49,6 +49,8 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
   const [busy, setBusy] = useState(false)
   const [branches, setBranches] = useState([])
   const [staffAccounts, setStaffAccounts] = useState([])
+  const [accounts, setAccounts] = useState([])
+  const [accountSearch, setAccountSearch] = useState('')
   const [branchStaff, setBranchStaff] = useState([])
   const [selectedBranchId, setSelectedBranchId] = useState('')
   const [staffUserId, setStaffUserId] = useState('')
@@ -80,12 +82,14 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
 
   const loadStaffData = useCallback(async () => {
     try {
-      const [branchResult, accountResult] = await Promise.all([
+      const [branchResult, accountResult, allAccountsResult] = await Promise.all([
         request('/api/admin/branches'),
         request('/api/admin/staff-accounts'),
+        request('/api/admin/users?per_page=100'),
       ])
       setBranches(branchResult.data)
       setStaffAccounts(accountResult.data)
+      setAccounts(allAccountsResult.data)
       setSelectedBranchId((current) => current || String(branchResult.data[0]?.id || ''))
     } catch (loadError) {
       setError(loadError.message)
@@ -151,6 +155,22 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
     }
   }
 
+  async function setAccountStatus(account) {
+    setBusy(true)
+    setError('')
+    try {
+      await request(`/api/admin/users/${account.id}/status`, {
+        method: 'PATCH',
+        body: { is_active: !account.is_active },
+      })
+      await loadStaffData()
+    } catch (actionError) {
+      setError(actionError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function changeStatus(restaurant, status) {
     setBusy(true)
     setError('')
@@ -194,6 +214,7 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
   }
 
   const selectedRestaurant = restaurants.find((restaurant) => restaurant.id === Number(selectedId))
+  const visibleAccounts = accounts.filter((account) => `${account.name} ${account.email} ${account.role}`.toLocaleLowerCase().includes(accountSearch.trim().toLocaleLowerCase()))
   const query = restaurantSearch.trim().toLocaleLowerCase()
   const visibleRestaurants = restaurants.filter((restaurant) => {
     const matchesSearch = !query
@@ -488,6 +509,40 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
                 </section>
               </aside>
             </div>
+
+            <section className="admin-users">
+              <div className="admin-panel-heading">
+                <div>
+                  <h3><UsersIcon size={18} /> {t('Llogaritë e platformës')}</h3>
+                  <p>{t('Shiko rolet dhe çaktivizo përkohësisht llogaritë. Llogaritë joaktive nuk mund të kyçen.')}</p>
+                </div>
+                <label className="admin-search">
+                  <span className="visually-hidden">{t('Kërko llogari')}</span>
+                  <input type="search" value={accountSearch} onChange={(event) => setAccountSearch(event.target.value)} placeholder={t('Kërko sipas emrit ose email-it…')} />
+                </label>
+              </div>
+              <div className="admin-user-list">
+                {visibleAccounts.map((account) => (
+                  <article className="admin-user-row" key={account.id}>
+                    <div>
+                      <strong>{account.name}</strong>
+                      <small>{account.email} · {t(account.role.replaceAll('_', ' '))}</small>
+                    </div>
+                    <span className={`admin-user-state ${account.is_active ? 'active' : 'inactive'}`}>
+                      {t(account.is_active ? 'Aktive' : 'Jo aktive')}
+                    </span>
+                    <button
+                      disabled={busy || account.id === user.id}
+                      title={account.id === user.id ? t('Nuk mund ta çaktivizoni llogarinë tuaj') : undefined}
+                      onClick={() => setAccountStatus(account)}
+                    >
+                      {t(account.is_active ? 'Çaktivizo' : 'Aktivizo')}
+                    </button>
+                  </article>
+                ))}
+                {!visibleAccounts.length && <p className="admin-empty">{t('Nuk u gjet asnjë llogari.')}</p>}
+              </div>
+            </section>
           </>
         )}
       </main>
