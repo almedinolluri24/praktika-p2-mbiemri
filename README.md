@@ -82,4 +82,4 @@ API-të e mbrojtura përdorin sesion Laravel/CSRF dhe kontrollojnë rolin/degën
 
 ## Verifikimi
 
-Ekzekuto `php artisan test` nga `backend` (37 teste, 225 assertions), dhe `npm run build` / `npm run lint` nga `frontend`. Rezultatet konkrete dhe mbulimi i plotë i skenarëve T01–T18 janë në `docs/TEST-REPORT.md`.
+Ekzekuto `php artisan test` nga `backend` (37 teste, 225 assertions), dhe `npm run test:auth`, `npm run build` / `npm run lint` nga `frontend`. Rezultatet konkrete dhe mbulimi i skenarëve T01–T18 janë në `docs/TEST-REPORT.md`.

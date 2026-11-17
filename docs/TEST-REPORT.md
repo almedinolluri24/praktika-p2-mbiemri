@@ -1,14 +1,15 @@
 # Raporti i auditimit dhe testeve
 
-Kontrolluar më 15 nëntor 2026 kundrejt specifikimit të profesorit në PDF (v1.2, 10 nëntor 2026).
+Kontrolluar më 17 nëntor 2026 kundrejt specifikimit të profesorit në PDF (v1.2, 10 nëntor 2026).
 Stack-u: **React · Laravel · MySQL / SQLite**.
 
 ## Komandat dhe rezultatet e ekzekutimit
 
 - `php artisan test` — **37 teste kaluan, 225 assertions** me sukses.
+- `npm run test:auth` — **7 teste kaluan**: admini hap vetëm panelin admin, rolet e stafit hapin panelin e punës, klienti hap porositë pas login-it dhe sign up nuk hap panel të privilegjuar.
 - `php artisan migrate:status` — të gjitha migrimet (përfshirë `2026_11_15_000009_add_pickup_instructions_to_branches`) janë ekzekutuar (`Ran`).
 - `php artisan db:seed --no-interaction` — ekzekutohet pa asnjë gabim; popullohen 7 lloje biznesesh, 8 degë, 36 produkte me alergjenë të deklaruar, 6 grupe opsionesh me çmime shtesë, llogari me role dhe 15 porosi demo me të gjitha statuset.
-- `npm run build` — **kaloi me sukses** (Vite: 69 module të transformuara në mënyrë optimale).
+- `npm run build` — **kaloi me sukses** (Vite: 77 module të transformuara).
 - `npm run lint` — **kaloi me sukses** (ESLint: 0 paralajmërime, 0 gabime).
 
 ## Mbulimi i plotë i skenarëve kritikë T01–T18

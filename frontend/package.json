@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test:auth": "node --test src/services/authDestination.test.js",
     "preview": "vite preview"
   },
   "dependencies": {

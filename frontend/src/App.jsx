@@ -15,6 +15,7 @@ import { RestaurantProfile } from './components/RestaurantProfile.jsx'
 import { CategoryIcon } from './components/Icons.jsx'
 import { useLanguage } from './i18n/useLanguage.js'
 import { getAuthenticatedUser, logout } from './services/auth.js'
+import { getPostAuthDestination } from './services/authDestination.js'
 import { loadCatalog, loadCatalogFilters } from './services/catalog.js'
 import { createPickupOrder } from './services/orders.js'
 import './App.css'
@@ -300,9 +301,10 @@ function App() {
   function handleLoginSuccess(currentUser, authAction) {
     setUser(currentUser)
     setAuthPageOpen(false)
-    if (currentUser.role === 'administrator') setAdminOpen(true)
-    else if (['restaurant_manager', 'kitchen_worker', 'pickup_worker'].includes(currentUser.role)) setRoleDashboardOpen(true)
-    else if (currentUser.role === 'customer' && authAction === 'login') setOrdersOpen(true)
+    const destination = getPostAuthDestination(currentUser.role, authAction)
+    setAdminOpen(destination.admin)
+    setRoleDashboardOpen(destination.staff)
+    setOrdersOpen(destination.orders)
   }
 
   function handleToggleTheme() {
