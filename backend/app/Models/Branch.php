@@ -37,6 +37,18 @@ class Branch extends Model
             ->withTimestamps();
     }
 
+    public function timezoneForCalculations(): string
+    {
+        try {
+            new \DateTimeZone($this->timezone ?: 'Europe/Pristina');
+            return $this->timezone ?: 'Europe/Pristina';
+        } catch (\Throwable) {
+            // Some Windows PHP timezone databases omit Kosovo's IANA entry; Belgrade observes the same civil-time rules.
+            if ($this->timezone === 'Europe/Pristina') return 'Europe/Belgrade';
+            throw new \InvalidArgumentException('Unsupported branch timezone: '.$this->timezone);
+        }
+    }
+
     public function businessHours(): HasMany
     {
         return $this->hasMany(BusinessHour::class);
