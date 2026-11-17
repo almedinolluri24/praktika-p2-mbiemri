@@ -6,6 +6,8 @@ use App\Models\Branch;
 use App\Models\ProductCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ManagerOperationsTest extends TestCase
@@ -13,6 +15,38 @@ class ManagerOperationsTest extends TestCase
     use RefreshDatabase;
 
     protected $seed = true;
+
+    public function test_manager_product_images_are_limited_to_safe_types_and_five_megabytes(): void
+    {
+        Storage::fake('public');
+        $manager = User::where('email', 'manager@foodora.demo')->firstOrFail();
+        $branch = Branch::where('name', 'Casa Forno Center')->firstOrFail();
+        $category = ProductCategory::where('restaurant_id', $branch->restaurant_id)->firstOrFail();
+        $pngBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aG8sAAAAASUVORK5CYII=');
+        $payload = [
+            'category_id' => $category->id,
+            'name' => 'Uploaded photo product',
+            'price' => 4.50,
+            'image' => UploadedFile::fake()->createWithContent('dish.png', $pngBytes),
+        ];
+
+        $created = $this->actingAs($manager)->post("/api/manager/branches/{$branch->id}/products", $payload, ['Accept' => 'application/json'])
+            ->assertCreated();
+        $imagePath = parse_url($created->json('data.image_path'), PHP_URL_PATH);
+        Storage::disk('public')->assertExists(str_replace('/storage/', '', (string) $imagePath));
+
+        $this->post("/api/manager/branches/{$branch->id}/products", [
+            ...$payload,
+            'name' => 'Rejected unsafe image',
+            'image' => UploadedFile::fake()->create('dish.svg', 20, 'image/svg+xml'),
+        ], ['Accept' => 'application/json'])->assertUnprocessable();
+
+        $this->post("/api/manager/branches/{$branch->id}/products", [
+            ...$payload,
+            'name' => 'Rejected large image',
+            'image' => UploadedFile::fake()->createWithContent('large.png', $pngBytes.str_repeat('a', 5_242_881)),
+        ], ['Accept' => 'application/json'])->assertUnprocessable();
+    }
 
     public function test_manager_can_manage_branch_menu_and_cannot_cross_restaurant_scope(): void
     {
