@@ -83,7 +83,7 @@ class OrderController extends Controller
             'expected_total' => ['sometimes', 'numeric', 'min:0'],
             'customer_note' => ['nullable', 'string', 'max:1000'],
             'items' => ['required', 'array', 'min:1', 'max:30'],
-            'items.*.product_id' => ['required', 'integer', 'distinct', 'exists:products,id'],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:20'],
             'items.*.options' => ['sometimes', 'array', 'max:10'],
             'items.*.options.*' => ['integer', 'distinct', 'exists:product_options,id'],
@@ -98,7 +98,7 @@ class OrderController extends Controller
             $options = array_map('intval', $line['options'] ?? []);
             sort($options);
             return ['product_id' => (int) $line['product_id'], 'quantity' => (int) $line['quantity'], 'options' => $options];
-        })->sortBy('product_id')->values()->all();
+        })->sortBy(fn (array $line): string => sprintf('%010d:%010d:%s', $line['product_id'], $line['quantity'], implode(',', $line['options'])))->values()->all();
         if (isset($data['expected_total'])) $fingerprintData['expected_total_cents'] = $this->cents($data['expected_total']);
         $fingerprint = hash('sha256', json_encode($fingerprintData, JSON_THROW_ON_ERROR));
 
@@ -112,7 +112,7 @@ class OrderController extends Controller
         }
 
         $branch = Branch::query()->whereKey($data['branch_id'])->where('is_active', true)->firstOrFail();
-        $productIds = collect($data['items'])->pluck('product_id')->all();
+        $productIds = collect($data['items'])->pluck('product_id')->unique()->values()->all();
         $products = Product::query()->with(['optionGroups.options'])
             ->whereIn('products.id', $productIds)
             ->where('products.restaurant_id', $branch->restaurant_id)
@@ -123,11 +123,12 @@ class OrderController extends Controller
             throw ValidationException::withMessages(['items' => ['One or more products are unavailable at this branch.']]);
         }
 
-        $now = CarbonImmutable::now($branch->timezone);
+        $timezone = $branch->timezoneForCalculations();
+        $now = CarbonImmutable::now($timezone);
         $scheduleType = $data['schedule_type'] ?? 'asap';
         $prepMinutes = collect($data['items'])->map(fn ($line) => (int) $products[$line['product_id']]->prep_minutes)->max() ?? 15;
         $requested = $scheduleType === 'scheduled'
-            ? CarbonImmutable::parse($data['pickup_at'], $branch->timezone)
+            ? CarbonImmutable::parse($data['pickup_at'], $timezone)
             : $now->addMinutes(max(10, $prepMinutes));
 
         $pickupCode = Str::random(40);
@@ -304,7 +305,7 @@ class OrderController extends Controller
             $locked->status = $to;
             if ($to === 'confirmed') {
                 $locked->eta_minutes = (int) $data['eta_minutes'];
-                $locked->estimated_ready_at = now($locked->branch->timezone)->addMinutes($locked->eta_minutes);
+                $locked->estimated_ready_at = CarbonImmutable::now($locked->branch->timezoneForCalculations())->addMinutes($locked->eta_minutes)->utc();
                 OrderEtaHistory::create([
                     'order_id' => $locked->id,
                     'actor_id' => $actor->id,
@@ -336,7 +337,7 @@ class OrderController extends Controller
             abort_unless(in_array($locked->status, ['confirmed', 'preparing'], true), 409);
             $previousEta = $locked->eta_minutes;
             $locked->eta_minutes = $data['eta_minutes'];
-            $locked->estimated_ready_at = now($locked->branch->timezone)->addMinutes($locked->eta_minutes);
+            $locked->estimated_ready_at = CarbonImmutable::now($locked->branch->timezoneForCalculations())->addMinutes($locked->eta_minutes)->utc();
             $locked->save();
             OrderEtaHistory::create(['order_id' => $locked->id, 'actor_id' => $actor->id, 'previous_eta_minutes' => $previousEta, 'eta_minutes' => $locked->eta_minutes, 'estimated_ready_at' => $locked->estimated_ready_at, 'reason' => $data['reason']]);
             AuditLog::create(['actor_id' => $actor->id, 'event' => 'order.eta_changed', 'subject_type' => 'order', 'subject_id' => $locked->id, 'metadata' => ['previous_eta_minutes' => $previousEta, 'eta_minutes' => $locked->eta_minutes, 'estimated_ready_at' => $locked->estimated_ready_at?->toIso8601String(), 'reason' => $data['reason']], 'ip_address' => $request->ip(), 'created_at' => now()]);
@@ -442,16 +443,17 @@ class OrderController extends Controller
 
     private function reserveSlot(Branch $branch, CarbonImmutable $requested, bool $requireOpenNow): array
     {
-        $local = $requested->setTimezone($branch->timezone);
+        $timezone = $branch->timezoneForCalculations();
+        $local = $requested->setTimezone($timezone);
         $weekday = $local->dayOfWeek;
         $hours = BusinessHour::query()->where('branch_id', $branch->id)->where('weekday', $weekday)->lockForUpdate()->first();
         if (! $hours || $hours->is_closed || ! $hours->opens_at || ! $hours->closes_at) {
             throw ValidationException::withMessages(['pickup_at' => ['This branch is closed at the requested time.']]);
         }
-        $open = CarbonImmutable::parse($local->toDateString().' '.$hours->opens_at, $branch->timezone);
-        $close = CarbonImmutable::parse($local->toDateString().' '.$hours->closes_at, $branch->timezone);
+        $open = CarbonImmutable::parse($local->toDateString().' '.$hours->opens_at, $timezone);
+        $close = CarbonImmutable::parse($local->toDateString().' '.$hours->closes_at, $timezone);
         if ($requireOpenNow) {
-            $now = CarbonImmutable::now($branch->timezone);
+            $now = CarbonImmutable::now($timezone);
             $openNow = $hours->weekday === $now->dayOfWeek && ! $now->lt($open) && $now->lt($close);
             if (! $openNow) throw ValidationException::withMessages(['branch_id' => ['This branch is currently closed. Choose a scheduled pickup time instead.']]);
         }
