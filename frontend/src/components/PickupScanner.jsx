@@ -62,7 +62,7 @@ export function PickupScanner({ orderId, onDetected }) {
     <div className="pickup-scanner">
       <button
         type="button"
-        className="wolt-btn-secondary"
+        className="foodora-btn-secondary"
         style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
         onClick={() => { setMessage(''); setOpen((current) => !current) }}
       >
