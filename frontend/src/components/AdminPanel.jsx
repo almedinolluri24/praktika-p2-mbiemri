@@ -262,7 +262,7 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
           )}
 
           <button
-            className="portal-logout-button"
+            className="portal-logout-button portal-logout-icon"
             onClick={onLogout}
             title={t('Dil nga llogaria')}
             aria-label={t('Dil nga llogaria')}
@@ -272,7 +272,7 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
           </button>
 
           {/* Dedicated Exit Button - only way to leave the admin panel */}
-          <button className="portal-exit-button" onClick={onClose} title={t('Dil nga paneli i administratorit dhe kthehu te dyqani')}>
+          <button className="portal-exit-button portal-exit-icon" onClick={onClose} title={t('Dil nga paneli i administratorit dhe kthehu te dyqani')} aria-label={t('Dil nga paneli i administratorit dhe kthehu te dyqani')}>
             <BackArrowIcon size={15} />
             <span>{t('Kthehu te Ballina')}</span>
           </button>
