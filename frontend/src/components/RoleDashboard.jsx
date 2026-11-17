@@ -41,7 +41,7 @@ async function api(url, { method = 'GET', body } = {}) {
 }
 
 export function RoleDashboard({ user, theme, onToggleTheme, onLogout, onClose }) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [busyOrder, setBusyOrder] = useState(null)
@@ -171,7 +171,7 @@ export function RoleDashboard({ user, theme, onToggleTheme, onLogout, onClose })
           )}
 
           <button
-            className="portal-logout-button"
+            className="portal-logout-button portal-logout-icon"
             onClick={onLogout}
             title={t('Dil nga llogaria')}
             aria-label={t('Dil nga llogaria')}
@@ -181,7 +181,7 @@ export function RoleDashboard({ user, theme, onToggleTheme, onLogout, onClose })
           </button>
 
           {/* Dedicated Exit Button - only way to leave the dashboard */}
-          <button className="portal-exit-button" onClick={onClose} title={t('Dil nga paneli dhe kthehu te ballina e dyqanit')}>
+          <button className="portal-exit-button portal-exit-icon" onClick={onClose} title={t('Dil nga paneli dhe kthehu te ballina e dyqanit')} aria-label={t('Dil nga paneli dhe kthehu te ballina e dyqanit')}>
             <BackArrowIcon size={15} />
             <span>{t('Kthehu te Ballina')}</span>
           </button>
@@ -309,8 +309,8 @@ export function RoleDashboard({ user, theme, onToggleTheme, onLogout, onClose })
                         </div>
 
                         <p className="role-order-customer">
-                          {t('Klienti:')} <strong>{order.customer?.name || t('Klient')}</strong> · {t('Koha e marrjes:')} {new Date(order.pickup_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          {order.estimated_ready_at && ` (${t('Afati i vlerësuar:')} ${new Date(order.estimated_ready_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`}
+                          {t('Klienti:')} <strong>{order.customer?.name || t('Klient')}</strong> · {t('Koha e marrjes:')} {new Date(order.pickup_at).toLocaleTimeString(language === 'en' ? 'en-US' : language === 'de' ? 'de-DE' : 'sq-XK', { hour: '2-digit', minute: '2-digit' })}
+                          {order.estimated_ready_at && ` (${t('Afati i vlerësuar:')} ${new Date(order.estimated_ready_at).toLocaleTimeString(language === 'en' ? 'en-US' : language === 'de' ? 'de-DE' : 'sq-XK', { hour: '2-digit', minute: '2-digit' })})`}
                         </p>
 
                         {order.customer_note && (
