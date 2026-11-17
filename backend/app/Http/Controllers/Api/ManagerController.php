@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -105,6 +106,7 @@ class ManagerController extends Controller
             'name' => ['required', 'string', 'max:160'],
             'description' => ['nullable', 'string', 'max:2000'],
             'image_path' => ['nullable', 'url', 'max:2048'],
+            'image' => ['sometimes', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'allergens' => ['sometimes', 'array', 'max:30'],
             'allergens.*' => ['string', 'max:80'],
             'price' => ['required', 'numeric', 'min:0', 'max:999999.99'],
@@ -115,8 +117,12 @@ class ManagerController extends Controller
         ]);
         $this->validateOptionGroups($data['option_group_ids'] ?? [], $branch);
         $this->assertManagerOwnsRestaurant($request, $branch);
+        $imagePath = $data['image_path'] ?? null;
+        if ($request->hasFile('image')) {
+            $imagePath = Storage::disk('public')->url($request->file('image')->store('products', 'public'));
+        }
 
-        $product = DB::transaction(function () use ($request, $branch, $data): Product {
+        $product = DB::transaction(function () use ($request, $branch, $data, $imagePath): Product {
             $slug = Str::slug($data['name']).'-'.Str::lower(Str::random(6));
             $product = Product::create([
                 'restaurant_id' => $branch->restaurant_id,
@@ -124,7 +130,7 @@ class ManagerController extends Controller
                 'name' => $data['name'],
                 'slug' => $slug,
                 'description' => $data['description'] ?? null,
-                'image_path' => $data['image_path'] ?? null,
+                'image_path' => $imagePath,
                 'allergens' => $data['allergens'] ?? null,
                 'price' => $data['price'],
                 'prep_minutes' => $data['prep_minutes'] ?? 15,
@@ -149,6 +155,7 @@ class ManagerController extends Controller
             'name' => ['sometimes', 'string', 'max:160'],
             'description' => ['sometimes', 'nullable', 'string', 'max:2000'],
             'image_path' => ['sometimes', 'nullable', 'url', 'max:2048'],
+            'image' => ['sometimes', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'allergens' => ['sometimes', 'nullable', 'array', 'max:30'],
             'allergens.*' => ['string', 'max:80'],
             'price' => ['sometimes', 'numeric', 'min:0', 'max:999999.99'],
@@ -161,6 +168,9 @@ class ManagerController extends Controller
         ]);
         $this->validateOptionGroups($data['option_group_ids'] ?? [], $branch);
         $globalFields = ['category_id', 'name', 'description', 'image_path', 'allergens', 'price', 'prep_minutes', 'prep_station', 'option_group_ids'];
+        if ($request->hasFile('image')) {
+            $data['image_path'] = Storage::disk('public')->url($request->file('image')->store('products', 'public'));
+        }
         if (array_intersect($globalFields, array_keys($data))) $this->assertManagerOwnsRestaurant($request, $branch);
 
         $updated = DB::transaction(function () use ($request, $branch, $product, $data, $globalFields): Product {
