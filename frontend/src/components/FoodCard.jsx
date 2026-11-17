@@ -1,5 +1,6 @@
 import { ClockIcon } from './Icons.jsx'
 import { useLanguage } from '../i18n/useLanguage.js'
+import foodPlaceholder from '../assets/food-placeholder.svg'
 
 export function FoodCard({ food, onAdd, quantity }) {
   const { t } = useLanguage()
@@ -10,7 +11,15 @@ export function FoodCard({ food, onAdd, quantity }) {
   return (
     <article className={`food-card ${!isAvailable ? 'sold-out' : ''}`}>
       <div className="food-photo">
-        <img src={imageUrl} alt={food.name} loading="lazy" />
+        <img
+          src={imageUrl}
+          alt={food.name}
+          loading="lazy"
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = foodPlaceholder
+          }}
+        />
         <span className="food-category-label">{t(food.category)}</span>
         {!isAvailable && <span className="sold-out-badge">{t('E shitur')}</span>}
         {quantity > 0 && <span className="added-indicator">{t('{count} në shportë', { count: quantity })}</span>}
