@@ -1,0 +1,299 @@
+.foodora-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 92px);
+  width: min(calc(100% - 56px), 1480px);
+  min-height: 590px;
+  margin: 24px auto 0;
+  padding: clamp(48px, 6.5vw, 88px) clamp(40px, 6vw, 92px);
+  overflow: hidden;
+  border: 1px solid #eee5dd;
+  border-radius: 30px;
+  background: #fbf8f5;
+  color: #211c18;
+  isolation: isolate;
+}
+
+.foodora-hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 660px;
+}
+
+.foodora-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #f2ddcd;
+  border-radius: 999px;
+  background: #fffaf6;
+  color: #bd4c0c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.foodora-hero-eyebrow > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f97316;
+  box-shadow: 0 0 0 4px #ffeadb;
+}
+
+.foodora-hero h1 {
+  display: flex;
+  flex-direction: column;
+  max-width: 670px;
+  margin: 24px 0 18px;
+  color: #211c18;
+  font-size: clamp(48px, 5.1vw, 70px);
+  font-weight: 760;
+  line-height: 1.035;
+  letter-spacing: -.06em;
+}
+
+.foodora-hero h1 span { color: #ed6810; }
+
+.foodora-hero-description {
+  max-width: 520px;
+  margin: 0;
+  color: #625b55;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.foodora-hero-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 620px;
+  min-height: 66px;
+  margin-top: 28px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid #e8ded4;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(55, 39, 23, .07);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.foodora-hero-search:focus-within {
+  border-color: #f97316;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, .13), 0 10px 28px rgba(55, 39, 23, .07);
+}
+
+.foodora-hero-search > svg {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  padding: 10px;
+  border-radius: 50%;
+  background: #f97316;
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.foodora-hero-search input {
+  flex: 1;
+  width: 100px;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #211c18;
+  font: inherit;
+  font-size: 14px;
+}
+
+.foodora-hero-search input::placeholder { color: #8a8179; opacity: 1; }
+
+.foodora-hero-search button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 11px;
+  background: #f97316;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease;
+}
+
+.foodora-hero-search button:hover { background: #df5d0b; transform: translateY(-1px); }
+.foodora-hero-search button:focus-visible { outline: 3px solid rgba(249, 115, 22, .35); outline-offset: 3px; }
+
+.foodora-hero-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  margin-top: 20px;
+}
+
+.foodora-hero-benefits > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #5e5750;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.foodora-hero-benefits i {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff0e4;
+  color: #d9580c;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.foodora-hero-visual {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  height: 460px;
+  justify-self: end;
+}
+
+.foodora-hero-visual::before {
+  position: absolute;
+  inset: 8px 0 0 24px;
+  border-radius: 30px;
+  background: #f0e5da;
+  content: "";
+  transform: rotate(2.5deg);
+}
+
+.foodora-hero-visual > img {
+  position: relative;
+  display: block;
+  width: min(100%, 590px);
+  height: 440px;
+  border: 5px solid #fff;
+  border-radius: 26px;
+  box-shadow: 0 22px 48px rgba(40, 29, 20, .15);
+  object-fit: cover;
+  object-position: center;
+}
+
+.foodora-hero-ready, .foodora-hero-caption {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 15px;
+  border: 1px solid #eee4db;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(40, 29, 20, .13);
+}
+
+.foodora-hero-ready { top: 30px; left: -12px; }
+.foodora-hero-caption { right: -10px; bottom: 24px; }
+.foodora-hero-ready-icon, .foodora-hero-caption-icon {
+  display: grid;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff1e5;
+  color: #dc5d0c;
+  font-size: 14px;
+  font-weight: 800;
+}
+.foodora-hero-badge-copy { display: grid; gap: 4px; }
+.foodora-hero-badge-copy strong { color: #28221d; font-size: 12px; }
+.foodora-hero-badge-copy small { color: #766e66; font-size: 10px; }
+
+@media (max-width: 980px) {
+  .foodora-hero { width: calc(100% - 40px); min-height: 0; padding: 44px 34px; gap: 30px; }
+  .foodora-hero h1 { font-size: clamp(42px, 5.2vw, 56px); }
+  .foodora-hero-description { font-size: 15px; }
+  .foodora-hero-visual { height: 370px; }
+  .foodora-hero-visual > img { height: 350px; }
+  .foodora-hero-ready { left: -4px; }
+  .foodora-hero-caption { right: -4px; }
+}
+
+@media (max-width: 760px) {
+  .foodora-hero { width: calc(100% - 28px); margin-top: 14px; padding: 34px 24px 26px; grid-template-columns: minmax(0, 1fr); gap: 22px; border-radius: 24px; }
+  .foodora-hero-copy { max-width: none; }
+  .foodora-hero h1 { margin: 19px 0 14px; font-size: clamp(42px, 8vw, 58px); }
+  .foodora-hero-description { max-width: 600px; font-size: 15px; }
+  .foodora-hero-search { max-width: none; margin-top: 21px; }
+  .foodora-hero-visual { width: min(100%, 560px); height: 330px; margin-inline: auto; justify-self: center; }
+  .foodora-hero-visual > img { width: min(100%, 520px); height: 310px; }
+  .foodora-hero-ready { top: 12px; left: 0; }
+  .foodora-hero-caption { right: 0; bottom: 7px; }
+}
+
+@media (max-width: 480px) {
+  .foodora-hero { width: calc(100% - 20px); padding: 26px 17px 20px; gap: 14px; border-radius: 20px; }
+  .foodora-hero-eyebrow { gap: 8px; padding: 7px 10px; font-size: 9px; }
+  .foodora-hero h1 { margin: 16px 0 12px; font-size: clamp(37px, 10vw, 46px); }
+  .foodora-hero-description { font-size: 14px; line-height: 1.65; }
+  .foodora-hero-search { min-height: 56px; gap: 7px; margin-top: 18px; padding: 5px; border-radius: 13px; }
+  .foodora-hero-search > svg { flex-basis: 34px; width: 34px; height: 34px; padding: 9px; }
+  .foodora-hero-search input { font-size: 12px; }
+  .foodora-hero-search button { min-height: 42px; gap: 7px; padding-inline: 11px; border-radius: 10px; font-size: 11px; }
+  .foodora-hero-search button span { display: none; }
+  .foodora-hero-benefits { gap: 8px 14px; margin-top: 15px; }
+  .foodora-hero-benefits > span { font-size: 11px; }
+  .foodora-hero-visual { height: 260px; }
+  .foodora-hero-visual > img { width: 94%; height: 240px; border-width: 4px; border-radius: 20px; }
+  .foodora-hero-ready, .foodora-hero-caption { gap: 7px; padding: 8px 10px; border-radius: 12px; }
+  .foodora-hero-ready-icon, .foodora-hero-caption-icon { flex-basis: 25px; width: 25px; height: 25px; font-size: 12px; }
+  .foodora-hero-badge-copy { gap: 3px; }
+  .foodora-hero-badge-copy strong { font-size: 10px; }
+  .foodora-hero-badge-copy small { font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foodora-hero-search, .foodora-hero-search button { transition: none; }
+}
+
+.app-shell.dark-theme .foodora-hero {
+  border-color: #34302c;
+  background: #1c1a18;
+  color: #f5f1ed;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
+}
+.app-shell.dark-theme .foodora-hero-eyebrow { border-color: #493122; background: #2b211a; color: #ffb27b; }
+.app-shell.dark-theme .foodora-hero-eyebrow > span { background: #f97316; box-shadow: 0 0 0 4px #493122; }
+.app-shell.dark-theme .foodora-hero h1 { color: #f5f1ed; }
+.app-shell.dark-theme .foodora-hero h1 span { color: #fb923c; }
+.app-shell.dark-theme .foodora-hero-description { color: #c2b9b1; }
+.app-shell.dark-theme .foodora-hero-search { border-color: #45403a; background: #272421; box-shadow: none; }
+.app-shell.dark-theme .foodora-hero-search input { color: #f5f1ed; }
+.app-shell.dark-theme .foodora-hero-search input::placeholder { color: #a69c93; }
+.app-shell.dark-theme .foodora-hero-search:focus-within { border-color: #f97316; box-shadow: 0 0 0 4px rgba(249, 115, 22, .2); }
+.app-shell.dark-theme .foodora-hero-benefits > span { color: #d0c7bf; }
+.app-shell.dark-theme .foodora-hero-benefits i,
+.app-shell.dark-theme .foodora-hero-ready-icon,
+.app-shell.dark-theme .foodora-hero-caption-icon { background: #493122; color: #ffb27b; }
+.app-shell.dark-theme .foodora-hero-visual::before { background: #3a2d23; }
+.app-shell.dark-theme .foodora-hero-ready,
+.app-shell.dark-theme .foodora-hero-caption { border-color: #47413a; background: #24211e; box-shadow: 0 10px 28px rgba(0, 0, 0, .3); }
+.app-shell.dark-theme .foodora-hero-badge-copy strong { color: #f5f1ed; }
+.app-shell.dark-theme .foodora-hero-badge-copy small { color: #b9afa6; }
