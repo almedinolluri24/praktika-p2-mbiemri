@@ -72,7 +72,26 @@ export async function getAuthenticatedUser() {
   return result.user
 }
 
-export async function resetPassword({ email, password, passwordConfirmation }) {
+export async function requestPasswordReset({ email }) {
+  await prepareCsrf()
+  const response = await fetch('/api/forgot-password', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      ...apiHeaders,
+      'Content-Type': 'application/json',
+      'X-XSRF-TOKEN': readCsrfCookie(),
+    },
+    body: JSON.stringify({ email }),
+  })
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(Object.values(result.errors || {}).flat()[0] || result.message || 'Kërkesa për rivendosjen e fjalëkalimit dështoi.')
+  }
+  return result
+}
+
+export async function resetPassword({ email, token, password, passwordConfirmation }) {
   await prepareCsrf()
   const response = await fetch('/api/reset-password', {
     method: 'POST',
@@ -82,7 +101,7 @@ export async function resetPassword({ email, password, passwordConfirmation }) {
       'Content-Type': 'application/json',
       'X-XSRF-TOKEN': readCsrfCookie(),
     },
-    body: JSON.stringify({ email, password, password_confirmation: passwordConfirmation }),
+    body: JSON.stringify({ email, token, password, password_confirmation: passwordConfirmation }),
   })
   const result = await response.json()
   if (!response.ok) {
