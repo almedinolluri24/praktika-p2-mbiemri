@@ -29,7 +29,7 @@ class DemonstrationScenariosTest extends TestCase
         $product = Product::where('slug', 'margherita-pizza')->firstOrFail();
         $regular = ProductOption::where('name', 'Regular')->firstOrFail();
 
-        $pickupAt = CarbonImmutable::now($branch->timezone)->addDay()->setTime(17, 0);
+        $pickupAt = CarbonImmutable::now($branch->timezoneForCalculations())->addDay()->setTime(17, 0);
         BusinessHour::where('branch_id', $branch->id)->where('weekday', $pickupAt->dayOfWeek)->update(['orders_per_slot' => 1]);
 
         $payload = [
