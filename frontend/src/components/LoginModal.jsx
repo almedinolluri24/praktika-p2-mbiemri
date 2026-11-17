@@ -51,7 +51,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
         onClose()
       } else {
         const user = await login({ email, password, remember })
-        onSuccess(user)
+        onSuccess(user, mode)
         onClose()
       }
     } catch (authError) {

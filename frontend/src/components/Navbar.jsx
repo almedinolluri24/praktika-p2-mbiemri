@@ -117,7 +117,7 @@ export function Navbar({
               </span>
 
               {user.role === 'customer' && (
-                <button className="login-button orders-nav-btn" onClick={() => { closeMenu(); onOpenOrders() }}>
+                <button className="login-button orders-nav-btn dashboard-nav-btn" onClick={() => { closeMenu(); onOpenOrders() }}>
                   <OrdersIcon />
                   <span>{t('Porositë e mia')}</span>
                 </button>
@@ -136,7 +136,7 @@ export function Navbar({
             </>
           ) : (
             <>
-              <button className="login-button" onClick={() => { closeMenu(); onLogin() }}>
+              <button className="login-button auth-nav-btn" onClick={() => { closeMenu(); onLogin() }}>
                 <LoginIcon />
                 <span>{t('Kyçu')}</span>
               </button>
