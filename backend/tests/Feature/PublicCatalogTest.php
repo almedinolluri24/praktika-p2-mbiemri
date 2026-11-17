@@ -22,6 +22,7 @@ class PublicCatalogTest extends TestCase
         $this->assertDatabaseHas('restaurants', ['slug' => 'casa-forno']);
         $this->assertDatabaseHas('branches', ['name' => 'Casa Forno Center']);
         $this->assertDatabaseHas('branches', ['name' => 'Casa Forno East']);
+        $this->assertDatabaseHas('branches', ['timezone' => 'Europe/Pristina']);
     }
 
     public function test_public_catalog_includes_open_state_for_each_branch(): void
