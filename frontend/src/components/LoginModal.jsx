@@ -4,6 +4,7 @@ import { BackArrowIcon, MoonIcon, SunIcon } from './Icons.jsx'
 import { login, register, requestPasswordReset, resetPassword } from '../services/auth.js'
 import { LanguageToggle } from '../i18n/LanguageToggle.jsx'
 import { useLanguage } from '../i18n/useLanguage.js'
+import './AuthPage.css'
 
 const demoAccounts = [
   { label: 'Klient', email: 'test@example.com', role: 'customer' },
@@ -20,6 +21,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
   const [email, setEmail] = useState(() => new URLSearchParams(window.location.search).get('email') || '')
   const [resetToken] = useState(() => new URLSearchParams(window.location.search).get('reset_token') || '')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
@@ -30,6 +32,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
     setMode('login')
     setEmail(acc.email)
     setPassword('password')
+    setShowPassword(false)
     setError('')
     setSuccessMsg('')
   }
@@ -78,7 +81,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
       {isPage && (
         <header className="auth-page-header">
           <FoodoraLogo />
-          <div>
+          <div className="auth-page-actions">
           <LanguageToggle />
             {onToggleTheme && (
               <button
@@ -91,9 +94,9 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
                 {theme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
               </button>
             )}
-            <button type="button" className="auth-page-back" onClick={onClose}>
+            <button type="button" className="auth-page-back" onClick={onClose} aria-label={t('Kthehu te ballina')}>
               <BackArrowIcon size={15} />
-              <span>{t('Kthehu te ballina')}</span>
+              <span className="auth-back-label">{t('Kthehu te ballina')}</span>
             </button>
           </div>
         </header>
@@ -208,35 +211,45 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
               onChange={(event) => setEmail(event.target.value)}
               placeholder={t('emri@example.com')}
               required
-              autoFocus={!registering}
             />
           </div>
           )}
 
           {!forgetting && (
           <div className="foodora-form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="foodora-password-label-row">
               <label htmlFor="login-password">{t(resetting ? 'Fjalëkalimi i ri' : 'Fjalëkalimi')}</label>
               {mode === 'login' && (
                 <button
                   type="button"
+                  className="forgot-password-toggle"
                   onClick={() => { setError(''); setSuccessMsg(''); setMode('forgot') }}
-                  style={{ background: 'none', border: 'none', color: '#ea580c', fontSize: '11px', cursor: 'pointer', padding: 0 }}
                 >
                   {t('Harruat fjalëkalimin?')}
                 </button>
               )}
             </div>
-            <input
-              id="login-password"
-              type="password"
-              autoComplete={registering || resetting ? 'new-password' : 'current-password'}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder={t(registering || resetting ? 'Së paku 8 karaktere' : 'Fjalëkalimi juaj')}
-              minLength={registering || resetting ? 8 : undefined}
-              required
-            />
+            <div className="foodora-password-input-wrap">
+              <input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete={registering || resetting ? 'new-password' : 'current-password'}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder={t(registering || resetting ? 'Së paku 8 karaktere' : 'Fjalëkalimi juaj')}
+                minLength={registering || resetting ? 8 : undefined}
+                required
+              />
+              <button
+                type="button"
+                className="password-visibility-toggle"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={t(showPassword ? 'Fshih fjalëkalimin' : 'Shfaq fjalëkalimin')}
+                aria-pressed={showPassword}
+              >
+                {t(showPassword ? 'Fshih' : 'Shfaq')}
+              </button>
+            </div>
           </div>
           )}
 
