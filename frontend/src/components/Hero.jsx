@@ -1,4 +1,5 @@
 import { useLanguage } from '../i18n/useLanguage.js'
+import foodPlaceholder from '../assets/food-placeholder.svg'
 import './Hero.css'
 
 export function Hero({ search, onSearch }) {
@@ -46,6 +47,10 @@ export function Hero({ search, onSearch }) {
         <img
           src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1050&q=85"
           alt={t('Ushqim i freskët dhe i shijshëm gati për marrje')}
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = foodPlaceholder
+          }}
         />
         <div className="foodora-hero-ready">
           <span className="foodora-hero-ready-icon" aria-hidden="true">✓</span>
