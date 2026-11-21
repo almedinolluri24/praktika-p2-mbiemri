@@ -77,6 +77,11 @@ function App() {
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [cityFilter, setCityFilter] = useState('All')
   const [openOnly, setOpenOnly] = useState(false)
+  const [restaurantSort, setRestaurantSort] = useState('recommended')
+  const [favoriteIds, setFavoriteIds] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('foodora_favorite_restaurants') || '[]').map(String) } catch { return [] }
+  })
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
   const [cart, setCart] = useState({})
   const [cartOpen, setCartOpen] = useState(false)
   const [notice, setNotice] = useState('')
@@ -90,6 +95,7 @@ function App() {
   const [priceReview, setPriceReview] = useState(null)
   const [pendingPickup, setPendingPickup] = useState({ scheduleType: 'asap', pickupAt: null, customerNote: '' })
   const [ordersOpen, setOrdersOpen] = useState(false)
+  const [reorderingOrderId, setReorderingOrderId] = useState(null)
   const [adminOpen, setAdminOpen] = useState(false)
   const [roleDashboardOpen, setRoleDashboardOpen] = useState(false)
 
@@ -129,6 +135,10 @@ function App() {
   }, [])
 
   useEffect(() => {
+    localStorage.setItem('foodora_favorite_restaurants', JSON.stringify(favoriteIds))
+  }, [favoriteIds])
+
+  useEffect(() => {
     let active = true
     const timer = window.setTimeout(async () => {
       setCatalogLoading(true)
@@ -160,8 +170,23 @@ function App() {
   const matchingRestaurants = useMemo(() => restaurants.filter((restaurant) => {
     const matchesCategory = restaurantCategory === 'All' || restaurant.cuisine === restaurantCategory
     const matchesSearch = `${restaurant.name} ${restaurant.cuisine} ${restaurant.description} ${restaurant.city || ''}`.toLowerCase().includes(search.toLowerCase())
-    return matchesCategory && matchesSearch
-  }), [restaurantCategory, restaurants, search])
+    const matchesFavorites = !favoritesOnly || favoriteIds.includes(String(restaurant.id))
+    return matchesCategory && matchesSearch && matchesFavorites
+  }).sort((a, b) => {
+    if (restaurantSort === 'rating') return (Number(b.rating) || 0) - (Number(a.rating) || 0)
+    if (restaurantSort === 'pickup') {
+      const pickupMinutes = (restaurant) => Number(String(restaurant.pickup || '').match(/\d+/)?.[0]) || Number.POSITIVE_INFINITY
+      return pickupMinutes(a) - pickupMinutes(b)
+    }
+    return 0
+  }), [favoriteIds, favoritesOnly, restaurantCategory, restaurants, restaurantSort, search])
+
+  function toggleFavorite(restaurant) {
+    const id = String(restaurant.id)
+    setFavoriteIds((current) => {
+      return current.includes(id) ? current.filter((favoriteId) => favoriteId !== id) : [...current, id]
+    })
+  }
 
   const visibleFoods = useMemo(() => foods.filter((food) => {
     const matchesPopular = Boolean(selectedRestaurant) || food.popular
@@ -231,6 +256,67 @@ function App() {
       else next[cartId] = { ...next[cartId], quantity: nextQuantity }
       return next
     })
+  }
+
+  async function reorderPreviousOrder(order) {
+    const branchId = Number(order.branch_id || order.branch?.id)
+    const restaurantId = Number(order.branch?.restaurant_id || order.branch?.restaurant?.id)
+    if (!branchId || !restaurantId) {
+      showNotice(t('Nuk mund të ringarkohet kjo porosi.'))
+      return
+    }
+    if (cartItems.length > 0 && Number(activeCartBranch) !== branchId) {
+      const accepted = window.confirm(t('Shporta përmban produkte nga një degë tjetër. Zbrazni shportën për të porositur nga kjo degë?'))
+      if (!accepted) return
+    }
+    setReorderingOrderId(order.id)
+    try {
+      const catalog = await loadCatalog({ restaurantId, selectedBranchId: branchId })
+      const availableFoods = new Map(catalog.foods.map((food) => [Number(food.productId), food]))
+      const next = cartItems.length > 0 && Number(activeCartBranch) === branchId ? { ...cart } : {}
+      let added = 0
+      let skipped = 0
+      for (const oldItem of order.items || []) {
+        const food = availableFoods.get(Number(oldItem.product_id))
+        if (!food || !food.isAvailable) { skipped += 1; continue }
+        const previousOptionIds = (oldItem.options || []).map((option) => Number(option.product_option_id)).filter(Number.isFinite)
+        const validOptions = food.optionGroups.flatMap((group) => group.options).filter((option) => previousOptionIds.includes(Number(option.id)))
+        const selectedOptions = validOptions.map((option) => Number(option.id))
+        const hasValidRequiredOptions = food.optionGroups.every((group) => {
+          const count = group.options.filter((option) => selectedOptions.includes(Number(option.id))).length
+          return count >= group.minSelections && (!group.maxSelections || count <= group.maxSelections)
+        })
+        if (!hasValidRequiredOptions) { skipped += 1; continue }
+        const optionKey = [...selectedOptions].sort((a, b) => a - b).join(',')
+        const cartKey = `${food.id}:${optionKey}`
+        const optionNames = validOptions.map((option) => option.name)
+        const optionExtra = validOptions.reduce((sum, option) => sum + option.priceDelta, 0)
+        const existing = next[cartKey]
+        next[cartKey] = {
+          food,
+          selectedOptions,
+          selectedOptionNames: optionNames,
+          optionExtra,
+          quantity: Math.min(20, (existing?.quantity || 0) + Number(oldItem.quantity || 1)),
+        }
+        added += 1
+      }
+      if (!added) {
+        showNotice(t('Artikujt e kësaj porosie nuk janë më të disponueshëm.'))
+        return
+      }
+      setCart(next)
+      setCheckoutError('')
+      setPriceReview(null)
+      setConfirmation(null)
+      setOrdersOpen(false)
+      setCartOpen(true)
+      showNotice(skipped ? t('Disa artikuj nuk ishin më të disponueshëm.') : t('Porosia u shtua përsëri në shportë.'))
+    } catch (error) {
+      showNotice(t(error.message || 'Katalogu nuk mund të ngarkohej.'))
+    } finally {
+      setReorderingOrderId(null)
+    }
   }
 
   function viewMenu(restaurant) {
@@ -420,6 +506,17 @@ function App() {
               <label className="open-only-filter">
                 <input type="checkbox" checked={openOnly} onChange={(event) => setOpenOnly(event.target.checked)} /> {t('Hapur tani')}
               </label>
+              <label className="open-only-filter favorites-only-filter">
+                <input type="checkbox" checked={favoritesOnly} onChange={(event) => setFavoritesOnly(event.target.checked)} /> {t('Të preferuarat')}
+              </label>
+              <label className="restaurant-sort-filter">
+                <span>{t('Rendit')}</span>
+                <select value={restaurantSort} onChange={(event) => setRestaurantSort(event.target.value)} aria-label={t('Rendit restorantet')}>
+                  <option value="recommended">{t('Të rekomanduara')}</option>
+                  <option value="rating">{t('Vlerësimi më i lartë')}</option>
+                  <option value="pickup">{t('Marrja më e shpejtë')}</option>
+                </select>
+              </label>
             </div>
             <span className="result-count">{matchingRestaurants.length} {t('Restorante')}</span>
           </div>
@@ -435,7 +532,13 @@ function App() {
           ) : matchingRestaurants.length ? (
             <div className="restaurant-grid">
               {matchingRestaurants.map((restaurant) => (
-                <RestaurantCard key={restaurant.id} restaurant={restaurant} onViewMenu={viewMenu} />
+                <RestaurantCard
+                  key={restaurant.id}
+                  restaurant={restaurant}
+                  onViewMenu={viewMenu}
+                  favorite={favoriteIds.includes(String(restaurant.id))}
+                  onToggleFavorite={toggleFavorite}
+                />
               ))}
             </div>
           ) : (
@@ -542,7 +645,7 @@ function App() {
           onAdd={(ids) => { addToCart(optionsFood, ids); setOptionsFood(null) }}
         />
       )}
-      {ordersOpen && user?.role === 'customer' && <OrdersPanel user={user} onProfileUpdated={setUser} onClose={() => setOrdersOpen(false)} />}
+      {ordersOpen && user?.role === 'customer' && <OrdersPanel user={user} onProfileUpdated={setUser} onReorder={reorderPreviousOrder} reorderingOrderId={reorderingOrderId} onClose={() => setOrdersOpen(false)} />}
     </div>
   )
 }
