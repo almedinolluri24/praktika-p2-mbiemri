@@ -75,7 +75,7 @@ function formatPristinaDateTime(value, language, includeDate = true) {
   return new Intl.DateTimeFormat(locale, options).format(date)
 }
 
-export function OrdersPanel({ user, onClose, onProfileUpdated }) {
+export function OrdersPanel({ user, onClose, onProfileUpdated, onReorder, reorderingOrderId }) {
   const { t, language } = useLanguage()
   const [activeTab, setActiveTab] = useState('orders') // 'orders' | 'profile'
   const [orders, setOrders] = useState([])
@@ -459,6 +459,16 @@ export function OrdersPanel({ user, onClose, onProfileUpdated }) {
                     </div>
 
                     <div className="footer-actions-box">
+                      {order.status === 'picked_up' && (
+                        <button
+                          type="button"
+                          className="foodora-btn-primary"
+                          onClick={() => onReorder?.(order)}
+                          disabled={reorderingOrderId === order.id}
+                        >
+                          {t(reorderingOrderId === order.id ? 'Po ringarkohet…' : 'Porosite përsëri')}
+                        </button>
+                      )}
                       {order.status === 'pending_confirmation' && (
                         <button
                           type="button"
