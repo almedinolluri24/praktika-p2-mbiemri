@@ -110,7 +110,12 @@ export function CartDrawer({
           </div>
         ) : items.length === 0 ? (
           <div className="cart-empty">
-            <span className="empty-bag">🛒</span>
+            <span className="empty-bag" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M5 7h3l2.4 13.1a2 2 0 0 0 2 1.6h11.2a2 2 0 0 0 1.9-1.5L28 11H9" />
+                <path d="M12 25.5h.1M23 25.5h.1" />
+              </svg>
+            </span>
             <h3>{t('Shporta juaj është e zbrazët')}</h3>
             <p>{t('Shtoni pjata të shijshme nga restorantet lokale për të filluar porosinë tuaj.')}</p>
             <button onClick={onClose}>{t('Eksploro ushqimet')}</button>
