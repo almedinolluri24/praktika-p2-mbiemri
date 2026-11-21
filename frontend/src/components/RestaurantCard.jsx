@@ -1,7 +1,7 @@
 import { useLanguage } from '../i18n/useLanguage.js'
 import foodPlaceholder from '../assets/food-placeholder.svg'
 
-export function RestaurantCard({ restaurant, onViewMenu }) {
+export function RestaurantCard({ restaurant, onViewMenu, favorite = false, onToggleFavorite }) {
   const { t } = useLanguage()
   const imageUrl = restaurant.image?.startsWith('http') || restaurant.image?.startsWith('/')
     ? restaurant.image
@@ -19,6 +19,18 @@ export function RestaurantCard({ restaurant, onViewMenu }) {
             event.currentTarget.src = foodPlaceholder
           }}
         />
+        <button
+          type="button"
+          className={favorite ? 'restaurant-favorite active' : 'restaurant-favorite'}
+          onClick={() => onToggleFavorite?.(restaurant)}
+          aria-pressed={favorite}
+          aria-label={t(favorite ? 'Hiq nga të preferuarat' : 'Shto te të preferuarat')}
+          title={t(favorite ? 'Hiq nga të preferuarat' : 'Shto te të preferuarat')}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.8 8.8c0 4.1-8.8 10-8.8 10s-8.8-5.9-8.8-10a4.7 4.7 0 0 1 8.8-2.3 4.7 4.7 0 0 1 8.8 2.3Z" />
+          </svg>
+        </button>
         {restaurant.featured && <span className="featured-label">{t('E PREFERUAR LOKALE')}</span>}
         <span className={restaurant.open ? 'open-label' : 'closed-label'}>
           <i></i>{t(restaurant.open ? 'Hapur tani' : 'Mbyllur')}
