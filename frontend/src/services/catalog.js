@@ -21,6 +21,42 @@ const productImages = {
   default: 'photo-1546549032-9571cd6b27df',
 }
 
+const namedProductImages = [
+  [/almond croissant/, 'photo-1618111415112-793c80d2fb3b'],
+  [/blueberry muffin|muffin/, 'photo-1637087788517-c63086ec5b7e'],
+  [/butter croissant|croissant/, 'photo-1725545901708-27d59e5c4226'],
+  [/focaccia/, 'photo-1767065888111-7ca2b12d4944'],
+  [/sourdough loaf|sourdough/, 'photo-1675725291010-cb1020860cb2'],
+  [/spinach feta borek|spinach.*borek|borek/, 'https://img.godt.no/w4000/plain/recipes/9d/9d9ca945-0a36-4542-b4e3-c23b36fc8189'],
+  [/bbq bacon burger|hamburger me proshutë dhe bbq|hamburger me proshutë/, 'photo-1561758033-f8ff74d6494a'],
+  [/classic smash burger|hamburger klasik smash/, 'photo-1568901346375-23c9450c58cd'],
+  [/crispy chicken burger|hamburger me pulë të skuqur/, 'photo-1671106571674-a89083d27e60'],
+  [/grilled chicken wrap|roll me pulë të pjekur në skarë/, 'photo-1626700051175-6818013e1d4f'],
+  [/onion rings|unaza qepësh/, 'photo-1645066804048-080d5fe87ae3'],
+  [/truffle fries|patate të skuqura me tartuf/, 'photo-1534938665420-4193effeacc4'],
+  [/four cheese|quattro formaggi/, 'photo-1574071318508-1cdbab80d002'],
+  [/margherita/, 'photo-1627626775846-122b778965ae'],
+  [/pepperoni/, 'photo-1578301807752-33631801f8aa'],
+  [/garlic bread/, 'photo-1556008531-57e6eefc7be4'],
+  [/penne alfredo|alfredo pasta/, 'photo-1662197480393-2a82030b7b83'],
+  [/tiramisu/, 'photo-1782503708390-4e5fff098d57'],
+  [/avocado toast/, 'photo-1603046891743-0f28d1192132'],
+  [/cappuccino/, 'photo-1522210338192-67c5905429d6'],
+  [/chocolate brownie|brownie/, 'photo-1612078960206-1709f1f0c969'],
+  [/cinnamon roll/, 'photo-1668015826833-9aeafb608ccd'],
+  [/cold brew/, 'photo-1581996323441-538096e854b9'],
+  [/iced latte/, 'photo-1584286595398-a59f21d313f5'],
+  [/fruit tart|tart/, 'photo-1768236360396-0f131beb3028'],
+  [/pistachio baklava|baklava/, 'photo-1676014959543-81df1079b423'],
+  [/vanilla cheesecake|cheesecake/, 'photo-1524351199678-941a58a3df50'],
+  [/chicken caesar|caesar salad/, 'photo-1643013911400-40bb4f2a92ce'],
+  [/green goddess/, 'photo-1512621776951-a57141f2eefd'],
+  [/rainbow buddha|buddha bowl/, 'photo-1540420773420-3366772f4999'],
+  [/hummus|veggie box/, 'photo-1695835394238-d3367fa34b45'],
+  [/mango smoothie|smoothie/, 'photo-1704881661177-7747fe663400'],
+  [/overnight oats|oatmeal|porridge/, 'photo-1650265929273-00c7ac3cb0e7'],
+]
+
 const cuisineLabels = {
   pizzeria: 'Italian',
   fast_food: 'Burgers',
@@ -38,7 +74,11 @@ async function getJson(url) {
 }
 
 function imageForProduct(product) {
-  const text = `${product.name} ${product.category?.name || ''}`.toLowerCase()
+  const name = product.name.toLowerCase()
+  const namedImage = namedProductImages.find(([pattern]) => pattern.test(name))?.[1]
+  if (namedImage) return namedImage
+
+  const text = `${name} ${product.category?.name || ''}`.toLowerCase()
   if (/pizza|crust/.test(text)) return productImages.pizza
   if (/burger|fries|wrap/.test(text)) return productImages.burger
   if (/pasta|penne/.test(text)) return productImages.pasta
