@@ -318,6 +318,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .app-shell .nav-actions .auth-nav-btn:hover { border-color: #343434 !important; background: #343434 !important; color: #fff !important; }
 .app-shell.dark-theme .nav-actions .auth-nav-btn { border-color: #171717 !important; background: #171717 !important; color: #fff !important; }
+.auth-status-placeholder { display: inline-flex; width: 145px; align-items: center; justify-content: flex-end; gap: 8px; }
+.auth-status-placeholder i { display: block; height: 34px; border-radius: 999px; background: linear-gradient(100deg, #f1efed 20%, #faf9f8 45%, #f1efed 70%); background-size: 220% 100%; animation: auth-placeholder-shimmer 1.2s ease-in-out infinite; }
+.auth-status-placeholder i:first-child { width: 58px; }
+.auth-status-placeholder i:last-child { width: 76px; }
+.app-shell.dark-theme .auth-status-placeholder i { background: linear-gradient(100deg, #333 20%, #3c3c3c 45%, #333 70%); background-size: 220% 100%; }
+@keyframes auth-placeholder-shimmer { to { background-position: -220% 0; } }
+@media (prefers-reduced-motion: reduce) { .auth-status-placeholder i { animation: none; } }
 
 /* Language selector as a compact globe dropdown. */
 .language-picker { position: relative; display: inline-flex; flex: 0 0 auto; }
@@ -1210,4 +1217,42 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .hero-content > p { font-size: 14px; }
   .hero-proof { align-items: flex-start; }
   .proof-rating { min-height: 26px; }
+}
+
+.profile-menu-wrap { position: relative; display: flex; align-items: center; }
+.profile-trigger { cursor: pointer; }
+.profile-trigger:hover, .profile-trigger[aria-expanded="true"] { background: #fff3e9; border-color: #f5b184; }
+.profile-popover {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(320px, calc(100vw - 32px));
+  padding: 18px;
+  border: 1px solid #eee4db;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(40, 29, 20, .16);
+  color: #211c18;
+}
+.profile-close { position: absolute; top: 12px; right: 12px; display: grid; width: 30px; height: 30px; place-items: center; border: 0; border-radius: 50%; background: #f7f3ef; color: #6b625b; cursor: pointer; }
+.profile-close:hover { background: #ffe4d2; color: #d9570a; }
+.profile-popover-heading { display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #f0e8e1; }
+.profile-avatar { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border-radius: 50%; background: #fff3e9; color: #ed6810; }
+.profile-avatar svg { width: 19px; height: 19px; }
+.profile-popover-heading div { display: grid; min-width: 0; gap: 3px; }
+.profile-popover-heading strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.profile-popover-heading div > span { color: #827970; font-size: 12px; }
+.profile-details { display: grid; gap: 13px; margin: 15px 0; }
+.profile-details div { display: grid; gap: 4px; min-width: 0; }
+.profile-details dt { color: #827970; font-size: 11px; }
+.profile-details dd { overflow-wrap: anywhere; margin: 0; font-size: 13px; font-weight: 600; }
+.profile-logout { display: flex; width: 100%; min-height: 42px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 11px; background: #fff1e8; color: #d9570a; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+.profile-logout:hover { background: #ffe4d2; }
+.dark-theme .profile-popover { border-color: #3b342e; background: #24211e; color: #f8f3ee; }
+.dark-theme .profile-popover-heading { border-color: #3b342e; }
+.dark-theme .profile-details dt, .dark-theme .profile-popover-heading div > span { color: #b6aaa0; }
+
+@media (max-width: 760px) {
+  .profile-popover { right: -48px; }
 }
