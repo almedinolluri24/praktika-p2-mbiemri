@@ -45,7 +45,9 @@ php artisan reverb:start
 
 `php artisan reverb:install` gjeneron çelësa lokalë në `.env`. `.env.example` ka vetëm zëvendësues lokalë; mos i përdor si kredenciale prodhimi. Reverb përdor `localhost:8080` dhe Vite proxy-on kërkesën e autorizimit të kanaleve te Laravel.
 
-Rivendosja e fjalëkalimit dërgon link me token të skaduar pas 60 minutash dhe që përdoret një herë. Në konfigurimin lokal `MAIL_MAILER=log`, linku shfaqet te `backend/storage/logs/laravel.log`; për dërgim real konfiguro SMTP në `.env`.
+Pas email-it dhe fjalëkalimit, kyçja kërkon edhe kod 6-shifror që dërgohet në email. Kodi ruhet i hash-uar në sesion, skadon pas 5 minutash, përdoret vetëm një herë dhe lejon deri në 5 prova; ridërgimi kufizohet me rate limit. Regjistrimi i ri kërkon po ashtu verifikim të email-it para se të nisë sesioni i kyçur. Lokalisht `MAIL_MAILER=log` e shkruan kodin te `backend/storage/logs/laravel.log`; për përdorim real konfiguro mailer SMTP në `.env`.
+
+Rivendosja e fjalëkalimit dërgon link me token të skaduar pas 60 minutash dhe që përdoret një herë.
 
 Seeder-i demo funksionon vetëm në `local` dhe `testing`. Parazgjedhja `DEMO_PASSWORD` merret nga `.env.example`; ndryshoje para se të përdorësh llogaritë në rrjet të përbashkët. Llogaritë demo:
 
@@ -58,6 +60,33 @@ Seeder-i demo funksionon vetëm në `local` dhe `testing`. Parazgjedhja `DEMO_PA
 | Administrator | vlera e `DEMO_ADMIN_EMAIL` (parazgjedhje: `admin@foodora.demo`) |
 
 Dashboard-i i administratorit shfaqet vetëm për llogarinë që Laravel kthen me rolin `administrator`. Për ta përdorur email-in tënd lokalisht, ndrysho në `backend/.env` vlerat `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_NAME` dhe `DEMO_ADMIN_PASSWORD`, pastaj ekzekuto `php artisan db:seed --class=DatabaseSeeder` nga `backend`. Seeder-i punon vetëm në `local`/`testing`, përditëson llogarinë admin dhe nuk fshin databazën. Nëse vendos email tjetër, llogaria demo `admin@foodora.demo` bëhet `customer` gjatë seed-it; llogaria nuk fshihet. Mos dërgo fjalëkalimin në chat dhe mos përdor këto kredenciale për prodhim.
+
+Regjistrimi publik krijon vetëm klientë dhe nuk pranon kod për admin ose menaxher. Pas kyçjes me llogarinë fillestare të administratorit, adminët e rinj caktohen te **Paneli Admin → Llogaritë e platformës → Bëje administrator**. Menaxherët dhe stafi caktohen te filiali nga seksioni **Stafi i filialit**. Këto ndryshime verifikohen nga API dhe regjistrohen në audit log.
+
+Për instalim të ri në server, mos ekzekuto `DatabaseSeeder` në prodhim. Ekzekuto migrimet dhe krijo administratorin e parë me komandë interaktive; email-i pyetet në terminal, ndërsa fjalëkalimi shtypet i fshehur, konfirmohet dhe duhet të ketë të paktën 12 karaktere me shkronja të mëdha/të vogla, numra dhe simbole. Komanda ndalon nëse ekziston tashmë një administrator:
+
+RBAC-i përdor tabelat ekzistuese `users`, `branch_staff`, `sessions` dhe `password_reset_tokens`; për ndryshimet e këtij implementimi nuk nevojitet migration i ri. Për databazë të freskët zbato të gjitha migrimet e projektit:
+
+```powershell
+cd backend
+php artisan migrate --force
+php artisan admin:create-initial
+```
+
+Për konfigurim prodhimi përdor `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` me HTTPS, `FRONTEND_URL` të faqes, databazë dhe mailer real. Vendos `SESSION_SECURE_COOKIE=true`, `SESSION_ENCRYPT=true`, `SESSION_HTTP_ONLY=true`, `SESSION_SAME_SITE=lax`, pastaj ekzekuto `php artisan config:cache`. Cookie-ja e sesionit është HttpOnly; CSRF mbrojtja mbetet aktive.
+
+Administratori krijon menaxherë te paneli i administratorit, zgjedh restoratet e tyre dhe sistemi i cakton në të gjitha filialet aktive të atyre restoranteve. Menaxheri merr lidhje me token njëpërdorimësh për të vendosur fjalëkalimin e vet. Për ftesat kërkohet konfigurim i mail-it; lokalisht `MAIL_MAILER=log` e shkruan lidhjen te `backend/storage/logs/laravel.log`.
+
+Mbulimi i autorizimit verifikohet me:
+
+```powershell
+cd backend
+php artisan test
+cd ../frontend
+npm run test:auth
+npm run build
+npm run lint
+```
 
 ### Frontend
 
