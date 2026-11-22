@@ -82,9 +82,6 @@
   letter-spacing: -.045em;
 }
 .app-shell .auth-page-card .login-intro { line-height: 1.55; }
-.app-shell .auth-page-card .foodora-demo-selector { padding: 13px 14px; border-radius: 14px; }
-.app-shell .auth-page-card .demo-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
-.app-shell .auth-page-card .demo-chip { min-height: 35px; padding-inline: 8px; white-space: nowrap; }
 .app-shell .auth-page-card .foodora-auth-form { gap: 14px; }
 .app-shell .auth-page-card .foodora-form-group { gap: 6px; }
 .app-shell .auth-page-card .foodora-form-group > label,
@@ -121,7 +118,6 @@
 .app-shell.dark-theme .auth-page-card .foodora-auth-header h2,
 .app-shell.dark-theme .auth-page-card .foodora-password-label-row label,
 .app-shell.dark-theme .auth-page-card .foodora-form-group > label { color: #f5f2ef; }
-.app-shell.dark-theme .auth-page-card .foodora-demo-selector { border-color: #393530; background: #292622; }
 .app-shell.dark-theme .auth-page-card input:not([type="checkbox"]) { border-color: #45403b; background: #191816; color: #f5f2ef; }
 .app-shell.dark-theme .auth-page-card .foodora-tab-switch { background: #302d29; }
 .app-shell.dark-theme .auth-page-card .foodora-tab-btn.active { background: #211f1c; color: #fff; }
@@ -153,7 +149,6 @@
   .app-shell .auth-page-promo p { font-size: 14px; }
   .app-shell .auth-page-card { padding: 26px 20px; border-radius: 20px; }
   .app-shell .auth-page-card .foodora-auth-header h2 { font-size: 24px; }
-  .app-shell .auth-page-card .demo-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .app-shell .auth-page-actions { gap: 6px; }
   .app-shell .auth-page-back { padding-inline: 10px; }
 }
