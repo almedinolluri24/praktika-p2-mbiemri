@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CartDrawer } from './components/CartDrawer.jsx'
 import { AdminPanel } from './components/AdminPanel.jsx'
 import { Footer } from './components/Footer.jsx'
@@ -9,6 +9,7 @@ import { LoginModal } from './components/LoginModal.jsx'
 import { Navbar } from './components/Navbar.jsx'
 import { OrdersPanel } from './components/OrdersPanel.jsx'
 import { ProductOptionsModal } from './components/ProductOptionsModal.jsx'
+import { PickupMap } from './components/PickupMap.jsx'
 import { RoleDashboard } from './components/RoleDashboard.jsx'
 import { RestaurantCard } from './components/RestaurantCard.jsx'
 import { RestaurantProfile } from './components/RestaurantProfile.jsx'
@@ -88,6 +89,8 @@ function App() {
   const [authPageOpen, setAuthPageOpen] = useState(() => new URLSearchParams(window.location.search).has('reset_token'))
   const [authMode, setAuthMode] = useState(() => new URLSearchParams(window.location.search).has('reset_token') ? 'reset' : 'login')
   const [user, setUser] = useState(null)
+  const [authReady, setAuthReady] = useState(false)
+  const authRequestVersion = useRef(0)
   const [optionsFood, setOptionsFood] = useState(null)
   const [checkoutBusy, setCheckoutBusy] = useState(false)
   const [checkoutError, setCheckoutError] = useState('')
@@ -124,14 +127,29 @@ function App() {
 
   useEffect(() => {
     let active = true
-    getAuthenticatedUser().then((currentUser) => { if (active) setUser(currentUser) }).catch(() => {})
+    const requestVersion = ++authRequestVersion.current
+    // Keep a slow or unavailable API from leaving the navigation stuck on placeholders.
+    const authFallbackTimer = window.setTimeout(() => {
+      if (active && requestVersion === authRequestVersion.current) setAuthReady(true)
+    }, 4000)
+    getAuthenticatedUser()
+      .then((currentUser) => {
+        if (active && requestVersion === authRequestVersion.current) setUser(currentUser)
+      })
+      .catch(() => {
+        if (active && requestVersion === authRequestVersion.current) setUser(null)
+      })
+      .finally(() => {
+        window.clearTimeout(authFallbackTimer)
+        if (active && requestVersion === authRequestVersion.current) setAuthReady(true)
+      })
     loadCatalogFilters().then((filters) => {
       if (!active) return
       setRestaurantCategoryOptions(['All', ...filters.business_types.map((type) => cuisineByBusinessType[type] || type)])
       setFoodCategoryOptions(['All', ...filters.categories])
       setCityOptions(filters.cities)
     }).catch(() => {})
-    return () => { active = false }
+    return () => { active = false; window.clearTimeout(authFallbackTimer) }
   }, [])
 
   useEffect(() => {
@@ -379,7 +397,10 @@ function App() {
   async function handleLogout() {
     try {
       await logout()
+      // Ignore any session check started before logout if it returns late.
+      authRequestVersion.current += 1
       setUser(null)
+      setAuthReady(true)
       showNotice('Keni dalë me sukses nga llogaria.')
     } catch (logoutError) {
       showNotice(logoutError.message)
@@ -387,7 +408,9 @@ function App() {
   }
 
   function handleLoginSuccess(currentUser, authAction) {
+    authRequestVersion.current += 1
     setUser(currentUser)
+    setAuthReady(true)
     setAuthPageOpen(false)
     const destination = getPostAuthDestination(currentUser.role, authAction)
     setAdminOpen(destination.admin)
@@ -462,6 +485,8 @@ function App() {
       <Navbar
         cartCount={cartCount}
         user={user}
+        onLogout={handleLogout}
+        authLoading={!authReady}
         theme={theme}
         onToggleTheme={handleToggleTheme}
         onLogin={() => { setAuthMode('login'); setAuthPageOpen(true) }}
@@ -520,6 +545,8 @@ function App() {
             </div>
             <span className="result-count">{matchingRestaurants.length} {t('Restorante')}</span>
           </div>
+
+          <PickupMap restaurants={matchingRestaurants} cityFilter={cityFilter} />
 
           {catalogLoading ? (
             <div className="catalog-state" role="status">{t('Po ngarkohen restorantet…')}</div>
