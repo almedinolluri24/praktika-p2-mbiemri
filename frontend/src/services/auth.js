@@ -35,7 +35,7 @@ export async function login({ email, password, remember }) {
     throw new Error(result.errors?.email?.[0] || result.message || 'Login failed. Please try again.')
   }
 
-  return result.user
+  return result
 }
 
 export async function register({ name, email, password, passwordConfirmation }) {
@@ -56,7 +56,41 @@ export async function register({ name, email, password, passwordConfirmation }) 
     error.status = response.status
     throw error
   }
+  return result
+}
+
+export async function verifyLoginCode({ code }) {
+  await prepareCsrf()
+  const response = await fetch('/api/login/verify', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      ...apiHeaders,
+      'Content-Type': 'application/json',
+      'X-XSRF-TOKEN': readCsrfCookie(),
+    },
+    body: JSON.stringify({ code }),
+  })
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(Object.values(result.errors || {}).flat()[0] || result.message || 'Kodi i verifikimit është i pavlefshëm.')
+  }
   return result.user
+}
+
+export async function resendLoginCode() {
+  await prepareCsrf()
+  const response = await fetch('/api/login/resend-code', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      ...apiHeaders,
+      'X-XSRF-TOKEN': readCsrfCookie(),
+    },
+  })
+  const result = await response.json()
+  if (!response.ok) throw new Error(result.message || 'Kodi i verifikimit nuk u ridërgua.')
+  return result
 }
 
 export async function getAuthenticatedUser() {
@@ -113,16 +147,22 @@ export async function resetPassword({ email, token, password, passwordConfirmati
 }
 
 export async function logout() {
-  await prepareCsrf()
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    await prepareCsrf()
+    const response = await fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        ...apiHeaders,
+        'X-XSRF-TOKEN': readCsrfCookie(),
+      },
+    })
 
-  const response = await fetch('/api/logout', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      ...apiHeaders,
-      'X-XSRF-TOKEN': readCsrfCookie(),
-    },
-  })
+    // An expired session is already logged out from the server's perspective.
+    if (response.ok || response.status === 401) return
+    if (response.status === 419 && attempt === 0) continue
 
-  if (!response.ok) throw new Error('Could not log out. Please try again.')
+    const result = await response.json().catch(() => ({}))
+    throw new Error(result.message || 'Nuk u çkyç llogaria. Ju lutem provoni përsëri.')
+  }
 }
