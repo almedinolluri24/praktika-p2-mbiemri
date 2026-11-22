@@ -1,22 +1,14 @@
 import { useState } from 'react'
 import { FoodoraLogo } from './FoodoraLogo.jsx'
 import { BackArrowIcon, MoonIcon, SunIcon } from './Icons.jsx'
-import { login, register, requestPasswordReset, resetPassword } from '../services/auth.js'
+import { login, register, requestPasswordReset, resetPassword, resendLoginCode, verifyLoginCode } from '../services/auth.js'
 import { LanguageToggle } from '../i18n/LanguageToggle.jsx'
 import { useLanguage } from '../i18n/useLanguage.js'
 import './AuthPage.css'
 
-const demoAccounts = [
-  { label: 'Klient', email: 'test@example.com', role: 'customer' },
-  { label: 'Menaxher', email: 'manager@foodora.demo', role: 'manager' },
-  { label: 'Kuzhinë', email: 'kitchen@foodora.demo', role: 'kitchen' },
-  { label: 'Marrje', email: 'pickup@foodora.demo', role: 'pickup' },
-  { label: 'Admin', email: 'admin@foodora.demo', role: 'admin' },
-]
-
 export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage = false, theme = 'light', onToggleTheme }) {
   const { t } = useLanguage()
-  const [mode, setMode] = useState(initialMode) // 'login' | 'register' | 'forgot' | 'reset'
+  const [mode, setMode] = useState(initialMode) // 'login' | 'register' | 'forgot' | 'reset' | 'verify'
   const [name, setName] = useState('')
   const [email, setEmail] = useState(() => new URLSearchParams(window.location.search).get('email') || '')
   const [resetToken] = useState(() => new URLSearchParams(window.location.search).get('reset_token') || '')
@@ -27,15 +19,9 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [submitting, setSubmitting] = useState(false)
-
-  function fillDemo(acc) {
-    setMode('login')
-    setEmail(acc.email)
-    setPassword('password')
-    setShowPassword(false)
-    setError('')
-    setSuccessMsg('')
-  }
+  const [verificationCode, setVerificationCode] = useState('')
+  const [verificationEmail, setVerificationEmail] = useState('')
+  const [verificationAction, setVerificationAction] = useState('login')
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -54,14 +40,41 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
         setPasswordConfirmation('')
         window.history.replaceState({}, '', '/')
       } else if (mode === 'register') {
-        const user = await register({ name, email, password, passwordConfirmation })
-        onSuccess(user, mode)
+        const result = await register({ name, email, password, passwordConfirmation })
+        setVerificationAction('register')
+        setVerificationEmail(result.email || email)
+        setVerificationCode('')
+        setPassword('')
+        setPasswordConfirmation('')
+        setSuccessMsg(result.message || 'Kodi i verifikimit u dërgua në email-in tënd.')
+        setMode('verify')
+      } else if (mode === 'verify') {
+        const user = await verifyLoginCode({ code: verificationCode })
+        onSuccess(user, verificationAction)
         onClose()
       } else {
-        const user = await login({ email, password, remember })
-        onSuccess(user, mode)
-        onClose()
+        const result = await login({ email, password, remember })
+        setVerificationAction('login')
+        setVerificationEmail(result.email || email)
+        setVerificationCode('')
+        setPassword('')
+        setSuccessMsg(result.message || 'Kodi i verifikimit u dërgua në email-in tënd.')
+        setMode('verify')
       }
+    } catch (authError) {
+      setError(t(authError.message))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleResendCode() {
+    setSubmitting(true)
+    setError('')
+    setSuccessMsg('')
+    try {
+      const result = await resendLoginCode()
+      setSuccessMsg(result.message)
     } catch (authError) {
       setError(t(authError.message))
     } finally {
@@ -72,6 +85,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
   const registering = mode === 'register'
   const resetting = mode === 'reset'
   const forgetting = mode === 'forgot'
+  const verifying = mode === 'verify'
 
   return (
     <div
@@ -121,10 +135,12 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
         <div className="foodora-auth-header">
           {!isPage && <FoodoraLogo className="login-logo" />}
           <h2 id="login-title">
-            {t(resetting ? 'Vendos fjalëkalim të ri' : forgetting ? 'Rivendos fjalëkalimin' : registering ? 'Krijo llogari të re' : 'Mirë se vini në Foodora')}
+            {t(verifying ? 'Verifikoni kodin e email-it' : resetting ? 'Vendos fjalëkalim të ri' : forgetting ? 'Rivendos fjalëkalimin' : registering ? 'Krijo llogari të re' : 'Mirë se vini në Foodora')}
           </h2>
           <p className="login-intro">
-            {resetting
+            {verifying
+              ? t('Kodi i verifikimit u dërgua në {email}. Shkruaje kodin për të përfunduar kyçjen.', { email: verificationEmail })
+              : resetting
               ? t('Zgjidhni fjalëkalim të ri për llogarinë tuaj.')
               : forgetting
               ? t('Do t’ju dërgojmë një lidhje të sigurt në email për ta rivendosur fjalëkalimin.')
@@ -133,7 +149,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
               : t('Hyni në llogarinë tuaj për të porositur dhe ndjekur përgatitjen.')}
           </p>
 
-          {!(resetting || forgetting) && (
+          {!(resetting || forgetting || verifying) && (
             <div className="foodora-tab-switch" role="tablist">
               <button
                 type="button"
@@ -156,25 +172,6 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
             </div>
           )}
         </div>
-
-        {mode === 'login' && (
-          <div className="foodora-demo-selector">
-            <span className="demo-label">⚡ {t('Llogari demonstrimi (1-klikim):')}</span>
-            <div className="demo-chips">
-              {demoAccounts.map((acc) => (
-                <button
-                  key={acc.email}
-                  type="button"
-                  className={`demo-chip ${email === acc.email ? 'selected' : ''}`}
-                  onClick={() => fillDemo(acc)}
-                  title={t('Vendos: {email}', { email: acc.email })}
-                >
-                  {t(acc.label)}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {successMsg && (
           <div className="foodora-alert success" role="status" style={{ marginBottom: '14px' }}>
@@ -200,7 +197,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
             </div>
           )}
 
-          {!resetting && (
+          {!resetting && !verifying && (
           <div className="foodora-form-group">
             <label htmlFor="login-email">{t('Adresa e email-it')}</label>
             <input
@@ -215,7 +212,7 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
           </div>
           )}
 
-          {!forgetting && (
+          {!forgetting && !verifying && (
           <div className="foodora-form-group">
             <div className="foodora-password-label-row">
               <label htmlFor="login-password">{t(resetting ? 'Fjalëkalimi i ri' : 'Fjalëkalimi')}</label>
@@ -253,6 +250,26 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
           </div>
           )}
 
+          {verifying && (
+            <div className="foodora-form-group">
+              <label htmlFor="login-verification-code">{t('Kodi i verifikimit')}</label>
+              <input
+                id="login-verification-code"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                value={verificationCode}
+                onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="123456"
+                minLength={6}
+                maxLength={6}
+                pattern="[0-9]{6}"
+                required
+                autoFocus
+              />
+            </div>
+          )}
+
           {(registering || resetting) ? (
             <div className="foodora-form-group">
               <label htmlFor="register-confirm-password">{t('Konfirmo fjalëkalimin')}</label>
@@ -277,12 +294,21 @@ export function LoginModal({ onClose, onSuccess, initialMode = 'login', isPage =
           {error && <div className="login-error" role="alert">⚠️ {t(error)}</div>}
 
           <button className="login-submit foodora-btn-primary" type="submit" disabled={submitting}>
-            {t(submitting ? 'Ju lutem prisni…' : resetting ? 'Ruaj fjalëkalimin e ri' : forgetting ? 'Dërgo lidhjen e rivendosjes' : registering ? 'Krijo llogarinë' : 'Vazhdo')}
+            {t(submitting ? 'Ju lutem prisni…' : verifying ? 'Verifiko kodin dhe kyçu' : resetting ? 'Ruaj fjalëkalimin e ri' : forgetting ? 'Dërgo lidhjen e rivendosjes' : registering ? 'Krijo llogarinë' : 'Vazhdo')}
           </button>
         </form>
 
         <div className="foodora-auth-footer">
-          {(resetting || forgetting) ? (
+          {verifying ? (
+            <>
+              <button className="auth-mode-toggle" type="button" onClick={handleResendCode} disabled={submitting}>
+                {t('Dërgo kodin përsëri')}
+              </button>
+              <button className="auth-mode-toggle" type="button" onClick={() => { setError(''); setSuccessMsg(''); setMode('login') }}>
+                {t('← Kthehu te kyçja')}
+              </button>
+            </>
+          ) : (resetting || forgetting) ? (
             <button
               className="auth-mode-toggle"
               type="button"
