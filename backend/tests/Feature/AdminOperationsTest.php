@@ -6,6 +6,8 @@ use App\Models\Restaurant;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Tests\TestCase;
 
 class AdminOperationsTest extends TestCase
@@ -82,5 +84,51 @@ class AdminOperationsTest extends TestCase
         $this->assertDatabaseMissing('branch_staff', ['branch_id' => $branch->id, 'user_id' => $customer->id]);
         $this->assertDatabaseHas('users', ['id' => $customer->id, 'role' => User::ROLE_CUSTOMER]);
         $this->assertDatabaseHas('audit_logs', ['event' => 'staff.removed', 'subject_id' => $customer->id]);
+    }
+
+    public function test_admin_can_create_manager_and_assign_all_active_branches_for_selected_restaurants(): void
+    {
+        Notification::fake();
+        $admin = User::where('email', 'admin@foodora.demo')->firstOrFail();
+        $restaurant = Restaurant::where('slug', 'casa-forno')->firstOrFail();
+
+        $this->actingAs(User::where('email', 'test@example.com')->firstOrFail())
+            ->postJson('/api/admin/managers', [
+                'name' => 'New Restaurant Manager',
+                'email' => 'new.manager@example.com',
+                'restaurant_ids' => [$restaurant->id],
+            ])->assertForbidden();
+
+        $response = $this->actingAs($admin)->postJson('/api/admin/managers', [
+            'name' => 'New Restaurant Manager',
+            'email' => 'NEW.MANAGER@example.com',
+            'restaurant_ids' => [$restaurant->id],
+        ])->assertCreated()
+            ->assertJsonPath('data.role', User::ROLE_MANAGER)
+            ->assertJsonPath('reset_link_sent', true);
+
+        $manager = User::findOrFail($response->json('data.id'));
+        $this->assertDatabaseHas('branch_staff', ['user_id' => $manager->id, 'role' => User::ROLE_MANAGER]);
+        $this->assertSame(
+            $restaurant->branches()->where('is_active', true)->count(),
+            $manager->staffBranches()->count(),
+        );
+        $this->assertDatabaseHas('audit_logs', ['event' => 'manager.created', 'subject_id' => $manager->id]);
+        Notification::assertSentTo($manager, ResetPassword::class);
+    }
+
+    public function test_admin_role_changes_are_protected_and_last_admin_cannot_be_demoted(): void
+    {
+        $admin = User::where('email', 'admin@foodora.demo')->firstOrFail();
+        $customer = User::where('email', 'customer2@example.com')->firstOrFail();
+
+        $this->actingAs($customer)->patchJson("/api/admin/users/{$customer->id}/administrator", ['is_administrator' => true])->assertForbidden();
+        $this->actingAs($admin)->patchJson("/api/admin/users/{$customer->id}/administrator", ['is_administrator' => true])
+            ->assertOk()->assertJsonPath('data.role', User::ROLE_ADMIN);
+        $this->assertDatabaseHas('audit_logs', ['event' => 'user.administrator_role_changed', 'subject_id' => $customer->id]);
+
+        $this->patchJson("/api/admin/users/{$admin->id}/administrator", ['is_administrator' => false])->assertUnprocessable();
+        $this->patchJson("/api/admin/users/{$customer->id}/administrator", ['is_administrator' => false])
+            ->assertOk()->assertJsonPath('data.role', User::ROLE_CUSTOMER);
     }
 }
