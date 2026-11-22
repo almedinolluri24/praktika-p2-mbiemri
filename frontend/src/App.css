@@ -421,52 +421,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.foodora-demo-selector {
-  background: #fafaf9;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-}
-
-.demo-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #4b5563;
-  margin-bottom: 8px;
-}
-
-.demo-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.demo-chip {
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #374151;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.demo-chip:hover {
-  border-color: #f97316;
-  color: #f97316;
-  background: #fff7ed;
-}
-
-.demo-chip.selected {
-  background: #f97316;
-  border-color: #f97316;
-  color: #ffffff;
-}
-
 .foodora-auth-form {
   display: grid;
   gap: 14px;
@@ -1783,28 +1737,6 @@
 
 .app-shell.dark-theme .foodora-tab-btn.active {
   background-color: #18181b !important;
-  color: #ffffff !important;
-}
-
-.app-shell.dark-theme .foodora-demo-selector {
-  background-color: #202025 !important;
-  border-color: #2e2e34 !important;
-}
-
-.app-shell.dark-theme .demo-chip {
-  background-color: #18181b !important;
-  border-color: #3f3f46 !important;
-  color: #d4d4d8 !important;
-}
-
-.app-shell.dark-theme .demo-chip:hover {
-  border-color: #f97316 !important;
-  color: #f97316 !important;
-}
-
-.app-shell.dark-theme .demo-chip.selected {
-  background-color: #f97316 !important;
-  border-color: #f97316 !important;
   color: #ffffff !important;
 }
 
