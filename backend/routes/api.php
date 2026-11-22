@@ -17,8 +17,10 @@ Route::middleware('web')->group(function (): void {
         Route::get('/admin/restaurants', [AdminController::class, 'restaurants']);
         Route::get('/admin/branches', [AdminController::class, 'branches']);
         Route::get('/admin/staff-accounts', [AdminController::class, 'staffAccounts']);
+        Route::post('/admin/managers', [AdminController::class, 'createManager']);
         Route::get('/admin/users', [AdminController::class, 'users']);
         Route::patch('/admin/users/{user}/status', [AdminController::class, 'setUserStatus'])->whereNumber('user');
+        Route::patch('/admin/users/{user}/administrator', [AdminController::class, 'setAdministratorRole'])->whereNumber('user');
         Route::get('/admin/branches/{branch}/staff', [AdminController::class, 'branchStaff'])->whereNumber('branch');
         Route::post('/admin/branches/{branch}/staff', [AdminController::class, 'assignStaff'])->whereNumber('branch');
         Route::delete('/admin/branches/{branch}/staff/{user}', [AdminController::class, 'removeStaff'])->whereNumber('branch')->whereNumber('user');
