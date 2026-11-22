@@ -4,18 +4,69 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
-use App\Models\ProductCategory;
 use App\Models\Branch;
+use App\Models\ProductCategory;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
+    public function createManager(Request $request): JsonResponse
+    {
+        abort_unless($request->user()->isAdministrator(), 403);
+        $email = $request->input('email');
+        if (is_string($email)) {
+            $request->merge(['email' => mb_strtolower(trim($email))]);
+        }
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'restaurant_ids' => ['required', 'array', 'min:1', 'max:50'],
+            'restaurant_ids.*' => ['required', 'integer', 'distinct', 'exists:restaurants,id'],
+        ]);
+
+        $branchIds = Branch::query()->whereIn('restaurant_id', $data['restaurant_ids'])->where('is_active', true)->pluck('id');
+        abort_if($branchIds->isEmpty(), 422, 'Selected restaurants have no active branches.');
+        $restaurantsWithBranches = Branch::query()->whereIn('restaurant_id', $data['restaurant_ids'])->where('is_active', true)->distinct()->pluck('restaurant_id')->map(fn ($id) => (int) $id)->all();
+        abort_if(array_diff(array_map('intval', $data['restaurant_ids']), $restaurantsWithBranches), 422, 'Every selected restaurant needs an active branch.');
+
+        $manager = DB::transaction(function () use ($request, $data, $branchIds): User {
+            $manager = User::create([
+                'name' => $data['name'],
+                'email' => mb_strtolower($data['email']),
+                'password' => Str::random(64),
+                'role' => User::ROLE_MANAGER,
+                'is_active' => true,
+            ]);
+            $manager->staffBranches()->syncWithPivotValues($branchIds->all(), ['role' => User::ROLE_MANAGER]);
+            $this->audit($request, 'manager.created', $manager, ['branch_ids' => $branchIds->all()]);
+
+            return $manager;
+        });
+
+        try {
+            $resetLinkSent = Password::sendResetLink(['email' => $manager->email]) === Password::RESET_LINK_SENT;
+        } catch (\Throwable $exception) {
+            Log::warning('Could not send the new manager password setup email.', [
+                'manager_id' => $manager->id,
+                'exception' => $exception::class,
+            ]);
+            $resetLinkSent = false;
+        }
+
+        return response()->json([
+            'data' => $manager->only(['id', 'name', 'email', 'role', 'is_active']),
+            'reset_link_sent' => $resetLinkSent,
+        ], 201);
+    }
+
     public function branches(Request $request): JsonResponse
     {
         abort_unless($request->user()->isAdministrator(), 403);
@@ -33,10 +84,14 @@ class AdminController extends Controller
     public function users(Request $request): JsonResponse
     {
         abort_unless($request->user()->isAdministrator(), 403);
+        $filters = $request->validate([
+            'search' => ['sometimes', 'string', 'max:120'],
+            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
+        ]);
 
         $users = User::query()
-            ->when($request->query('search'), fn ($query, $search) => $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')))
-            ->orderBy('name')->paginate(30, ['id', 'name', 'email', 'role', 'is_active']);
+            ->when($filters['search'] ?? null, fn ($query, $search) => $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')))
+            ->orderBy('name')->paginate($filters['per_page'] ?? 30, ['id', 'name', 'email', 'role', 'is_active']);
 
         return response()->json($users);
     }
@@ -46,15 +101,54 @@ class AdminController extends Controller
         abort_unless($request->user()->isAdministrator(), 403);
         $data = $request->validate(['is_active' => ['required', 'boolean']]);
         abort_if($request->user()->id === $user->id && ! $data['is_active'], 422, 'You cannot deactivate your own account.');
-        if ($user->isAdministrator() && ! $data['is_active']) {
-            abort_if(User::query()->where('role', User::ROLE_ADMIN)->where('is_active', true)->count() <= 1, 422, 'The last active administrator cannot be deactivated.');
-        }
 
-        $previous = $user->is_active;
-        $user->update(['is_active' => $data['is_active']]);
-        $this->audit($request, 'user.status_changed', $user, ['from' => $previous, 'to' => $user->is_active]);
+        $updated = DB::transaction(function () use ($request, $user, $data): User {
+            $activeAdmins = User::query()->where('role', User::ROLE_ADMIN)->where('is_active', true)->lockForUpdate()->get();
+            $lockedUser = User::query()->lockForUpdate()->findOrFail($user->id);
+            if ($lockedUser->isAdministrator() && ! $data['is_active']) {
+                abort_if($activeAdmins->count() <= 1, 422, 'The last active administrator cannot be deactivated.');
+            }
 
-        return response()->json(['data' => $user->fresh(['staffBranches'])->only(['id', 'name', 'email', 'role', 'is_active'])]);
+            $previous = $lockedUser->is_active;
+            $lockedUser->update(['is_active' => $data['is_active']]);
+            $this->audit($request, 'user.status_changed', $lockedUser, ['from' => $previous, 'to' => $lockedUser->is_active]);
+
+            return $lockedUser->fresh(['staffBranches']);
+        });
+
+        return response()->json(['data' => $updated->only(['id', 'name', 'email', 'role', 'is_active'])]);
+    }
+
+    public function setAdministratorRole(Request $request, User $user): JsonResponse
+    {
+        abort_unless($request->user()->isAdministrator(), 403);
+        $data = $request->validate(['is_administrator' => ['required', 'boolean']]);
+
+        abort_if(! $data['is_administrator'] && $request->user()->id === $user->id, 422, 'You cannot remove administrator access from your own account.');
+
+        $updated = DB::transaction(function () use ($request, $user, $data): User {
+            if ($data['is_administrator']) {
+                $lockedUser = User::query()->lockForUpdate()->findOrFail($user->id);
+                abort_if(! $lockedUser->is_active, 422, 'Activate this account before granting administrator access.');
+                abort_if($lockedUser->isAdministrator(), 422, 'This account is already an administrator.');
+                abort_if($lockedUser->staffBranches()->exists(), 422, 'Remove this account from its staff branches before granting administrator access.');
+                $role = User::ROLE_ADMIN;
+            } else {
+                $admins = User::query()->where('role', User::ROLE_ADMIN)->lockForUpdate()->get();
+                $lockedUser = $admins->firstWhere('id', $user->id);
+                abort_unless($lockedUser, 422, 'This account is not an administrator.');
+                abort_if($admins->where('is_active', true)->count() <= 1, 422, 'The last active administrator cannot be demoted.');
+                $role = User::ROLE_CUSTOMER;
+            }
+
+            $previousRole = $lockedUser->role;
+            $lockedUser->update(['role' => $role]);
+            $this->audit($request, 'user.administrator_role_changed', $lockedUser, ['from' => $previousRole, 'to' => $role]);
+
+            return $lockedUser->fresh();
+        });
+
+        return response()->json(['data' => $updated->only(['id', 'name', 'email', 'role', 'is_active'])]);
     }
 
     public function branchStaff(Request $request, Branch $branch): JsonResponse
