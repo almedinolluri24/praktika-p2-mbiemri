@@ -36,6 +36,14 @@ function UserIcon() {
   )
 }
 
+function LogoutIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 17l5-5-5-5" /><path d="M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+    </svg>
+  )
+}
+
 function OrdersIcon() {
   return (
     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -64,11 +72,14 @@ export function Navbar({
   onLogin,
   onRegister,
   onDashboard,
+  onLogout,
   user,
+  authLoading = false,
   theme,
   onToggleTheme,
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const { t } = useLanguage()
   const closeMenu = () => setMenuOpen(false)
 
@@ -95,16 +106,44 @@ export function Navbar({
         </nav>
 
         <div className={menuOpen ? 'nav-actions open' : 'nav-actions'}>
-          {user ? (
+          {authLoading ? (
+            <span className="auth-status-placeholder" role="status" aria-label={t('Po kontrollohet sesioni…')}>
+              <i /><i />
+            </span>
+          ) : user ? (
             <>
-              <span
-                className="user-greeting"
-                role="img"
-                aria-label={t('Llogaria e kyçur: {name}', { name: user.name })}
-                title={user.name}
-              >
-                <UserIcon />
-              </span>
+              <div className="profile-menu-wrap">
+                <button
+                  type="button"
+                  className="user-greeting profile-trigger"
+                  aria-label={t('Hap profilin')}
+                  aria-expanded={profileOpen}
+                  aria-haspopup="dialog"
+                  onClick={() => setProfileOpen((open) => !open)}
+                >
+                  <UserIcon />
+                </button>
+                {profileOpen && (
+                  <section className="profile-popover" role="dialog" aria-label={t('Profili im')}>
+                    <button type="button" className="profile-close" aria-label={t('Mbyll')} onClick={() => setProfileOpen(false)}>
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                        <path d="m18 6-12 12M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <div className="profile-popover-heading">
+                      <span className="profile-avatar"><UserIcon /></span>
+                      <div><strong>{user.name}</strong><span>{t(user.role)}</span></div>
+                    </div>
+                    <dl className="profile-details">
+                      <div><dt>{t('Emri dhe mbiemri')}</dt><dd>{user.name}</dd></div>
+                      <div><dt>{t('Email')}</dt><dd>{user.email}</dd></div>
+                    </dl>
+                    <button type="button" className="profile-logout" onClick={() => { setProfileOpen(false); closeMenu(); onLogout() }}>
+                      <LogoutIcon /><span>{t('Dil nga llogaria')}</span>
+                    </button>
+                  </section>
+                )}
+              </div>
 
               {user.role === 'customer' && (
                 <button className="login-button orders-nav-btn dashboard-nav-btn" onClick={() => { closeMenu(); onOpenOrders() }}>
