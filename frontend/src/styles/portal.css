@@ -1588,6 +1588,7 @@
 .admin-users .admin-panel-heading p { margin: 0; color: var(--portal-muted); font-size: 12px; }
 .admin-user-list { display: grid; }
 .admin-user-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--portal-border); }
+.admin-user-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .admin-user-row:last-child { border-bottom: 0; }
 .admin-user-row strong, .admin-user-row small { display: block; }
 .admin-user-row strong { font-size: 13px; }
@@ -1611,5 +1612,5 @@
   .admin-users .admin-panel-heading { align-items: stretch; flex-direction: column; }
   .admin-user-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
   .admin-user-state { justify-self: start; grid-column: 1; grid-row: 2; }
-  .admin-user-row button { grid-column: 2; grid-row: 1 / span 2; }
+  .admin-user-actions { grid-column: 1 / -1; justify-content: flex-end; }
 }
