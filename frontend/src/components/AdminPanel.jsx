@@ -55,6 +55,10 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
   const [selectedBranchId, setSelectedBranchId] = useState('')
   const [staffUserId, setStaffUserId] = useState('')
   const [staffRole, setStaffRole] = useState('restaurant_manager')
+  const [managerName, setManagerName] = useState('')
+  const [managerEmail, setManagerEmail] = useState('')
+  const [managerRestaurantIds, setManagerRestaurantIds] = useState([])
+  const [managerCreatedMessage, setManagerCreatedMessage] = useState('')
 
   const loadRestaurants = useCallback(async () => {
     setLoading(true)
@@ -142,6 +146,30 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
     }
   }
 
+  async function createManager(event) {
+    event.preventDefault()
+    setBusy(true)
+    setError('')
+    setManagerCreatedMessage('')
+    try {
+      const result = await request('/api/admin/managers', {
+        method: 'POST',
+        body: { name: managerName, email: managerEmail, restaurant_ids: managerRestaurantIds.map(Number) },
+      })
+      setManagerName('')
+      setManagerEmail('')
+      setManagerRestaurantIds([])
+      setManagerCreatedMessage(result.reset_link_sent
+        ? 'Menaxheri u krijua dhe iu dërgua email për të vendosur fjalëkalimin.'
+        : 'Menaxheri u krijua, por emaili nuk u dërgua. Kontrollo konfigurimin e emailit në backend.')
+      await loadStaffData()
+    } catch (actionError) {
+      setError(actionError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function removeStaff(staffMember) {
     setBusy(true)
     setError('')
@@ -162,6 +190,22 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
       await request(`/api/admin/users/${account.id}/status`, {
         method: 'PATCH',
         body: { is_active: !account.is_active },
+      })
+      await loadStaffData()
+    } catch (actionError) {
+      setError(actionError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function setAdministratorRole(account) {
+    setBusy(true)
+    setError('')
+    try {
+      await request(`/api/admin/users/${account.id}/administrator`, {
+        method: 'PATCH',
+        body: { is_administrator: account.role !== 'administrator' },
       })
       await loadStaffData()
     } catch (actionError) {
@@ -445,6 +489,28 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
                       <p>{t('Menaxho qasjen e stafit në filialet e platformës.')}</p>
                     </div>
                   </div>
+                  <form onSubmit={createManager}>
+                    <label htmlFor="admin-manager-name">{t('Emri i menaxherit')}</label>
+                    <input id="admin-manager-name" value={managerName} onChange={(event) => setManagerName(event.target.value)} maxLength={120} required />
+                    <label htmlFor="admin-manager-email">{t('Email i menaxherit')}</label>
+                    <input id="admin-manager-email" type="email" value={managerEmail} onChange={(event) => setManagerEmail(event.target.value)} required />
+                    <label htmlFor="admin-manager-restaurants">{t('Restorantet që do të menaxhojë')}</label>
+                    <select
+                      id="admin-manager-restaurants"
+                      multiple
+                      size={Math.min(5, Math.max(2, new Set(branches.map((branch) => branch.restaurant_id)).size))}
+                      value={managerRestaurantIds}
+                      onChange={(event) => setManagerRestaurantIds(Array.from(event.target.selectedOptions, (option) => option.value))}
+                      required
+                    >
+                      {[...new Map(branches.map((branch) => [branch.restaurant_id, branch.restaurant])).values()].map((restaurant) => (
+                        <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+                      ))}
+                    </select>
+                    <button disabled={busy || !managerRestaurantIds.length}>+ {t('Krijo menaxherin dhe dërgo ftesën')}</button>
+                  </form>
+                  {managerCreatedMessage && <p role="status">{t(managerCreatedMessage)}</p>}
+
                   <label htmlFor="admin-staff-branch">{t('Zgjidh filialin')}</label>
                   <select
                     id="admin-staff-branch"
@@ -514,7 +580,7 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
               <div className="admin-panel-heading">
                 <div>
                   <h3><UsersIcon size={18} /> {t('Llogaritë e platformës')}</h3>
-                  <p>{t('Shiko rolet dhe çaktivizo përkohësisht llogaritë. Llogaritë joaktive nuk mund të kyçen.')}</p>
+                  <p>{t('Regjistrimi krijon klientë. Vetëm administratori mund t’i japë ose t’ia heqë një llogarie rolin administrator; stafin e cakton sipas degës.')}</p>
                 </div>
                 <label className="admin-search">
                   <span className="visually-hidden">{t('Kërko llogari')}</span>
@@ -531,13 +597,22 @@ export function AdminPanel({ user, theme, onToggleTheme, onLogout, onClose }) {
                     <span className={`admin-user-state ${account.is_active ? 'active' : 'inactive'}`}>
                       {t(account.is_active ? 'Aktive' : 'Jo aktive')}
                     </span>
-                    <button
-                      disabled={busy || account.id === user.id}
-                      title={account.id === user.id ? t('Nuk mund ta çaktivizoni llogarinë tuaj') : undefined}
-                      onClick={() => setAccountStatus(account)}
-                    >
-                      {t(account.is_active ? 'Çaktivizo' : 'Aktivizo')}
-                    </button>
+                    <div className="admin-user-actions">
+                      <button
+                        disabled={busy || !account.is_active || account.id === user.id}
+                        title={account.id === user.id ? t('Nuk mund ta ndryshoni rolin e llogarisë suaj') : undefined}
+                        onClick={() => setAdministratorRole(account)}
+                      >
+                        {t(account.role === 'administrator' ? 'Hiq rolin administrator' : 'Bëje administrator')}
+                      </button>
+                      <button
+                        disabled={busy || account.id === user.id}
+                        title={account.id === user.id ? t('Nuk mund ta çaktivizoni llogarinë tuaj') : undefined}
+                        onClick={() => setAccountStatus(account)}
+                      >
+                        {t(account.is_active ? 'Çaktivizo' : 'Aktivizo')}
+                      </button>
+                    </div>
                   </article>
                 ))}
                 {!visibleAccounts.length && <p className="admin-empty">{t('Nuk u gjet asnjë llogari.')}</p>}
