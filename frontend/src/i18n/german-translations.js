@@ -521,6 +521,7 @@ const germanTranslations = {
   'Regjistrimi publik krijon llogari klienti. Rolet e stafit caktohen nga menaxheri ose administratori.': 'Bei der öffentlichen Registrierung wird ein Kundenkonto erstellt. Personalrollen werden vom Manager oder Administrator zugewiesen.',
   'Rivendos fjalëkalimin': 'Passwort zurücksetzen',
   'Rivendosja e fjalëkalimit dështoi.': 'Das Zurücksetzen des Passworts ist fehlgeschlagen.',
+  'Emaili për rivendosjen e fjalëkalimit nuk u dërgua. Kontrollo konfigurimin e email-it dhe provo përsëri.': 'Die E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden. Prüfe die E-Mail-Konfiguration und versuche es erneut.',
   'Roli në këtë filial': 'Rolle in dieser Filiale',
   'Ruaj orarin javor & kapacitetin': 'Wochenplan und Kapazität speichern',
   'Ruaj çmimin': 'Preis speichern',
