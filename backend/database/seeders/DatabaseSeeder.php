@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $password = Hash::make(env('DEMO_PASSWORD', 'password'));
-        $adminEmail = strtolower(trim((string) env('DEMO_ADMIN_EMAIL', 'admin@foodora.demo')));
+        $adminEmail = strtolower(trim((string) env('DEMO_ADMIN_EMAIL', 'ollurialmedin@gmail.com')));
         $adminName = trim((string) env('DEMO_ADMIN_NAME', 'Foodora Administrator')) ?: 'Foodora Administrator';
         $adminPassword = Hash::make(env('DEMO_ADMIN_PASSWORD', env('DEMO_PASSWORD', 'password')));
         if ($adminEmail !== 'admin@foodora.demo') {
