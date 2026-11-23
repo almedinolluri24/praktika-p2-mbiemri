@@ -228,7 +228,17 @@ class AuthenticatedSessionController extends Controller
             'email' => ['required', 'email', 'max:255'],
         ]);
 
-        Password::sendResetLink($request->only('email'));
+        try {
+            Password::sendResetLink($request->only('email'));
+        } catch (Throwable $exception) {
+            Log::warning('Could not send a password reset email.', [
+                'exception' => $exception::class,
+            ]);
+
+            return response()->json([
+                'message' => 'Emaili për rivendosjen e fjalëkalimit nuk u dërgua. Kontrollo konfigurimin e email-it dhe provo përsëri.',
+            ], 503);
+        }
 
         return response()->json([
             'message' => 'Nëse ekziston llogaria, do të dërgohet një lidhje për rivendosjen e fjalëkalimit.',
