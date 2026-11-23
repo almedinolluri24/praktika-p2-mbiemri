@@ -53,9 +53,17 @@ Seeder-i demo funksionon vetëm në `local` dhe `testing`. Parazgjedhja `DEMO_PA
 
 | Roli | Email |
 | --- | --- |
-| Administrator |(parazgjedhje: `ollurialmedin@gmail.com`) |
+| Klient 1 / 2 | `test@example.com` / `customer2@example.com` |
+| Menaxher | `manager@foodora.demo` / `manager.urban@foodora.demo` |
+| Kuzhinë | `kitchen@foodora.demo` / `kitchen.urban@foodora.demo` |
+| Marrje | `pickup@foodora.demo` / `pickup.urban@foodora.demo` |
+| Administrator | vlera e `DEMO_ADMIN_EMAIL` (parazgjedhje: `ollurialmedin@gmail.com`) |
 
-Dashboard-i i administratorit shfaqet vetëm për llogarinë që Laravel kthen me rolin `administrator`. Për ta përdorur email-in tënd lokalisht, ndrysho në `backend/.env` vlerat `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_NAME` dhe `DEMO_ADMIN_PASSWORD`, pastaj ekzekuto `php artisan db:seed --class=DatabaseSeeder` nga `backend`. Seeder-i punon vetëm në `local`/`testing`, përditëson llogarinë admin dhe nuk fshin databazën. Nëse vendos email tjetër, llogaria demo `admin@foodora.demo` bëhet `customer` gjatë seed-it; llogaria nuk fshihet. Mos dërgo fjalëkalimin në chat dhe mos përdor këto kredenciale për prodhim.
+Për të hapur panelin admin lokalisht, kyçu me `ollurialmedin@gmail.com`, fjalëkalimin e caktuar për llogarinë admin dhe kodin 6-shifror që dërgohet në email. Pas verifikimit, zgjidh **Paneli Admin** në navigim.
+
+Dashboard-i i administratorit shfaqet vetëm për llogarinë që Laravel kthen me rolin `administrator`. Për ta përdorur email-in tënd lokalisht, vendos `DEMO_ADMIN_EMAIL=ollurialmedin@gmail.com` në `backend/.env`, cakto `DEMO_ADMIN_NAME` dhe `DEMO_ADMIN_PASSWORD`, pastaj ekzekuto `php artisan db:seed --class=DatabaseSeeder` nga `backend`. Seeder-i punon vetëm në `local`/`testing`, përditëson llogarinë admin dhe nuk fshin databazën. Nëse vendos email tjetër, llogaria demo `admin@foodora.demo` bëhet `customer` gjatë seed-it; llogaria nuk fshihet. Mos dërgo fjalëkalimin në chat dhe mos përdor këto kredenciale për prodhim.
+
+Për të marrë kodet e kyçjes në Gmail, vendos `MAIL_MAILER=smtp`, `MAIL_HOST=smtp.gmail.com`, `MAIL_PORT=587`, `MAIL_SCHEME=smtp`, dhe përdor adresën Gmail si `MAIL_USERNAME` dhe `MAIL_FROM_ADDRESS`. Krijo një Google App Password me 2-Step Verification të aktivizuar dhe ruaje te `MAIL_PASSWORD` në `backend/.env` (mos e vendos në Git ose në chat). Pastaj ekzekuto `php artisan config:clear` nga `backend` dhe rinise serverin Laravel. [Udhëzimi zyrtar i Google për App Passwords](https://support.google.com/mail/answer/185833?hl=en).
 
 Regjistrimi publik krijon vetëm klientë dhe nuk pranon kod për admin ose menaxher. Pas kyçjes me llogarinë fillestare të administratorit, adminët e rinj caktohen te **Paneli Admin → Llogaritë e platformës → Bëje administrator**. Menaxherët dhe stafi caktohen te filiali nga seksioni **Stafi i filialit**. Këto ndryshime verifikohen nga API dhe regjistrohen në audit log.
 
