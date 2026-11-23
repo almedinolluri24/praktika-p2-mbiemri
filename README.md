@@ -53,7 +53,7 @@ Seeder-i demo funksionon vetëm në `local` dhe `testing`. Parazgjedhja `DEMO_PA
 
 | Roli | Email |
 | --- | --- |
-| Administrator | vlera e `DEMO_ADMIN_EMAIL` (parazgjedhje: `ollurialmedin@gmail.com`) |
+| Administrator |(parazgjedhje: `ollurialmedin@gmail.com`) |
 
 Dashboard-i i administratorit shfaqet vetëm për llogarinë që Laravel kthen me rolin `administrator`. Për ta përdorur email-in tënd lokalisht, ndrysho në `backend/.env` vlerat `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_NAME` dhe `DEMO_ADMIN_PASSWORD`, pastaj ekzekuto `php artisan db:seed --class=DatabaseSeeder` nga `backend`. Seeder-i punon vetëm në `local`/`testing`, përditëson llogarinë admin dhe nuk fshin databazën. Nëse vendos email tjetër, llogaria demo `admin@foodora.demo` bëhet `customer` gjatë seed-it; llogaria nuk fshihet. Mos dërgo fjalëkalimin në chat dhe mos përdor këto kredenciale për prodhim.
 
