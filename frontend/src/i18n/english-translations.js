@@ -58,6 +58,7 @@ const englishTranslations = {
   'healthy kitchen': 'Healthy kitchen',
   'Keni dalë me sukses nga llogaria.': 'You have successfully logged out.',
   'Rivendosja e fjalëkalimit dështoi.': 'Password reset failed.',
+  'Emaili për rivendosjen e fjalëkalimit nuk u dërgua. Kontrollo konfigurimin e email-it dhe provo përsëri.': 'The password reset email could not be sent. Check the email configuration and try again.',
   'Pizzeri': 'Pizzeria',
   'Ushqim i shpejtë': 'Fast food',
   'Kafene': 'Cafe',
